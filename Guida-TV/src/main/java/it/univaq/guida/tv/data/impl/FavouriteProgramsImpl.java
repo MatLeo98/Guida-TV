@@ -8,6 +8,7 @@ package it.univaq.guida.tv.data.impl;
 import it.univaq.guida.tv.data.model.FavouritePrograms;
 import it.univaq.guida.tv.data.impl.ScheduleImpl.TimeSlot;
 import it.univaq.guida.tv.data.model.Program;
+import it.univaq.guida.tv.data.model.User;
 
 /**
  *

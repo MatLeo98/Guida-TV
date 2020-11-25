@@ -5,6 +5,7 @@
  */
 package it.univaq.guida.tv.data.impl;
 
+import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Schedule;
 import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.Program;
