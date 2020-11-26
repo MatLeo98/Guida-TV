@@ -5,13 +5,14 @@
  */
 package it.univaq.guida.tv.data.impl;
 
+import it.univaq.framework.data.DataItemImpl;
 import it.univaq.guida.tv.data.model.Image;
 
 /**
  *
  * @author giorg
  */
-public class ImageImpl implements Image {
+public class ImageImpl extends DataItemImpl<Integer> implements Image {
  
     private String caption;
     private String imageType;

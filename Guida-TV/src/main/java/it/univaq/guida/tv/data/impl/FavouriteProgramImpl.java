@@ -6,6 +6,7 @@
 package it.univaq.guida.tv.data.impl;
 
 
+import it.univaq.framework.data.DataItemImpl;
 import it.univaq.guida.tv.data.impl.ScheduleImpl.TimeSlot;
 import it.univaq.guida.tv.data.model.FavouriteProgram;
 import it.univaq.guida.tv.data.model.Program;
@@ -15,7 +16,7 @@ import it.univaq.guida.tv.data.model.User;
  *
  * @author giorg
  */
-public class FavouriteProgramImpl implements FavouriteProgram {
+public class FavouriteProgramImpl extends DataItemImpl<Integer> implements FavouriteProgram {
 
     private TimeSlot timeSlot;
     
@@ -23,6 +24,7 @@ public class FavouriteProgramImpl implements FavouriteProgram {
     private User user;
     
     public FavouriteProgramImpl(){
+        super();
         timeSlot = null;
         program = null;
         user = null;

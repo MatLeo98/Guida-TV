@@ -6,29 +6,31 @@
 
 package it.univaq.guida.tv.data.impl;
 
+import it.univaq.framework.data.DataItemImpl;
 import it.univaq.guida.tv.data.model.User;
 
 /**
  *
  * @author Matteo
  */
-public class UserImpl implements User {
+public class UserImpl extends DataItemImpl<String> implements User {
 
-    private String email;
+    //private String email;
     private String password;
     private Boolean confirmed;
     private Boolean newsletter;
 
     public UserImpl(){
 
-    email = "";
+    super();
+    //email = "";
     password = "";
     confirmed = false;
     newsletter = false;
 
     }
 
-    @Override
+   /* @Override
     public String getEmail() {
         return email;
     }
@@ -36,7 +38,7 @@ public class UserImpl implements User {
     @Override
     public void setEmail(String email) {
         this.email = email;
-    }
+    }*/
 
     @Override
     public String getPassword() {

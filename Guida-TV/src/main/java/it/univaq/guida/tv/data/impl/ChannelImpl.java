@@ -5,6 +5,7 @@
  */
 package it.univaq.guida.tv.data.impl;
 
+import it.univaq.framework.data.DataItemImpl;
 import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Image;
 
@@ -12,28 +13,17 @@ import it.univaq.guida.tv.data.model.Image;
  *
  * @author Matteo
  */
-public class ChannelImpl implements Channel {
+public class ChannelImpl extends DataItemImpl<Integer> implements Channel {
     
-    private int number;
+  
     private String name;
     private Image image;
     
     public ChannelImpl(){
-    
-    number = 0;
+    super();
     name = "";
     image = null;
     
-    }
-
-    @Override
-    public int getNumber() {
-        return number;
-    }
-
-    @Override
-    public void setNumber(int number) {
-        this.number = number;
     }
 
     @Override

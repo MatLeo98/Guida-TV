@@ -5,6 +5,7 @@
  */
 package it.univaq.guida.tv.data.impl;
 
+import it.univaq.framework.data.DataItemImpl;
 import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Schedule;
 import it.univaq.guida.tv.data.model.Episode;
@@ -16,9 +17,8 @@ import java.time.LocalDateTime;
  *
  * @author giorg
  */
-public class ScheduleImpl implements Schedule {
+public class ScheduleImpl extends DataItemImpl<Integer> implements Schedule {
 
-    private Integer id;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private LocalDate date;
@@ -29,7 +29,7 @@ public class ScheduleImpl implements Schedule {
     private Episode episode;
     
     public ScheduleImpl(){
-        id = null;
+        super();
         startTime = null;
         endTime = null;
         date = null;
@@ -45,16 +45,6 @@ public class ScheduleImpl implements Schedule {
     //Notte: 00:00 - 6:00
     public enum TimeSlot {
         mattina, pomeriggio, sera, notte;
-    }
-    
-    @Override
-     public Integer getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     @Override

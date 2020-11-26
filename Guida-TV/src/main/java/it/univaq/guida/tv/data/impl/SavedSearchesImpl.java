@@ -5,6 +5,7 @@
  */
 package it.univaq.guida.tv.data.impl;
 
+import it.univaq.framework.data.DataItemImpl;
 import it.univaq.guida.tv.data.model.SavedSearches;
 import it.univaq.guida.tv.data.model.User;
 import java.time.LocalDate;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
  *
  * @author Matteo
  */
-public class SavedSearchesImpl implements SavedSearches {
+public class SavedSearchesImpl extends DataItemImpl<Integer> implements SavedSearches {
     
     private String title;
     private String genre;
@@ -28,6 +29,7 @@ public class SavedSearchesImpl implements SavedSearches {
     
     public SavedSearchesImpl(){
     
+        super();
         title = "";
         genre = "";
         maxStartHour = null;

@@ -5,6 +5,7 @@
  */
 package it.univaq.guida.tv.data.impl;
 
+import it.univaq.framework.data.DataItemImpl;
 import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.Program;
 
@@ -12,9 +13,8 @@ import it.univaq.guida.tv.data.model.Program;
  *
  * @author giorg
  */
-public class EpisodeImpl implements Episode {
+public class EpisodeImpl extends DataItemImpl<Integer> implements Episode {
 
-    private Integer id;
     private String name;
     private int seasonNumber;
     private int number;
@@ -22,21 +22,11 @@ public class EpisodeImpl implements Episode {
     private Program program;
     
     public EpisodeImpl(){
-        id = null;
+        super();
         name = "";
         seasonNumber = 0;
         number = 0;
         
-    }
-    
-    @Override
-    public Integer getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     @Override
