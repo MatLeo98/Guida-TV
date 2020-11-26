@@ -6,6 +6,7 @@
 package it.univaq.guida.tv.data.impl;
 
 import it.univaq.guida.tv.data.model.Channel;
+import it.univaq.guida.tv.data.model.Image;
 
 /**
  *
@@ -13,23 +14,25 @@ import it.univaq.guida.tv.data.model.Channel;
  */
 public class ChannelImpl implements Channel {
     
-    private Integer number;
+    private int number;
     private String name;
+    private Image image;
     
     public ChannelImpl(){
     
     number = 0;
     name = "";
+    image = null;
     
     }
 
     @Override
-    public Integer getNumber() {
+    public int getNumber() {
         return number;
     }
 
     @Override
-    public void setNumber(Integer number) {
+    public void setNumber(int number) {
         this.number = number;
     }
 
@@ -41,6 +44,16 @@ public class ChannelImpl implements Channel {
     @Override
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public Image getImage() {
+        return image;
+    }
+
+    @Override
+    public void setImage(Image image) {
+        this.image = image;
     }
     
 }
