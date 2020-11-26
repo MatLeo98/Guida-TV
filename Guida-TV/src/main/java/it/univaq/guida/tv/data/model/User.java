@@ -11,11 +11,11 @@ import it.univaq.framework.data.DataItem;
  *
  * @author Matteo
  */
-public interface User extends DataItem<Integer>{
+public interface User extends DataItem<String>{
 
     Boolean getConfirmed();
 
-    String getEmail();
+    //String getEmail();
 
     Boolean getNewsletter();
 
@@ -23,7 +23,7 @@ public interface User extends DataItem<Integer>{
 
     void setConfirmed(Boolean confirmed);
 
-    void setEmail(String email);
+    //void setEmail(String email);
 
     void setNewsletter(Boolean newsletter);
 
