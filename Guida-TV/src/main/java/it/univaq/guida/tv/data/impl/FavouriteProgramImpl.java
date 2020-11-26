@@ -5,8 +5,9 @@
  */
 package it.univaq.guida.tv.data.impl;
 
-import it.univaq.guida.tv.data.model.FavouritePrograms;
+
 import it.univaq.guida.tv.data.impl.ScheduleImpl.TimeSlot;
+import it.univaq.guida.tv.data.model.FavouriteProgram;
 import it.univaq.guida.tv.data.model.Program;
 import it.univaq.guida.tv.data.model.User;
 
@@ -14,18 +15,20 @@ import it.univaq.guida.tv.data.model.User;
  *
  * @author giorg
  */
-public class FavouriteProgramsImpl implements FavouritePrograms {
+public class FavouriteProgramImpl implements FavouriteProgram {
 
     private TimeSlot timeSlot;
     
     private Program program;
     private User user;
     
-    public FavouriteProgramsImpl(){
+    public FavouriteProgramImpl(){
         timeSlot = null;
         program = null;
         user = null;
-    } @Override
+    } 
+    
+    @Override
     public TimeSlot getTimeSlot() {
         return timeSlot;
     }

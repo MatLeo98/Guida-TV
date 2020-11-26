@@ -12,7 +12,7 @@ import it.univaq.guida.tv.data.model.Program;
  *
  * @author giorg
  */
-public interface FavouritePrograms {
+public interface FavouriteProgram {
 
     Program getProgram();
 
