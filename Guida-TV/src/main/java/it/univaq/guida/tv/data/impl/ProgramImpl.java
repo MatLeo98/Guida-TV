@@ -6,8 +6,11 @@
 package it.univaq.guida.tv.data.impl;
 
 import it.univaq.framework.data.DataItemImpl;
+import it.univaq.guida.tv.data.model.Episode;
+import it.univaq.guida.tv.data.model.Image;
 import it.univaq.guida.tv.data.model.Program;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -19,11 +22,11 @@ public class ProgramImpl extends DataItemImpl<Integer> implements Program {
     private String description;
     private Genre genre;
     private String link;
-    private ImageImpl image;
+    private Image image;
     private Boolean isSerie;
     private int seasonsNumber;
     
-    private ArrayList episodes = new ArrayList<>();
+    private List<Episode> episodes;
     
     public enum Genre {
     	
@@ -86,12 +89,12 @@ public class ProgramImpl extends DataItemImpl<Integer> implements Program {
     }
 
     @Override
-    public ImageImpl getImage() {
+    public Image getImage() {
         return image;
     }
 
     @Override
-    public void setImage(ImageImpl image) {
+    public void setImage(Image image) {
         this.image = image;
     }
 
@@ -116,12 +119,17 @@ public class ProgramImpl extends DataItemImpl<Integer> implements Program {
     }
     
     @Override
-    public ArrayList getEpisodes() {
+    public void addEpisode(Episode episode){
+        this.episodes.add(episode);
+    }
+    
+    @Override
+    public List<Episode> getEpisodes() {
         return episodes;
     }
 
     @Override
-    public void setEpisodes(ArrayList episodes) {
+    public void setEpisodes(List<Episode> episodes) {
         this.episodes = episodes;
     }
     

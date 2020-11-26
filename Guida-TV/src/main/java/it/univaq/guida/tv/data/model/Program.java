@@ -10,6 +10,7 @@ import it.univaq.guida.tv.data.impl.ImageImpl;
 import it.univaq.guida.tv.data.impl.ImageImpl;
 import it.univaq.guida.tv.data.impl.ProgramImpl.Genre;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -21,7 +22,7 @@ public interface Program extends DataItem<Integer> {
 
     Genre getGenre();
 
-    ImageImpl getImage();
+    Image getImage();
 
     Boolean getIsSerie();
 
@@ -31,14 +32,14 @@ public interface Program extends DataItem<Integer> {
 
     int getSeasonsNumber();
     
-    public ArrayList getEpisodes();
+    public List<Episode> getEpisodes();
     
 
     void setDescription(String description);
 
     void setGenre(Genre genre);
 
-    void setImage(ImageImpl image);
+    void setImage(Image image);
 
     void setIsSerie(Boolean isSerie);
 
@@ -48,7 +49,9 @@ public interface Program extends DataItem<Integer> {
 
     void setSeasonsNumber(int seasonsNumber);
     
-    void setEpisodes(ArrayList episodes);
+    void addEpisode(Episode episode);
+    
+    void setEpisodes(List<Episode> episodes);
     
     
 }
