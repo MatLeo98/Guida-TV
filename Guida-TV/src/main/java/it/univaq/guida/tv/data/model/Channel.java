@@ -5,19 +5,17 @@
  */
 package it.univaq.guida.tv.data.model;
 
+import it.univaq.framework.data.DataItem;
+
 /**
  *
  * @author Matteo
  */
-public interface Channel {
+public interface Channel extends DataItem<Integer>{
 
     String getName();
 
-    int getNumber();
-
     void setName(String name);
-
-    void setNumber(int number);
     
     Image getImage();
     

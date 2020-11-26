@@ -5,13 +5,13 @@
  */
 package it.univaq.guida.tv.data.model;
 
+import it.univaq.framework.data.DataItem;
+
 /**
  *
  * @author giorg
  */
-public interface Episode {
-
-    Integer getId();
+public interface Episode extends DataItem<Integer> {
 
     String getName();
 
@@ -20,8 +20,6 @@ public interface Episode {
     Integer getSeasonNumber();
     
     Program getProgram();
-
-    void setId(Integer id);
 
     void setName(String name);
 

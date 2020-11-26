@@ -5,6 +5,7 @@
  */
 package it.univaq.guida.tv.data.model;
 
+import it.univaq.framework.data.DataItem;
 import it.univaq.guida.tv.data.impl.ScheduleImpl.TimeSlot;
 import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.Program;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
  *
  * @author giorg
  */
-public interface Schedule {
+public interface Schedule extends DataItem<Integer> {
 
     Channel getChannel();
 
@@ -24,8 +25,6 @@ public interface Schedule {
     LocalDateTime getEndTime();
 
     Episode getEpisode();
-
-    Integer getId();
 
     Program getProgram();
 
@@ -40,8 +39,6 @@ public interface Schedule {
     void setEndTime(LocalDateTime endTime);
 
     void setEpisode(Episode episode);
-
-    void setId(Integer id);
 
     void setProgram(Program program);
 

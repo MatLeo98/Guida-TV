@@ -5,11 +5,13 @@
  */
 package it.univaq.guida.tv.data.model;
 
+import it.univaq.framework.data.DataItem;
+
 /**
  *
  * @author giorg
  */
-public interface Image {
+public interface Image extends DataItem<Integer> {
 
     String getCaption();
 

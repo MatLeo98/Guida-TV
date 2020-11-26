@@ -5,6 +5,7 @@
  */
 package it.univaq.guida.tv.data.model;
 
+import it.univaq.framework.data.DataItem;
 import it.univaq.guida.tv.data.impl.ScheduleImpl.TimeSlot;
 import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.User;
@@ -13,7 +14,7 @@ import it.univaq.guida.tv.data.model.User;
  *
  * @author Matteo
  */
-public interface FavouriteChannels {
+public interface FavouriteChannels extends DataItem<Integer>{
 
     Channel getChannel();
 

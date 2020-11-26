@@ -5,6 +5,7 @@
  */
 package it.univaq.guida.tv.data.model;
 
+import it.univaq.framework.data.DataItem;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
  *
  * @author Matteo
  */
-public interface SavedSearches {
+public interface SavedSearches extends DataItem<Integer> {
 
     int getChannel();
 

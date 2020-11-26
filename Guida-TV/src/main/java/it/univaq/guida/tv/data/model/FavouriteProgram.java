@@ -5,6 +5,7 @@
  */
 package it.univaq.guida.tv.data.model;
 
+import it.univaq.framework.data.DataItem;
 import it.univaq.guida.tv.data.impl.ScheduleImpl;
 import it.univaq.guida.tv.data.model.Program;
 
@@ -12,7 +13,7 @@ import it.univaq.guida.tv.data.model.Program;
  *
  * @author giorg
  */
-public interface FavouriteProgram {
+public interface FavouriteProgram extends DataItem<Integer>{
 
     Program getProgram();
 

@@ -5,11 +5,13 @@
  */
 package it.univaq.guida.tv.data.model;
 
+import it.univaq.framework.data.DataItem;
+
 /**
  *
  * @author Matteo
  */
-public interface User {
+public interface User extends DataItem<Integer>{
 
     Boolean getConfirmed();
 

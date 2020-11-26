@@ -5,6 +5,7 @@
  */
 package it.univaq.guida.tv.data.model;
 
+import it.univaq.framework.data.DataItem;
 import it.univaq.guida.tv.data.impl.ImageImpl;
 import it.univaq.guida.tv.data.impl.ImageImpl;
 import it.univaq.guida.tv.data.impl.ProgramImpl.Genre;
@@ -14,15 +15,11 @@ import java.util.ArrayList;
  *
  * @author giorg
  */
-public interface Program {
-    
-    
+public interface Program extends DataItem<Integer> {
 
     String getDescription();
 
     Genre getGenre();
-
-    Integer getId();
 
     ImageImpl getImage();
 
@@ -40,8 +37,6 @@ public interface Program {
     void setDescription(String description);
 
     void setGenre(Genre genre);
-
-    void setId(Integer id);
 
     void setImage(ImageImpl image);
 
