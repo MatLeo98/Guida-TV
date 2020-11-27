@@ -5,6 +5,7 @@
  */
 package it.univaq.guida.tv.data.dao;
 
+import it.univaq.framework.data.DataException;
 import it.univaq.guida.tv.data.model.FavouriteChannels;
 import it.univaq.guida.tv.data.model.User;
 import java.util.List;
@@ -17,7 +18,7 @@ public interface FavouriteChannelsDAO {
     
     FavouriteChannels createFavouriteChannel();
     
-    List<FavouriteChannels> getFavouriteChannels(User user);
+    List<FavouriteChannels> getFavouriteChannels(User user) throws DataException;
     
     void deleteFavouriteChannel();
     

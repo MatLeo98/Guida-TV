@@ -5,6 +5,7 @@
  */
 package it.univaq.guida.tv.data.dao;
 
+import it.univaq.framework.data.DataException;
 import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Image;
 import it.univaq.guida.tv.data.model.Program;
@@ -18,10 +19,10 @@ public interface ImageDAO {
     
     Image createImage();
 
-    Image getImage(int image_key);
+    Image getImage(int image_key) throws DataException;
 
-    Image getProgramImage(Program program);
+    Image getProgramImage(Program program) throws DataException;
 
-    Image getChannelImage(Channel channel);
+    Image getChannelImage(Channel channel) throws DataException;
     
 }

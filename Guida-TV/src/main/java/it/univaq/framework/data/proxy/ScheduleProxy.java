@@ -62,7 +62,11 @@ public class ScheduleProxy extends ScheduleImpl implements DataItemProxy{
     @Override
     public Episode getEpisode() {
         if (super.getEpisode() == null && episode_key > 0) {
-            super.setEpisode(((EpisodeDAO) dataLayer.getDAO(Episode.class)).getEpisode(episode_key));
+            try {
+                super.setEpisode(((EpisodeDAO) dataLayer.getDAO(Episode.class)).getEpisode(episode_key));
+            } catch (DataException ex) {
+                Logger.getLogger(ScheduleProxy.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         return super.getEpisode();
@@ -77,7 +81,11 @@ public class ScheduleProxy extends ScheduleImpl implements DataItemProxy{
     @Override
     public Program getProgram() {
         if (super.getProgram() == null && program_key > 0) {
-            super.setProgram(((ProgramDAO) dataLayer.getDAO(Program.class)).getProgram(program_key));
+            try {
+                super.setProgram(((ProgramDAO) dataLayer.getDAO(Program.class)).getProgram(program_key));
+            } catch (DataException ex) {
+                Logger.getLogger(ScheduleProxy.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         return super.getProgram();
@@ -92,7 +100,11 @@ public class ScheduleProxy extends ScheduleImpl implements DataItemProxy{
     @Override
     public Channel getChannel() {
         if (super.getChannel() == null && channel_key > 0) {
-            super.setChannel(((ChannelDAO) dataLayer.getDAO(Channel.class)).getChannel(channel_key));
+            try {
+                super.setChannel(((ChannelDAO) dataLayer.getDAO(Channel.class)).getChannel(channel_key));
+            } catch (DataException ex) {
+                Logger.getLogger(ScheduleProxy.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         return super.getChannel();

@@ -5,6 +5,7 @@
  */
 package it.univaq.guida.tv.data.dao;
 
+import it.univaq.framework.data.DataException;
 import it.univaq.guida.tv.data.model.User;
 
 /**
@@ -15,9 +16,9 @@ public interface UserDAO {
     
     User createUser();
     
-    User getUser(String userEmail);
+    User getUser(String userEmail) throws DataException;
     
-    User storeUser(User user);
+    User storeUser(User user) throws DataException;
     
     //login
     

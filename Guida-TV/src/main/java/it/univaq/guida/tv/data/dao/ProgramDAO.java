@@ -5,6 +5,7 @@
  */
 package it.univaq.guida.tv.data.dao;
 
+import it.univaq.framework.data.DataException;
 import it.univaq.guida.tv.data.impl.ProgramImpl.Genre;
 import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.Program;
@@ -19,19 +20,19 @@ public interface ProgramDAO {
     
     Program createProgram();
 
-    Program getProgram(int programId);
+    Program getProgram(int programId) throws DataException;
     
-    Program getProgramByEpisode(Episode episode);
+    Program getProgramByEpisode(Episode episode) throws DataException;
     
-    List<Program> getProgramsByGenre(Genre genre);
+    List<Program> getProgramsByGenre(Genre genre) throws DataException;
     
-    List<Program> getProgramsLikeTitolo(String titolo);
+    List<Program> getProgramsLikeTitolo(String titolo) throws DataException;
 
-    List<Program> getPrograms();
+    List<Program> getPrograms() throws DataException;
 
-    List<Program> getTvSeries();
+    List<Program> getTvSeries() throws DataException;
 
-    void storeProgram(Program program);
+    void storeProgram(Program program) throws DataException;
     
     void deleteProgram(Program program);
     

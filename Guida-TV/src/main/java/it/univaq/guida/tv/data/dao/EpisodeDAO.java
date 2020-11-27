@@ -5,6 +5,7 @@
  */
 package it.univaq.guida.tv.data.dao;
 
+import it.univaq.framework.data.DataException;
 import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.Program;
 import java.time.LocalDate;
@@ -18,11 +19,11 @@ public interface EpisodeDAO {
     
     Episode createEpisode();
 
-    Episode getEpisode(int episodeId);
+    Episode getEpisode(int episodeId) throws DataException;
 
-    List<Episode> getProgramEpisodes(Program program);
+    List<Episode> getProgramEpisodes(Program program) throws DataException;
     
-    List<Episode> getLastMonthEpisodes(Program program);
+    List<Episode> getLastMonthEpisodes(Program program) throws DataException;
     
     void deleteEpisode(Episode episode);
     

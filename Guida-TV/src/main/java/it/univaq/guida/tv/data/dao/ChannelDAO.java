@@ -5,6 +5,7 @@
  */
 package it.univaq.guida.tv.data.dao;
 
+import it.univaq.framework.data.DataException;
 import it.univaq.guida.tv.data.model.Channel;
 import java.util.List;
 
@@ -16,11 +17,11 @@ public interface ChannelDAO {
     
     Channel createChannel();
     
-    Channel getChannel (int num);
+    Channel getChannel (int num) throws DataException;
     
-    List<Channel> getChannels();
+    List<Channel> getChannels() throws DataException;
     
-    void storeChannel (Channel channel);
+    void storeChannel (Channel channel) throws DataException;
     
     void deleteChannel();
     

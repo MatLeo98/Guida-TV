@@ -5,6 +5,7 @@
  */
 package it.univaq.guida.tv.data.dao;
 
+import it.univaq.framework.data.DataException;
 import it.univaq.guida.tv.data.impl.ScheduleImpl.TimeSlot;
 import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Episode;
@@ -22,25 +23,25 @@ public interface ScheduleDAO {
     
     Schedule createSchedule();
 
-    Schedule getSchedule(int scheduleId);
+    Schedule getSchedule(int scheduleId) throws DataException;
     
-    Schedule getScheduleByProgram(Program program);
+    Schedule getScheduleByProgram(Program program) throws DataException;
     
-    Schedule getScheduleByEpisode(Episode episode);
+    Schedule getScheduleByEpisode(Episode episode) throws DataException;
     
-    List<Schedule> getOnAirPrograms();
+    List<Schedule> getOnAirPrograms() throws DataException;
 
-    List<Schedule> getScheduleByDate(LocalDate date);
+    List<Schedule> getScheduleByDate(LocalDate date) throws DataException;
 
-    List<Schedule> getScheduleByTimeSlot(TimeSlot timeslot);
+    List<Schedule> getScheduleByTimeSlot(TimeSlot timeslot) throws DataException;
 
-    List<Schedule> getScheduleByChannel(Channel channel, LocalDate date); //get palinsesto per una certa data, lo usiamo anche per la data odierna
+    List<Schedule> getScheduleByChannel(Channel channel, LocalDate date) throws DataException; //get palinsesto per una certa data, lo usiamo anche per la data odierna
     
-    List<Schedule> getScheduleBetweenDates(LocalDate startDate, LocalDate endDate);
+    List<Schedule> getScheduleBetweenDates(LocalDate startDate, LocalDate endDate) throws DataException;
     
-    List<Schedule> getScheduleBetweenTimes(LocalDateTime startTime, LocalDateTime endTime);
+    List<Schedule> getScheduleBetweenTimes(LocalDateTime startTime, LocalDateTime endTime) throws DataException;
 
-    void storeSchedule(Schedule schedule);
+    void storeSchedule(Schedule schedule) throws DataException;
     
     void deleteSchedule(Schedule schedule);
     

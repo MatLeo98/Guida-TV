@@ -5,6 +5,7 @@
  */
 package it.univaq.framework.data.proxy;
 
+import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
 import it.univaq.guida.tv.data.dao.ImageDAO;
@@ -12,6 +13,8 @@ import it.univaq.guida.tv.data.impl.ProgramImpl;
 import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.Image;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -64,7 +67,11 @@ public class ProgramProxy  extends ProgramImpl implements DataItemProxy{
     @Override
     public Image getImage() {
         if (super.getImage() == null) {
-            super.setImage(((ImageDAO) dataLayer.getDAO(Image.class)).getProgramImage(this));
+            try {
+                super.setImage(((ImageDAO) dataLayer.getDAO(Image.class)).getProgramImage(this));
+            } catch (DataException ex) {
+                Logger.getLogger(ProgramProxy.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return super.getImage();
     }

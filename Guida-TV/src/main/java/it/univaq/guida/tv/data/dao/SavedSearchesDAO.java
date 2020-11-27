@@ -5,6 +5,7 @@
  */
 package it.univaq.guida.tv.data.dao;
 
+import it.univaq.framework.data.DataException;
 import it.univaq.guida.tv.data.model.SavedSearches;
 import it.univaq.guida.tv.data.model.User;
 import java.util.List;
@@ -17,7 +18,7 @@ public interface SavedSearchesDAO {
     
     SavedSearches createSavedSearch();
     
-    List<SavedSearches> getSavedSearches (User user);
+    List<SavedSearches> getSavedSearches (User user) throws DataException;
     
     void deleteSavedSearch();
     
