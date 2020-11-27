@@ -5,11 +5,14 @@
  */
 package it.univaq.framework.data.proxy;
 
+import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
 import it.univaq.guida.tv.data.dao.ImageDAO;
 import it.univaq.guida.tv.data.impl.ChannelImpl;
 import it.univaq.guida.tv.data.model.Image;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -41,7 +44,11 @@ public class ChannelProxy extends ChannelImpl implements DataItemProxy{
     @Override
     public Image getImage() {
         if (super.getImage() == null) {
-            super.setImage(((ImageDAO) dataLayer.getDAO(Image.class)).getChannelImage(this));
+            try {
+                super.setImage(((ImageDAO) dataLayer.getDAO(Image.class)).getChannelImage(this));
+            } catch (DataException ex) {
+                Logger.getLogger(ChannelProxy.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return super.getImage();
     }

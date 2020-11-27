@@ -5,6 +5,7 @@
  */
 package it.univaq.framework.data.proxy;
 
+import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
 import it.univaq.guida.tv.data.dao.EpisodeDAO;
@@ -15,6 +16,8 @@ import it.univaq.guida.tv.data.impl.ScheduleImpl;
 import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.Program;
 import it.univaq.guida.tv.data.model.User;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -55,7 +58,11 @@ public class FavouriteProgramProxy extends FavouriteProgramImpl implements DataI
     @Override
     public User getUser() {
         if (super.getUser() == null && !(user_key.equals(""))) {
-            super.setUser(((UserDAO) dataLayer.getDAO(User.class)).getUser(user_key));
+            try {
+                super.setUser(((UserDAO) dataLayer.getDAO(User.class)).getUser(user_key));
+            } catch (DataException ex) {
+                Logger.getLogger(FavouriteProgramProxy.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         return super.getUser();
@@ -70,7 +77,11 @@ public class FavouriteProgramProxy extends FavouriteProgramImpl implements DataI
     @Override
     public Program getProgram() {
         if (super.getProgram() == null && program_key > 0) {
-            super.setProgram(((ProgramDAO) dataLayer.getDAO(Program.class)).getProgram(program_key));
+            try {
+                super.setProgram(((ProgramDAO) dataLayer.getDAO(Program.class)).getProgram(program_key));
+            } catch (DataException ex) {
+                Logger.getLogger(FavouriteProgramProxy.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         return super.getProgram();

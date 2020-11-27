@@ -5,6 +5,7 @@
  */
 package it.univaq.framework.data.proxy;
 
+import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
 import it.univaq.guida.tv.data.dao.UserDAO;
@@ -12,6 +13,8 @@ import it.univaq.guida.tv.data.impl.SavedSearchesImpl;
 import it.univaq.guida.tv.data.model.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -39,7 +42,11 @@ public class SavedSearchesProxy extends SavedSearchesImpl implements DataItemPro
     @Override
     public User getUser() {
         if (super.getUser() == null) {
-            super.setUser(((UserDAO) dataLayer.getDAO(User.class)).getUser(user_key));
+            try {
+                super.setUser(((UserDAO) dataLayer.getDAO(User.class)).getUser(user_key));
+            } catch (DataException ex) {
+                Logger.getLogger(SavedSearchesProxy.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return super.getUser();
     }

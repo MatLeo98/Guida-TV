@@ -5,6 +5,7 @@
  */
 package it.univaq.framework.data.proxy;
 
+import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
 import it.univaq.guida.tv.data.dao.ChannelDAO;
@@ -13,6 +14,8 @@ import it.univaq.guida.tv.data.impl.FavouriteChannelImpl;
 import it.univaq.guida.tv.data.impl.ScheduleImpl;
 import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.User;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -42,7 +45,11 @@ public class FavouriteChannelProxy extends FavouriteChannelImpl implements DataI
     @Override
     public Channel getChannel() {
         if (super.getChannel() == null) {
-            super.setChannel(((ChannelDAO) dataLayer.getDAO(Channel.class)).getChannel(channel_key));
+            try {
+                super.setChannel(((ChannelDAO) dataLayer.getDAO(Channel.class)).getChannel(channel_key));
+            } catch (DataException ex) {
+                Logger.getLogger(FavouriteChannelProxy.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return super.getChannel();
     }
@@ -56,7 +63,11 @@ public class FavouriteChannelProxy extends FavouriteChannelImpl implements DataI
     @Override
     public User getUser() {
         if (super.getUser() == null) {
-            super.setUser(((UserDAO) dataLayer.getDAO(User.class)).getUser(user_key));
+            try {
+                super.setUser(((UserDAO) dataLayer.getDAO(User.class)).getUser(user_key));
+            } catch (DataException ex) {
+                Logger.getLogger(FavouriteChannelProxy.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return super.getUser();
     }
