@@ -44,7 +44,7 @@ public class FavouriteChannelProxy extends FavouriteChannelImpl implements DataI
 
     @Override
     public Channel getChannel() {
-        if (super.getChannel() == null) {
+        if (super.getChannel() == null && channel_key > 0) {
             try {
                 super.setChannel(((ChannelDAO) dataLayer.getDAO(Channel.class)).getChannel(channel_key));
             } catch (DataException ex) {
@@ -62,7 +62,7 @@ public class FavouriteChannelProxy extends FavouriteChannelImpl implements DataI
 
     @Override
     public User getUser() {
-        if (super.getUser() == null) {
+        if (super.getUser() == null && !(user_key.equals(""))) {
             try {
                 super.setUser(((UserDAO) dataLayer.getDAO(User.class)).getUser(user_key));
             } catch (DataException ex) {

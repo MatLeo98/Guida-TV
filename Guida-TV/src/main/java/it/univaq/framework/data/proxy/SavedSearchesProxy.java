@@ -41,7 +41,7 @@ public class SavedSearchesProxy extends SavedSearchesImpl implements DataItemPro
 
     @Override
     public User getUser() {
-        if (super.getUser() == null) {
+        if (super.getUser() == null && !(user_key.equals(""))) {
             try {
                 super.setUser(((UserDAO) dataLayer.getDAO(User.class)).getUser(user_key));
             } catch (DataException ex) {

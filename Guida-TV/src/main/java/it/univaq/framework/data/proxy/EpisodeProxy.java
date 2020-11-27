@@ -43,7 +43,11 @@ public class EpisodeProxy extends EpisodeImpl implements DataItemProxy{
     public Program getProgram() {
        
         if (super.getProgram() == null && program_key > 0) {
-            super.setProgram(((ProgramDAO) dataLayer.getDAO(Program.class)).getProgram(program_key));
+            try {
+                super.setProgram(((ProgramDAO) dataLayer.getDAO(Program.class)).getProgram(program_key));
+            } catch (DataException ex) {
+                Logger.getLogger(EpisodeProxy.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
        
         return super.getProgram();
