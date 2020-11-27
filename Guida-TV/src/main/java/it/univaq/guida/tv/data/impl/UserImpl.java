@@ -7,7 +7,11 @@
 package it.univaq.guida.tv.data.impl;
 
 import it.univaq.framework.data.DataItemImpl;
+import it.univaq.guida.tv.data.model.FavouriteProgram;
+import it.univaq.guida.tv.data.model.SavedSearches;
 import it.univaq.guida.tv.data.model.User;
+import java.util.List;
+import it.univaq.guida.tv.data.model.FavouriteChannel;
 
 /**
  *
@@ -19,6 +23,9 @@ public class UserImpl extends DataItemImpl<String> implements User {
     private String password;
     private Boolean confirmed;
     private Boolean newsletter;
+    List<SavedSearches> savedSearches;
+    List<FavouriteChannel> favouriteChannels;
+    List<FavouriteProgram> favouritePrograms;
 
     public UserImpl(){
 
@@ -68,6 +75,51 @@ public class UserImpl extends DataItemImpl<String> implements User {
     @Override
     public void setNewsletter(Boolean newsletter) {
         this.newsletter = newsletter;
+    }
+    
+    @Override
+    public void addSavedSearch(SavedSearches savedSearch){
+        this.savedSearches.add(savedSearch);
+    }
+
+    @Override
+    public List<SavedSearches> getSavedSearches() {
+        return savedSearches;
+    }
+
+    @Override
+    public void setSavedSearches(List<SavedSearches> savedSearches) {
+        this.savedSearches = savedSearches;
+    }
+    
+    @Override
+    public void addFavouriteChannel(FavouriteChannel favouriteChannel){
+        this.favouriteChannels.add(favouriteChannel);
+    }
+
+    @Override
+    public List<FavouriteChannel> getFavouriteChannels() {
+        return favouriteChannels;
+    }
+
+    @Override
+    public void setFavouriteChannels(List<FavouriteChannel> favouriteChannels) {
+        this.favouriteChannels = favouriteChannels;
+    }
+    
+    @Override
+    public void addFavouriteProgram(FavouriteProgram favouriteProgram){
+        this.favouritePrograms.add(favouriteProgram);
+    }
+
+    @Override
+    public List<FavouriteProgram> getFavouriteProgram() {
+        return favouritePrograms;
+    }
+
+    @Override
+    public void setFavouriteProgram(List<FavouriteProgram> favouriteProgram) {
+        this.favouritePrograms = favouriteProgram;
     }
 
 }

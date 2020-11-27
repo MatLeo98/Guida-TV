@@ -7,21 +7,21 @@ package it.univaq.guida.tv.data.impl;
 
 import it.univaq.framework.data.DataItemImpl;
 import it.univaq.guida.tv.data.impl.ScheduleImpl.TimeSlot;
-import it.univaq.guida.tv.data.model.FavouriteChannels;
 import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.User;
+import it.univaq.guida.tv.data.model.FavouriteChannel;
 
 /**
  *
  * @author Matteo
  */
-public class FavouriteChannelsImpl extends DataItemImpl<Integer> implements FavouriteChannels {
+public class FavouriteChannelImpl extends DataItemImpl<Integer> implements FavouriteChannel {
     
     private TimeSlot timeSlot;
     private User user;
     private Channel channel;
 
-    public FavouriteChannelsImpl() {
+    public FavouriteChannelImpl() {
         super();
         this.timeSlot = null;
         this.user = null;

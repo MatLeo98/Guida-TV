@@ -14,7 +14,7 @@ import it.univaq.guida.tv.data.model.User;
  *
  * @author Matteo
  */
-public interface FavouriteChannels extends DataItem<Integer>{
+public interface FavouriteChannel extends DataItem<Integer>{
 
     Channel getChannel();
 
