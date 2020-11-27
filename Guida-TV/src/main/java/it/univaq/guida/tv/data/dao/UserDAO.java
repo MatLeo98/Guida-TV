@@ -15,6 +15,8 @@ public interface UserDAO {
     
     User createUser();
     
+    User getUser(String userEmail);
+    
     User storeUser(User user);
     
     //login

@@ -5,6 +5,7 @@
  */
 package it.univaq.guida.tv.data.dao;
 
+import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.FavouriteProgram;
 import it.univaq.guida.tv.data.model.User;
 import java.util.List;

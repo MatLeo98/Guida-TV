@@ -5,7 +5,9 @@
  */
 package it.univaq.guida.tv.data.model;
 
+import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItem;
+import java.io.InputStream;
 
 /**
  *
@@ -20,6 +22,8 @@ public interface Image extends DataItem<Integer> {
     long getImageSize();
 
     String getImageType();
+    
+    InputStream getImageData() throws DataException;
 
     void setCaption(String caption);
 
@@ -28,5 +32,8 @@ public interface Image extends DataItem<Integer> {
     void setImageSize(long imageSize);
 
     void setImageType(String imageType);
+    
+    void setImageData(InputStream is) throws DataException;
+    
     
 }
