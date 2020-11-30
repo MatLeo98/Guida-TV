@@ -4,9 +4,25 @@
         <servlet-name>BaseController</servlet-name>
         <servlet-class>it.univaq.framework.controller.BaseController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ListChannels</servlet-name>
+        <servlet-class>it.univaq.framework.controller.ListChannels</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Lista</servlet-name>
+        <servlet-class>it.univaq.framework.controller.Lista</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>BaseController</servlet-name>
         <url-pattern>/base</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ListChannels</servlet-name>
+        <url-pattern>/channels</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Lista</servlet-name>
+        <url-pattern>/lista</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

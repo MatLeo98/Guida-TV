@@ -5,6 +5,8 @@
  */
 package it.univaq.framework.controller;
 
+
+import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.annotation.Resource;
@@ -18,36 +20,29 @@ import javax.sql.DataSource;
  *
  * @author giorg
  */
-public class BaseController extends HttpServlet {
+public abstract class BaseController extends HttpServlet {
     
     @Resource(name = "jdbc/guidatv")
     private DataSource ds;
 
     
     
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet BaseController</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet BaseController at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+    protected abstract void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException;
+
+    private void processBaseRequest(HttpServletRequest request, HttpServletResponse response) {
+        //WARNING: never declare DB-related objects including references to Connection and Statement (as our data layer)
+        //as class variables of a servlet. Since servlet instances are reused, concurrent requests may conflict on such
+        //variables leading to unexpected results. To always have different connections and statements on a per-request
+        //(i.e., per-thread) basis, declare them in the doGet, doPost etc. (or in methods called by them) and 
+        //(possibly) pass such variables through the request.
+        try (GuidatvDataLayer datalayer = new GuidatvDataLayer(ds)) {
+            datalayer.init();
+            request.setAttribute("datalayer", datalayer);
+            processRequest(request, response);
+        } catch (Exception ex) {
+            ex.printStackTrace(); //for debugging only
+            /*(new FailureResult(getServletContext())).activate(
+                    (ex.getMessage() != null || ex.getCause() == null) ? ex.getMessage() : ex.getCause().getMessage(), request, response);*/
         }
     }
 
@@ -63,7 +58,7 @@ public class BaseController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        processBaseRequest(request, response);
     }
 
     /**
@@ -77,7 +72,7 @@ public class BaseController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        processBaseRequest(request, response);
     }
 
     /**
