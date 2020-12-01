@@ -119,7 +119,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
                 throw new DataException("Unable to load article by ID", ex);
             }
         }
-        return a;
+        return schedule;
     }
 
     @Override
@@ -206,8 +206,6 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             throw new DataException("Unable to load articles by issue", ex);
         }
         return result; 
-    }
-    
-   
-    
+    }   
 }
+
