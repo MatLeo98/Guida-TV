@@ -103,7 +103,32 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
 
     @Override
     public List<Channel> getChannels() throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Channel> result = new ArrayList();
+
+        try {
+            //sArticlesByIssue.setInt(1, issue.getKey());            
+            try (ResultSet rs = s.executeQuery()) {
+                while (rs.next()) {
+                     Channel candidatura = new ChannelImpl();
+					candidatura.setKey(rs.getInt("id"));
+					candidatura.setName(rs.getString("name"));
+                                        Image image = new ImageImpl();
+					candidatura.setImage(image);
+					candidatura.setVersion(1);
+					
+					
+            result.add(candidatura);
+                    //result.add((Channel) rs);
+                }
+            }
+        } catch (SQLException ex) {
+            try {
+                throw new DataException("Unable to load articles by issue", ex);
+            } catch (DataException ex1) {
+                Logger.getLogger(ChannelDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+        return result;
     }
 
     @Override
