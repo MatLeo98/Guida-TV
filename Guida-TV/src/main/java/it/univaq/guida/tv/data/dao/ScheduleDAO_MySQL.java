@@ -8,16 +8,23 @@ package it.univaq.guida.tv.data.dao;
 import it.univaq.framework.data.DAO;
 import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataLayer;
+import it.univaq.guida.tv.data.impl.ChannelImpl;
+import it.univaq.guida.tv.data.impl.ProgramImpl;
 import it.univaq.guida.tv.data.impl.ScheduleImpl;
+import it.univaq.guida.tv.data.impl.ScheduleImpl.TimeSlot;
 import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.Program;
 import it.univaq.guida.tv.data.model.Schedule;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,7 +32,7 @@ import java.util.List;
  */
 public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     
-    private PreparedStatement s;
+    private PreparedStatement sOnAirPrograms;
 
     public ScheduleDAO_MySQL(DataLayer d) {
         super(d);
@@ -38,7 +45,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
 
             //precompiliamo tutte le query utilizzate nella classe
             //precompile all the queries uses in this class
-            //s = connection.prepareStatement("SELECT * FROM episode");
+            sOnAirPrograms = connection.prepareStatement("SELECT * FROM schedule WHERE ? > startTime && ? < endTime");
             
 
         } catch (SQLException ex) {
@@ -52,7 +59,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
         //also closing PreparedStamenents is a good practice...
         try {
 
-            s.close();
+            sOnAirPrograms.close();
 
 
         } catch (SQLException ex) {
@@ -83,7 +90,32 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
 
     @Override
     public List<Schedule> getOnAirPrograms() throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Schedule> result = new ArrayList();
+                       
+            try (ResultSet rs = sOnAirPrograms.executeQuery()) {
+                while (rs.next()) {
+                     Schedule schedule = new ScheduleImpl();
+					schedule.setKey(rs.getInt("idSchedule"));
+					schedule.setStartTime(rs.getDate("starTime"));
+                                        schedule.setEndTime(rs.getDate("endTime"));
+                                        schedule.setDate(rs.getDate("date"));
+                                        schedule.setTimeslot(TimeSlot.valueOf(rs.getString("timeSlot")));
+                                        Program program = new ProgramImpl();
+					schedule.setProgram(program);
+                                        Channel channel = new ChannelImpl();
+                                        schedule.setChannel(channel);
+                                        schedule.setVersion(1);
+					
+            result.add(schedule);
+            }
+        } catch (SQLException ex) {
+            try {
+                throw new DataException("Unable to load articles by issue", ex);
+            } catch (DataException ex1) {
+                Logger.getLogger(EpisodeDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+        return result;
     }
 
     @Override

@@ -10,8 +10,8 @@ import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Schedule;
 import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.Program;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  *
@@ -19,9 +19,9 @@ import java.time.LocalDateTime;
  */
 public class ScheduleImpl extends DataItemImpl<Integer> implements Schedule {
 
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private LocalDate date;
+    private Date startTime;
+    private Date endTime;
+    private Date date;
     private TimeSlot timeslot;
     
     private Channel channel;
@@ -48,32 +48,32 @@ public class ScheduleImpl extends DataItemImpl<Integer> implements Schedule {
     }
 
     @Override
-    public LocalDateTime getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
     @Override
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
     @Override
-    public LocalDateTime getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
     @Override
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 
     @Override
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
     @Override
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

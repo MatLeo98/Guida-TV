@@ -85,13 +85,7 @@ public class ListChannels extends BaseController {
             Logger.getLogger(ListChannels.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private void action_program(HttpServletRequest request, HttpServletResponse response){
-    
-        response.setContentType("text/html;charset=UTF-8");
-        
-        
-    }
+
 }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
