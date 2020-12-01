@@ -13,6 +13,8 @@ import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.Program;
 import it.univaq.guida.tv.data.model.Schedule;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,9 +24,41 @@ import java.util.List;
  * @author Matteo
  */
 public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
+    
+    private PreparedStatement s;
 
     public ScheduleDAO_MySQL(DataLayer d) {
         super(d);
+    }
+    
+    @Override
+    public void init() throws DataException {
+        try {
+            super.init();
+
+            //precompiliamo tutte le query utilizzate nella classe
+            //precompile all the queries uses in this class
+            //s = connection.prepareStatement("SELECT * FROM episode");
+            
+
+        } catch (SQLException ex) {
+            throw new DataException("Error initializing newspaper data layer", ex);
+        }
+    }
+    
+    @Override
+    public void destroy() throws DataException {
+        //anche chiudere i PreparedStamenent � una buona pratica...
+        //also closing PreparedStamenents is a good practice...
+        try {
+
+            s.close();
+
+
+        } catch (SQLException ex) {
+            //
+        }
+        super.destroy();
     }
 
     @Override
