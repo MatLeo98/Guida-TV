@@ -17,6 +17,7 @@ import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.Program;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -117,19 +118,19 @@ public class ScheduleProxy extends ScheduleImpl implements DataItemProxy{
     }
 
     @Override
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         super.setDate(date); 
         this.modified = true;
     }
 
     @Override
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(Date endTime) {
         super.setEndTime(endTime); 
         this.modified = true;
     }
 
     @Override
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(Date startTime) {
         super.setStartTime(startTime); 
         this.modified = true;
     }

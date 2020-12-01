@@ -6,11 +6,13 @@
 package it.univaq.guida.tv.data.dao;
 
 import it.univaq.framework.data.DataException;
+import it.univaq.framework.data.proxy.ScheduleProxy;
 import it.univaq.guida.tv.data.impl.ScheduleImpl.TimeSlot;
 import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.Program;
 import it.univaq.guida.tv.data.model.Schedule;
+import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,7 +23,9 @@ import java.util.List;
  */
 public interface ScheduleDAO {
     
-    Schedule createSchedule();
+    public ScheduleProxy createSchedule();
+    
+    Schedule createSchedule(ResultSet rs) throws DataException;
 
     Schedule getSchedule(int scheduleId) throws DataException;
     
@@ -34,8 +38,10 @@ public interface ScheduleDAO {
     List<Schedule> getScheduleByDate(LocalDate date) throws DataException;
 
     List<Schedule> getScheduleByTimeSlot(TimeSlot timeslot) throws DataException;
+    
+    List<Schedule> getTodaySchedule() throws DataException;
 
-    List<Schedule> getScheduleByChannel(Channel channel, LocalDate date) throws DataException; //get palinsesto per una certa data, lo usiamo anche per la data odierna
+    List<Schedule> getScheduleByChannel(Channel channel, LocalDate date) throws DataException; 
     
     List<Schedule> getScheduleBetweenDates(LocalDate startDate, LocalDate endDate) throws DataException;
     

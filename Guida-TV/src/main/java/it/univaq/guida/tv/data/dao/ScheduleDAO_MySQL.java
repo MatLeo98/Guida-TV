@@ -8,8 +8,7 @@ package it.univaq.guida.tv.data.dao;
 import it.univaq.framework.data.DAO;
 import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataLayer;
-import it.univaq.guida.tv.data.impl.ChannelImpl;
-import it.univaq.guida.tv.data.impl.ProgramImpl;
+import it.univaq.framework.data.proxy.ScheduleProxy;
 import it.univaq.guida.tv.data.impl.ScheduleImpl;
 import it.univaq.guida.tv.data.impl.ScheduleImpl.TimeSlot;
 import it.univaq.guida.tv.data.model.Channel;
@@ -33,6 +32,8 @@ import java.util.logging.Logger;
 public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     
     private PreparedStatement sOnAirPrograms;
+    private PreparedStatement todaySchedule;
+    private PreparedStatement scheduleByID;
 
     public ScheduleDAO_MySQL(DataLayer d) {
         super(d);
@@ -46,6 +47,9 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             //precompiliamo tutte le query utilizzate nella classe
             //precompile all the queries uses in this class
             sOnAirPrograms = connection.prepareStatement("SELECT * FROM schedule WHERE ? > startTime && ? < endTime");
+            //s = connection.prepareStatement("SELECT * FROM episode");
+            todaySchedule = connection.prepareStatement("SELECT * FROM schedule WHERE date = CURDATE()");
+            scheduleByID = connection.prepareStatement("SELECT * FROM schedule WHERE ID=?");
             
 
         } catch (SQLException ex) {
@@ -67,15 +71,55 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
         }
         super.destroy();
     }
+    
+    @Override
+    public ScheduleProxy createSchedule() {
+        return new ScheduleProxy(getDataLayer());
+    }
 
     @Override
-    public Schedule createSchedule() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ScheduleProxy createSchedule(ResultSet rs) throws DataException{
+        ScheduleProxy schedule = createSchedule();
+        try {
+            schedule.setKey(rs.getInt("idSchedule"));
+            schedule.setStartTime(rs.getDate("starTime"));
+            schedule.setEndTime(rs.getDate("endTime"));
+            schedule.setDate(rs.getDate("date"));
+            schedule.setTimeslot(TimeSlot.valueOf(rs.getString("timeSlot")));
+            schedule.setProgramKey(rs.getInt("programId"));
+            schedule.setChannelKey(rs.getInt("channelId"));
+            schedule.setVersion(rs.getInt("version"));
+        } catch (SQLException ex) {
+            throw new DataException("Unable to create article object form ResultSet", ex);
+        }
+        return schedule;
     }
 
     @Override
     public Schedule getSchedule(int scheduleId) throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         Schedule schedule = null;
+        //prima vediamo se l'oggetto è già stato caricato
+        //first look for this object in the cache
+        if (dataLayer.getCache().has(Schedule.class, scheduleId)) {
+            schedule = dataLayer.getCache().get(Schedule.class, scheduleId);
+        } else {
+            //altrimenti lo carichiamo dal database
+            //otherwise load it from database
+            try {
+                scheduleByID.setInt(1, scheduleId);
+                try (ResultSet rs = scheduleByID.executeQuery()) {
+                    if (rs.next()) {
+                        schedule = createSchedule(rs);
+                        //e lo mettiamo anche nella cache
+                        //and put it also in the cache
+                        dataLayer.getCache().add(Schedule.class, schedule);
+                    }
+                }
+            } catch (SQLException ex) {
+                throw new DataException("Unable to load article by ID", ex);
+            }
+        }
+        return a;
     }
 
     @Override
@@ -94,19 +138,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
                        
             try (ResultSet rs = sOnAirPrograms.executeQuery()) {
                 while (rs.next()) {
-                     Schedule schedule = new ScheduleImpl();
-					schedule.setKey(rs.getInt("idSchedule"));
-					schedule.setStartTime(rs.getDate("starTime"));
-                                        schedule.setEndTime(rs.getDate("endTime"));
-                                        schedule.setDate(rs.getDate("date"));
-                                        schedule.setTimeslot(TimeSlot.valueOf(rs.getString("timeSlot")));
-                                        Program program = new ProgramImpl();
-					schedule.setProgram(program);
-                                        Channel channel = new ChannelImpl();
-                                        schedule.setChannel(channel);
-                                        schedule.setVersion(1);
-					
-            result.add(schedule);
+                     result.add((Schedule) getSchedule(rs.getInt("idSchedule")));
             }
         } catch (SQLException ex) {
             try {
@@ -117,7 +149,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
         }
         return result;
     }
-
+    
     @Override
     public List<Schedule> getScheduleByDate(LocalDate date) throws DataException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -151,6 +183,29 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     @Override
     public void deleteSchedule(Schedule schedule) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Schedule> getTodaySchedule() throws DataException {
+       List<Schedule> result = new ArrayList();
+            
+        try (ResultSet rs = todaySchedule.executeQuery()) {
+                while (rs.next()) {
+                    //la query  estrae solo gli ID degli articoli selezionati
+                    //poi sarà getArticle che, con le relative query, popolerà
+                    //gli oggetti corrispondenti. Meno efficiente, ma così la
+                    //logica di creazione degli articoli è meglio incapsulata
+                    //the query extracts only the IDs of the selected articles 
+                    //then getArticle, with its queries, will populate the 
+                    //corresponding objects. Less efficient, but in this way
+                    //article creation logic is better encapsulated
+                    result.add((Schedule) getSchedule(rs.getInt("idSchedule")));
+                }
+        }
+        catch (SQLException ex) {
+            throw new DataException("Unable to load articles by issue", ex);
+        }
+        return result; 
     }
     
    
