@@ -79,15 +79,15 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
             //sArticlesByIssue.setInt(1, issue.getKey());            
             try (ResultSet rs = s.executeQuery()) {
                 while (rs.next()) {
-                     Channel candidatura = new ChannelImpl();
-					candidatura.setKey(rs.getInt("id"));
-					candidatura.setName(rs.getString("name"));
+                     Channel channel = new ChannelImpl();
+					channel.setKey(rs.getInt("id"));
+					channel.setName(rs.getString("name"));
                                         Image image = new ImageImpl();
-					candidatura.setImage(image);
-					candidatura.setVersion(1);
+					channel.setImage(image);
+					channel.setVersion(1);
 					
 					
-            result.add(candidatura);
+            result.add(channel);
                     //result.add((Channel) rs);
                 }
             }

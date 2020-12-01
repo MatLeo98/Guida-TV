@@ -46,8 +46,8 @@ public class ListChannels extends BaseController {
             k = 1;
             
             //request.setAttribute("episode", ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getEpisode(k));
-            request.setAttribute("episode", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(k));
-            action_episode(request, response, k);
+            request.setAttribute("channel", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(k));
+            action_channel(request, response, k);
            
         
             
@@ -63,10 +63,10 @@ public class ListChannels extends BaseController {
        
     }
 
-    private void action_episode(HttpServletRequest request, HttpServletResponse response, int k) {
+    private void action_channel(HttpServletRequest request, HttpServletResponse response, int k) {
         
         //Episode episode = (Episode) request.getAttribute("episode");
-        Channel channel = (Channel) request.getAttribute("episode");
+        Channel channel = (Channel) request.getAttribute("channel");
         /* TODO output your page here. You may use following sample code. */
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
@@ -84,6 +84,13 @@ public class ListChannels extends BaseController {
         } catch (IOException ex) {
             Logger.getLogger(ListChannels.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private void action_program(HttpServletRequest request, HttpServletResponse response){
+    
+        response.setContentType("text/html;charset=UTF-8");
+        
+        
     }
 }
 
