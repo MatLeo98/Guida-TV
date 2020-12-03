@@ -12,6 +12,10 @@
         <servlet-name>Lista</servlet-name>
         <servlet-class>it.univaq.framework.controller.Lista</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ScheduleList</servlet-name>
+        <servlet-class>it.univaq.framework.controller.ScheduleList</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>BaseController</servlet-name>
         <url-pattern>/base</url-pattern>
@@ -23,6 +27,10 @@
     <servlet-mapping>
         <servlet-name>Lista</servlet-name>
         <url-pattern>/lista</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ScheduleList</servlet-name>
+        <url-pattern>/schedules</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
