@@ -66,27 +66,49 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
            return new ProgramProxy(getDataLayer());
     }
     
-    public ProgramProxy createEpisode(ResultSet rs) throws DataException{
-            ProgramProxy episode = createProgram();
+    public ProgramProxy createProgram(ResultSet rs) throws DataException{
+            ProgramProxy program = createProgram();
         try {
-            episode.setKey(rs.getInt("idProgram"));
-            episode.setName(rs.getString("name"));
-            episode.setDescription(rs.getString("description"));
-            episode.setGenre(Genre.valueOf(rs.getString("genre")));
-            episode.setLink(rs.getString("link"));
-            episode.setIsSerie(rs.getBoolean("isSerie"));
-            episode.setSeasonsNumber(rs.getInt("seasonsNumber"));
-            episode.setImageKey(rs.getInt("imageId"));
-            episode.setVersion(rs.getInt("version"));
+            program.setKey(rs.getInt("idProgram"));
+            program.setName(rs.getString("name"));
+            program.setDescription(rs.getString("description"));
+            program.setGenre(Genre.valueOf(rs.getString("genre")));
+            program.setLink(rs.getString("link"));
+            program.setIsSerie(rs.getBoolean("isSerie"));
+            program.setSeasonsNumber(rs.getInt("seasonsNumber"));
+            program.setImageKey(rs.getInt("imageId"));
+            program.setVersion(rs.getInt("version"));
         } catch (SQLException ex) {
-            throw new DataException("Unable to create episode object form ResultSet", ex);
+            throw new DataException("Unable to create program object form ResultSet", ex);
         }
-        return episode;
+        return program;
     }
 
     @Override
     public Program getProgram(int programId) throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       Program program = null;
+        //prima vediamo se l'oggetto è già stato caricato
+        //first look for this object in the cache
+        if (dataLayer.getCache().has(Program.class, programId)) {
+            program = dataLayer.getCache().get(Program.class, programId);
+        } else {
+            //altrimenti lo carichiamo dal database
+            //otherwise load it from database
+            try {
+                programByID.setInt(1, programId);
+                try (ResultSet rs = programByID.executeQuery()) {
+                    if (rs.next()) {
+                        program = createProgram(rs);
+                        //e lo mettiamo anche nella cache
+                        //and put it also in the cache
+                        dataLayer.getCache().add(Program.class, program);
+                    }
+                }
+            } catch (SQLException ex) {
+                throw new DataException("Unable to load article by ID", ex);
+            }
+        }
+        return program;
     }
 
     @Override
