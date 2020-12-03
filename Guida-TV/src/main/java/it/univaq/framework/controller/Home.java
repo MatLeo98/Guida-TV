@@ -10,13 +10,10 @@ import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import it.univaq.guida.tv.data.model.Schedule;
 import java.io.IOException;
 import java.io.PrintWriter;
-import static java.lang.System.out;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -58,7 +55,7 @@ public class Home extends BaseController {
         
         //Episode episode = (Episode) request.getAttribute("episode");
         List<Schedule> onAirPrograms = (List<Schedule>) request.getAttribute("onAirPrograms");
-        //Schedule schedule = (Schedule) request.getAttribute("schedule");
+        Schedule schedule = (Schedule) request.getAttribute("schedule");
         /* TODO output your page here. You may use following sample code. */
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
@@ -70,8 +67,10 @@ public class Home extends BaseController {
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet Home at " + request.getContextPath() + "</h1>");
-            out.println("<h1>Canale " + onAirPrograms.get(0).getChannel().getName() + "</h1>");
-            //out.println("<h1>Schedule " + schedule.getChannel().getName() + "</h1>");
+            for(Schedule s : onAirPrograms){
+            out.println("<h1>Canale " + s.getChannel().getName() + "</h1>");
+            }
+            out.println("<h1>Schedule " + schedule.getChannel().getName() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         } catch (IOException ex) {

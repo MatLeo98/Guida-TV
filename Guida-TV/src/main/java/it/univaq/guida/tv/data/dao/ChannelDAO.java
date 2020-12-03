@@ -19,8 +19,6 @@ public interface ChannelDAO {
     
     Channel createChannel();
     
-    public ChannelProxy createChannel(ResultSet rs) throws DataException;
-    
     Channel getChannel (int num) throws DataException;
     
     List<Channel> getChannels() throws DataException;

@@ -10,14 +10,9 @@ import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataLayer;
 import it.univaq.framework.data.proxy.ChannelProxy;
 import it.univaq.guida.tv.data.impl.ChannelImpl;
-import it.univaq.guida.tv.data.impl.EpisodeImpl;
 import it.univaq.guida.tv.data.impl.ImageImpl;
-import it.univaq.guida.tv.data.impl.ProgramImpl;
 import it.univaq.guida.tv.data.model.Channel;
-import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.Image;
-import it.univaq.guida.tv.data.model.Program;
-import it.univaq.guida.tv.data.model.Schedule;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,7 +27,7 @@ import java.util.logging.Logger;
  */
 public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
     
-    private PreparedStatement s;
+    private PreparedStatement allChannels;
     private PreparedStatement channelByID;
 
     public ChannelDAO_MySQL(DataLayer d) {
@@ -46,7 +41,7 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
 
             //precompiliamo tutte le query utilizzate nella classe
             //precompile all the queries uses in this class
-            s = connection.prepareStatement("SELECT * FROM channel");
+            allChannels = connection.prepareStatement("SELECT idChannel FROM channel");
             channelByID = connection.prepareStatement("SELECT * FROM channel WHERE idChannel = ?");
             
 
@@ -62,7 +57,7 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
         try {
 
             channelByID.close();
-            s.close();
+            allChannels.close();
 
 
         } catch (SQLException ex) {
@@ -76,7 +71,6 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
 return new ChannelProxy(getDataLayer());
     }
     
-    @Override
     public ChannelProxy createChannel(ResultSet rs) throws DataException{
             ChannelProxy channel = createChannel();
         try {
@@ -119,32 +113,16 @@ return new ChannelProxy(getDataLayer());
 
     @Override
     public List<Channel> getChannels() throws DataException {
-        List<Channel> result = new ArrayList();
-
-        try {
-            //sArticlesByIssue.setInt(1, issue.getKey());            
-            try (ResultSet rs = s.executeQuery()) {
-                while (rs.next()) {
-                     Channel candidatura = new ChannelImpl();
-					candidatura.setKey(rs.getInt("id"));
-					candidatura.setName(rs.getString("name"));
-                                        Image image = new ImageImpl();
-					candidatura.setImage(image);
-					candidatura.setVersion(1);
-					
-					
-            result.add(candidatura);
-                    //result.add((Channel) rs);
-                }
+        List<Channel> channels = new ArrayList();
+        
+            try (ResultSet rs = allChannels.executeQuery()) {
+            while (rs.next()) {
+                channels.add((Channel) getChannel(rs.getInt("articleID")));
             }
         } catch (SQLException ex) {
-            try {
-                throw new DataException("Unable to load articles by issue", ex);
-            } catch (DataException ex1) {
-                Logger.getLogger(ChannelDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex1);
-            }
+            throw new DataException("Unable to load channels", ex);
         }
-        return result;
+        return channels;
     }
 
     @Override
