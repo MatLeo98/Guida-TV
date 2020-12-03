@@ -22,6 +22,7 @@ public class ChannelProxy extends ChannelImpl implements DataItemProxy{
     
     protected boolean modified;
     protected DataLayer dataLayer;
+    protected int k;
     
     public ChannelProxy(DataLayer d) {
         super();
@@ -67,7 +68,8 @@ public class ChannelProxy extends ChannelImpl implements DataItemProxy{
         return modified;
     }
     
-    public void setImageKey() {
+    public void setImageKey(int key) {
+        this.k = key;
         super.setImage(null);
     }
     

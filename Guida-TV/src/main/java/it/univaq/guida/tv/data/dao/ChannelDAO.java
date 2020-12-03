@@ -6,7 +6,9 @@
 package it.univaq.guida.tv.data.dao;
 
 import it.univaq.framework.data.DataException;
+import it.univaq.framework.data.proxy.ChannelProxy;
 import it.univaq.guida.tv.data.model.Channel;
+import java.sql.ResultSet;
 import java.util.List;
 
 /**
@@ -16,6 +18,8 @@ import java.util.List;
 public interface ChannelDAO {
     
     Channel createChannel();
+    
+    public ChannelProxy createChannel(ResultSet rs) throws DataException;
     
     Channel getChannel (int num) throws DataException;
     

@@ -8,6 +8,7 @@ package it.univaq.guida.tv.data.dao;
 import it.univaq.framework.data.DAO;
 import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataLayer;
+import it.univaq.framework.data.proxy.ChannelProxy;
 import it.univaq.guida.tv.data.impl.ChannelImpl;
 import it.univaq.guida.tv.data.impl.EpisodeImpl;
 import it.univaq.guida.tv.data.impl.ImageImpl;
@@ -16,6 +17,7 @@ import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.Image;
 import it.univaq.guida.tv.data.model.Program;
+import it.univaq.guida.tv.data.model.Schedule;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,6 +33,7 @@ import java.util.logging.Logger;
 public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
     
     private PreparedStatement s;
+    private PreparedStatement channelByID;
 
     public ChannelDAO_MySQL(DataLayer d) {
         super(d);
@@ -44,6 +47,7 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
             //precompiliamo tutte le query utilizzate nella classe
             //precompile all the queries uses in this class
             s = connection.prepareStatement("SELECT * FROM channel");
+            channelByID = connection.prepareStatement("SELECT * FROM channel WHERE idChannel = ?");
             
 
         } catch (SQLException ex) {
@@ -57,6 +61,7 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
         //also closing PreparedStamenents is a good practice...
         try {
 
+            channelByID.close();
             s.close();
 
 
@@ -67,38 +72,49 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
     }
 
     @Override
-    public Channel createChannel() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ChannelProxy createChannel() {
+return new ChannelProxy(getDataLayer());
+    }
+    
+    @Override
+    public ChannelProxy createChannel(ResultSet rs) throws DataException{
+            ChannelProxy channel = createChannel();
+        try {
+            channel.setKey(rs.getInt("idChannel"));
+            channel.setName(rs.getString("name"));
+            channel.setImageKey(rs.getInt("imageId"));
+            channel.setVersion(rs.getInt("version"));
+        } catch (SQLException ex) {
+            throw new DataException("Unable to create article object form ResultSet", ex);
+        }
+        return channel;
     }
 
     @Override
-    public Channel getChannel(int num) throws DataException {
-       List<Channel> result = new ArrayList();
-
-        try {
-            //sArticlesByIssue.setInt(1, issue.getKey());            
-            try (ResultSet rs = s.executeQuery()) {
-                while (rs.next()) {
-                     Channel channel = new ChannelImpl();
-					channel.setKey(rs.getInt("id"));
-					channel.setName(rs.getString("name"));
-                                        Image image = new ImageImpl();
-					channel.setImage(image);
-					channel.setVersion(1);
-					
-					
-            result.add(channel);
-                    //result.add((Channel) rs);
-                }
-            }
-        } catch (SQLException ex) {
+    public Channel getChannel(int channelId) throws DataException {
+       Channel channel = null;
+        //prima vediamo se l'oggetto è già stato caricato
+        //first look for this object in the cache
+        if (dataLayer.getCache().has(Channel.class, channelId)) {
+            channel = dataLayer.getCache().get(Channel.class, channelId);
+        } else {
+            //altrimenti lo carichiamo dal database
+            //otherwise load it from database
             try {
-                throw new DataException("Unable to load articles by issue", ex);
-            } catch (DataException ex1) {
-                Logger.getLogger(ChannelDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex1);
+                channelByID.setInt(1, channelId);
+                try (ResultSet rs = channelByID.executeQuery()) {
+                    if (rs.next()) {
+                        channel = createChannel(rs);
+                        //e lo mettiamo anche nella cache
+                        //and put it also in the cache
+                        dataLayer.getCache().add(Channel.class, channel);
+                    }
+                }
+            } catch (SQLException ex) {
+                throw new DataException("Unable to load article by ID", ex);
             }
         }
-        return result.get(0);
+        return channel;
     }
 
     @Override

@@ -46,10 +46,10 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
 
             //precompiliamo tutte le query utilizzate nella classe
             //precompile all the queries uses in this class
-            sOnAirPrograms = connection.prepareStatement("SELECT * FROM schedule WHERE ? > startTime && ? < endTime");
+            sOnAirPrograms = connection.prepareStatement("SELECT * FROM schedule WHERE '10:30:00' < startTime && '11:40:00' > endTime");
             //s = connection.prepareStatement("SELECT * FROM episode");
             todaySchedule = connection.prepareStatement("SELECT * FROM schedule WHERE date = CURDATE()");
-            scheduleByID = connection.prepareStatement("SELECT * FROM schedule WHERE ID=?");
+            scheduleByID = connection.prepareStatement("SELECT * FROM schedule WHERE idSchedule = ?");
             
 
         } catch (SQLException ex) {
@@ -82,12 +82,13 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
         ScheduleProxy schedule = createSchedule();
         try {
             schedule.setKey(rs.getInt("idSchedule"));
-            schedule.setStartTime(rs.getDate("starTime"));
+            schedule.setStartTime(rs.getDate("startTime"));
             schedule.setEndTime(rs.getDate("endTime"));
             schedule.setDate(rs.getDate("date"));
             schedule.setTimeslot(TimeSlot.valueOf(rs.getString("timeSlot")));
             schedule.setProgramKey(rs.getInt("programId"));
             schedule.setChannelKey(rs.getInt("channelId"));
+            schedule.setEpisodeKey(rs.getInt("episodeId"));
             schedule.setVersion(rs.getInt("version"));
         } catch (SQLException ex) {
             throw new DataException("Unable to create article object form ResultSet", ex);

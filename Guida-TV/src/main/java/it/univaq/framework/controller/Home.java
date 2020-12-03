@@ -7,8 +7,7 @@ package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
-import it.univaq.guida.tv.data.model.Channel;
-import it.univaq.guida.tv.data.model.Episode;
+import it.univaq.guida.tv.data.model.Schedule;
 import java.io.IOException;
 import java.io.PrintWriter;
 import static java.lang.System.out;
@@ -25,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author giorg
  */
-public class ListChannels extends BaseController {
+public class Home extends BaseController {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,33 +39,26 @@ public class ListChannels extends BaseController {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException{
         
-        int k;
+        //int k;
         
         try {
-            k = 1;
-            
-            //request.setAttribute("episode", ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getEpisode(k));
-            request.setAttribute("channel", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(k));
-            action_channel(request, response, k);
-           
-        
+            request.setAttribute("schedule", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getSchedule(1));
+            request.setAttribute("onAirPrograms", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getOnAirPrograms());
+            action_channel(request, response);                 
             
         } catch (NumberFormatException ex) {
-            request.setAttribute("message", "Article key not specified");
-            
+            request.setAttribute("message", "Article key not specified");           
         } catch (DataException ex) { 
-            Logger.getLogger(ListChannels.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
-       
-       
-       
+      
     }
 
-    private void action_channel(HttpServletRequest request, HttpServletResponse response, int k) {
+    private void action_channel(HttpServletRequest request, HttpServletResponse response) {
         
         //Episode episode = (Episode) request.getAttribute("episode");
-        Channel channel = (Channel) request.getAttribute("channel");
+        List<Schedule> onAirPrograms = (List<Schedule>) request.getAttribute("onAirPrograms");
+        //Schedule schedule = (Schedule) request.getAttribute("schedule");
         /* TODO output your page here. You may use following sample code. */
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
@@ -74,15 +66,16 @@ public class ListChannels extends BaseController {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Lista</title>");            
+            out.println("<title>Home</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Lista at " + request.getContextPath() + "</h1>");
-            out.println("<h1>Canale " + channel.getName() + "</h1>");
+            out.println("<h1>Servlet Home at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Canale " + onAirPrograms.get(0).getChannel().getName() + "</h1>");
+            //out.println("<h1>Schedule " + schedule.getChannel().getName() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         } catch (IOException ex) {
-            Logger.getLogger(ListChannels.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
