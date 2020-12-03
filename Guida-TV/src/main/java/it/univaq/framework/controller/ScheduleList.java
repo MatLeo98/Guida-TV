@@ -36,29 +36,30 @@ public class ScheduleList extends BaseController {
      */
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException {
-   
+           throws ServletException{
+       
+        
         try {
            
             System.out.println("ciao");
-            request.setAttribute("schedule", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getSchedule(1));
-            //request.setAttribute("schedules", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getTodaySchedule());
+            //request.setAttribute("schedule", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getSchedule(1));
+            request.setAttribute("schedules", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getTodaySchedule());
             action_schedule(request, response);
            
-        
-            
+           
         } catch (NumberFormatException ex) {
             request.setAttribute("message", "Article key not specified");
             
         } catch (DataException ex) { 
-            Logger.getLogger(Schedule.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ScheduleList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private void action_schedule(HttpServletRequest request, HttpServletResponse response) {
-        //List<Schedule> schedules = (List<Schedule>) request.getAttribute("schedules");
-        Schedule schedule = (Schedule) request.getAttribute("schedule");
+        List<Schedule> schedules = (List<Schedule>) request.getAttribute("schedules");
+        //Schedule schedule = (Schedule) request.getAttribute("schedule");
         /* TODO output your page here. You may use following sample code. */
+        
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
@@ -69,7 +70,10 @@ public class ScheduleList extends BaseController {
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet Lista at " + request.getContextPath() + "</h1>");
-            out.println("<h1>Canale " + schedule.getDate() + "</h1>");
+            out.println("<h1>Canale " + schedules.get(0).getChannel().getName() + "</h1>");
+            out.println("<p>Episodio numero: "+ schedules.get(0).getEpisode().getNumber() +" - " +schedules.get(0).getEpisode().getName() +"</p>");
+            out.println("<p> Ora inizio: " + schedules.get(0).getStartTime().getTime() + "</p>");
+            //out.println("<h1>Canale " + schedule.getChannel().getName() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         } catch (IOException ex) {

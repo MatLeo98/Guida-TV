@@ -68,7 +68,7 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
 
     @Override
     public ChannelProxy createChannel() {
-return new ChannelProxy(getDataLayer());
+        return new ChannelProxy(getDataLayer());
     }
     
     public ChannelProxy createChannel(ResultSet rs) throws DataException{

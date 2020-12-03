@@ -25,6 +25,7 @@ public class ProgramProxy  extends ProgramImpl implements DataItemProxy{
     
     protected boolean modified;
     protected DataLayer dataLayer;
+    protected int image_key;
     
     public ProgramProxy(DataLayer d) {
         super();
@@ -109,6 +110,11 @@ public class ProgramProxy  extends ProgramImpl implements DataItemProxy{
 
     public boolean isModified() {
         return modified;
+    }
+
+    public void setImageKey(int key) {
+        this.image_key = key;
+        
     }
     
 }

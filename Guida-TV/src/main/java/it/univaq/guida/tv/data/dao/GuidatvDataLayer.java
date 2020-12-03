@@ -36,9 +36,9 @@ public class GuidatvDataLayer extends DataLayer{
         registerDAO(Channel.class, new ChannelDAO_MySQL(this));
         registerDAO(Episode.class, new EpisodeDAO_MySQL(this));
         /*registerDAO(FavouriteChannel.class, new FavouriteChannelDAO_MySQL(this));
-        registerDAO(FavouriteProgram.class, new FavouriteProgramDAO_MySQL(this));
+        registerDAO(FavouriteProgram.class, new FavouriteProgramDAO_MySQL(this));*/
         registerDAO(Program.class, new ProgramDAO_MySQL(this));
-        registerDAO(SavedSearches.class, new SavedSearchesDAO_MySQL(this)); */
+       /* registerDAO(SavedSearches.class, new SavedSearchesDAO_MySQL(this)); */
         registerDAO(Schedule.class, new ScheduleDAO_MySQL(this));
          /*registerDAO(User.class, new UserDAO_MySQL(this));
         registerDAO(Image.class, new ImageDAO_MySQL(this));*/
@@ -59,13 +59,13 @@ public class GuidatvDataLayer extends DataLayer{
     
     public FavouriteProgramDAO getFavouriteProgramDAO() {
         return (FavouriteProgramDAO) getDAO(FavouriteProgram.class);
-    }
+    }*/
     
     public ProgramDAO getProgramDAO() {
         return (ProgramDAO) getDAO(Program.class);
     }
     
-    public SavedSearchesDAO getSavedSearchesDAO() {
+    /*public SavedSearchesDAO getSavedSearchesDAO() {
         return (SavedSearchesDAO) getDAO(SavedSearches.class); 
     }*/
     

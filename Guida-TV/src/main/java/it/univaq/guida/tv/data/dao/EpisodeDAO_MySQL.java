@@ -8,6 +8,8 @@ package it.univaq.guida.tv.data.dao;
 import it.univaq.framework.data.DAO;
 import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataLayer;
+import it.univaq.framework.data.proxy.ChannelProxy;
+import it.univaq.framework.data.proxy.EpisodeProxy;
 import it.univaq.guida.tv.data.impl.ChannelImpl;
 import it.univaq.guida.tv.data.impl.EpisodeImpl;
 import it.univaq.guida.tv.data.impl.ImageImpl;
@@ -31,6 +33,7 @@ import java.util.logging.Logger;
 public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
     
     private PreparedStatement s;
+    private PreparedStatement episodeByID;
 
     public EpisodeDAO_MySQL(DataLayer d) {
         super(d);
@@ -44,10 +47,11 @@ public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
             //precompiliamo tutte le query utilizzate nella classe
             //precompile all the queries uses in this class
             s = connection.prepareStatement("SELECT * FROM episode");
+            episodeByID = connection.prepareStatement("SELECT * FROM episode WHERE idEpisode = ?");
             
 
         } catch (SQLException ex) {
-            throw new DataException("Error initializing newspaper data layer", ex);
+            throw new DataException("Error initializing data layer", ex);
         }
     }
     
@@ -58,6 +62,7 @@ public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
         try {
 
             s.close();
+            episodeByID.close();
 
 
         } catch (SQLException ex) {
@@ -67,40 +72,50 @@ public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
     }
 
     @Override
-    public Episode createEpisode() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public EpisodeProxy createEpisode() {
+        return new EpisodeProxy(getDataLayer());
+    }
+    
+     public EpisodeProxy createEpisode(ResultSet rs) throws DataException{
+            EpisodeProxy episode = createEpisode();
+        try {
+            episode.setKey(rs.getInt("idEpisode"));
+            episode.setName(rs.getString("name"));
+            episode.setSeasonNumber(rs.getInt("seasonNumber"));
+            episode.setNumber(rs.getInt("number"));
+            episode.setProgramKey(rs.getInt("programId"));
+            episode.setVersion(rs.getInt("version"));
+        } catch (SQLException ex) {
+            throw new DataException("Unable to create episode object form ResultSet", ex);
+        }
+        return episode;
     }
 
     @Override
     public Episode getEpisode(int episodeId) throws DataException {
-        List<Episode> result = new ArrayList();
-
-        try {
-            //sArticlesByIssue.setInt(1, issue.getKey());            
-            try (ResultSet rs = s.executeQuery()) {
-                while (rs.next()) {
-                     Episode candidatura = new EpisodeImpl();
-					candidatura.setKey(rs.getInt("id"));
-					candidatura.setName(rs.getString("name"));
-                                        candidatura.setSeasonNumber(rs.getInt("seasonNumber"));
-                                        candidatura.setNumber(rs.getInt("number"));
-                                        Program program = new ProgramImpl();
-					candidatura.setProgram(program);
-					candidatura.setVersion(1);
-					
-					
-            result.add(candidatura);
-                    //result.add((Channel) rs);
-                }
-            }
-        } catch (SQLException ex) {
+        Episode episode = null;
+        //prima vediamo se l'oggetto è già stato caricato
+        //first look for this object in the cache
+        if (dataLayer.getCache().has(Episode.class, episodeId)) {
+            episode = dataLayer.getCache().get(Episode.class, episodeId);
+        } else {
+            //altrimenti lo carichiamo dal database
+            //otherwise load it from database
             try {
-                throw new DataException("Unable to load articles by issue", ex);
-            } catch (DataException ex1) {
-                Logger.getLogger(EpisodeDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex1);
+                episodeByID.setInt(1, episodeId);
+                try (ResultSet rs = episodeByID.executeQuery()) {
+                    if (rs.next()) {
+                        episode = createEpisode(rs);
+                        //e lo mettiamo anche nella cache
+                        //and put it also in the cache
+                        dataLayer.getCache().add(Episode.class, episode);
+                    }
+                }
+            } catch (SQLException ex) {
+                throw new DataException("Unable to load article by ID", ex);
             }
         }
-        return result.get(0);
+        return episode;
     }
 
     @Override
