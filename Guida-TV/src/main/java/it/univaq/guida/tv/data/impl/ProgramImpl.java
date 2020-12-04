@@ -30,7 +30,7 @@ public class ProgramImpl extends DataItemImpl<Integer> implements Program {
     
     public enum Genre {
     	
-    	informazione, cultura, fiction, intrattenimento, giocoTelevisivo, horror, avventura, crime, romantico, thriller, drammatico, azione; 
+    	comico, informazione, cultura, fiction, intrattenimento, giocoTelevisivo, horror, avventura, crime, romantico, thriller, drammatico, azione; 
     
     }
     

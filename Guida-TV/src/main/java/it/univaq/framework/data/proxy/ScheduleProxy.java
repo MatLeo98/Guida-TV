@@ -124,13 +124,13 @@ public class ScheduleProxy extends ScheduleImpl implements DataItemProxy{
     }
 
     @Override
-    public void setEndTime(Date endTime) {
+    public void setEndTime(String endTime) {
         super.setEndTime(endTime); 
         this.modified = true;
     }
 
     @Override
-    public void setStartTime(Date startTime) {
+    public void setStartTime(String startTime) {
         super.setStartTime(startTime); 
         this.modified = true;
     }

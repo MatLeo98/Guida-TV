@@ -19,8 +19,8 @@ import java.util.Date;
  */
 public class ScheduleImpl extends DataItemImpl<Integer> implements Schedule {
 
-    private Date startTime;
-    private Date endTime;
+    private String startTime;
+    private String endTime;
     private Date date;
     private TimeSlot timeslot;
     
@@ -48,22 +48,22 @@ public class ScheduleImpl extends DataItemImpl<Integer> implements Schedule {
     }
 
     @Override
-    public Date getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
     @Override
-    public void setStartTime(Date startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
     @Override
-    public Date getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
     @Override
-    public void setEndTime(Date endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 

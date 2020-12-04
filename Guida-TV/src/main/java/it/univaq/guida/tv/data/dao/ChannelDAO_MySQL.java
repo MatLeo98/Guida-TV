@@ -117,7 +117,7 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
         
             try (ResultSet rs = allChannels.executeQuery()) {
             while (rs.next()) {
-                channels.add((Channel) getChannel(rs.getInt("articleID")));
+                channels.add((Channel) getChannel(rs.getInt("idChannel")));
             }
         } catch (SQLException ex) {
             throw new DataException("Unable to load channels", ex);

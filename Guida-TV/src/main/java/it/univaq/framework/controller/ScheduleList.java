@@ -11,6 +11,8 @@ import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Schedule;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,8 +43,9 @@ public class ScheduleList extends BaseController {
         
         try {
            
-            System.out.println("ciao");
+           
             //request.setAttribute("schedule", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getSchedule(1));
+            request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
             request.setAttribute("schedules", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getTodaySchedule());
             action_schedule(request, response);
            
@@ -56,6 +59,7 @@ public class ScheduleList extends BaseController {
     }
 
     private void action_schedule(HttpServletRequest request, HttpServletResponse response) {
+        List<Channel> channels = (List<Channel>) request.getAttribute("channels");
         List<Schedule> schedules = (List<Schedule>) request.getAttribute("schedules");
         //Schedule schedule = (Schedule) request.getAttribute("schedule");
         /* TODO output your page here. You may use following sample code. */
@@ -69,10 +73,27 @@ public class ScheduleList extends BaseController {
             out.println("<title>Servlet Lista</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Lista at " + request.getContextPath() + "</h1>");
-            out.println("<h1>Canale " + schedules.get(0).getChannel().getName() + "</h1>");
-            out.println("<p>Episodio numero: "+ schedules.get(0).getEpisode().getNumber() +" - " +schedules.get(0).getEpisode().getName() +"</p>");
-            out.println("<p> Ora inizio: " + schedules.get(0).getStartTime().getTime() + "</p>");
+           // out.println("<h1>Servlet Lista at " + request.getContextPath() + "</h1>");
+            for(Channel c : channels){
+                out.println("<h1>Canale: " + c.getName() + "</h1>");
+            
+                for(Schedule s : schedules){
+                    if( s.getChannel().getName().equals(c.getName())){
+                        //out.println("<h1>Canale: " + s.getChannel().getName() + "</h1>");
+                        out.println("<p>Programma: "+ s.getProgram().getName() +"</p>");
+                        if(s.getEpisode() != null){
+                            out.println("<p>Episodio numero: "+ s.getEpisode().getNumber() + " - "+ s.getEpisode().getName() +"</p>");
+                        }
+                        
+                       
+                        //String currentDate = Date.format(cals.getTime());
+                        out.println("<p> Data: " + s.getDate() + "</p>");
+                        out.println("<p> Ora inizio: " + s.getStartTime() + "</p>");
+                        out.println("<p> Ora fine: " + s.getEndTime() + "</p>");
+                        out.println("<br>");
+                    }
+                }
+            }
             //out.println("<h1>Canale " + schedule.getChannel().getName() + "</h1>");
             out.println("</body>");
             out.println("</html>");

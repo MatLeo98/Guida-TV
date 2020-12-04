@@ -21,13 +21,13 @@ public interface Schedule extends DataItem<Integer> {
 
     Date getDate();
 
-    Date getEndTime();
+    String getEndTime();
 
     Episode getEpisode();
 
     Program getProgram();
 
-    Date getStartTime();
+    String getStartTime();
 
     TimeSlot getTimeslot();
 
@@ -35,13 +35,13 @@ public interface Schedule extends DataItem<Integer> {
 
     void setDate(Date date);
 
-    void setEndTime(Date endTime);
+    void setEndTime(String endTime);
 
     void setEpisode(Episode episode);
 
     void setProgram(Program program);
 
-    void setStartTime(Date startTime);
+    void setStartTime(String startTime);
 
     void setTimeslot(TimeSlot timeslot);
     
