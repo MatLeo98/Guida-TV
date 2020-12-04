@@ -6,10 +6,12 @@
 package it.univaq.guida.tv.data.impl;
 
 import it.univaq.framework.data.DataItemImpl;
+import it.univaq.guida.tv.data.impl.ProgramImpl.Genre;
 import it.univaq.guida.tv.data.model.SavedSearches;
 import it.univaq.guida.tv.data.model.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  *
@@ -18,12 +20,12 @@ import java.time.LocalDateTime;
 public class SavedSearchesImpl extends DataItemImpl<Integer> implements SavedSearches {
     
     private String title;
-    private String genre;
-    private LocalDateTime maxStartHour;
-    private LocalDateTime maxEndHour;
+    private Genre genre;
+    private Date maxStartHour;
+    private Date maxEndHour;
     private int channel;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private Date startDate;
+    private Date endDate;
     private Boolean sendEmail;
     private User user;
     
@@ -31,7 +33,7 @@ public class SavedSearchesImpl extends DataItemImpl<Integer> implements SavedSea
     
         super();
         title = "";
-        genre = "";
+        genre = null;
         maxStartHour = null;
         maxEndHour = null;
         channel = 0;
@@ -53,32 +55,32 @@ public class SavedSearchesImpl extends DataItemImpl<Integer> implements SavedSea
     }
 
     @Override
-    public String getGenre() {
+    public Genre getGenre() {
         return genre;
     }
 
     @Override
-    public void setGenre(String genre) {
+    public void setGenre(Genre genre) {
         this.genre = genre;
     }
 
     @Override
-    public LocalDateTime getMaxStartHour() {
+    public Date getMaxStartHour() {
         return maxStartHour;
     }
 
     @Override
-    public void setMaxStartHour(LocalDateTime maxStartHour) {
+    public void setMaxStartHour(Date maxStartHour) {
         this.maxStartHour = maxStartHour;
     }
 
     @Override
-    public LocalDateTime getMaxEndHour() {
+    public Date getMaxEndHour() {
         return maxEndHour;
     }
 
     @Override
-    public void setMaxEndHour(LocalDateTime maxEndHour) {
+    public void setMaxEndHour(Date maxEndHour) {
         this.maxEndHour = maxEndHour;
     }
 
@@ -93,22 +95,22 @@ public class SavedSearchesImpl extends DataItemImpl<Integer> implements SavedSea
     }
 
     @Override
-    public LocalDate getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
     @Override
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
     @Override
-    public LocalDate getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
     @Override
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 

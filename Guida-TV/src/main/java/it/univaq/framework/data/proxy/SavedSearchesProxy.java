@@ -9,10 +9,12 @@ import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
 import it.univaq.guida.tv.data.dao.UserDAO;
+import it.univaq.guida.tv.data.impl.ProgramImpl.Genre;
 import it.univaq.guida.tv.data.impl.SavedSearchesImpl;
 import it.univaq.guida.tv.data.model.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,13 +60,13 @@ public class SavedSearchesProxy extends SavedSearchesImpl implements DataItemPro
     }
 
     @Override
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(Date endDate) {
         super.setEndDate(endDate);
         this.modified = true;
     }
 
     @Override
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(Date startDate) {
         super.setStartDate(startDate);
         this.modified = true;
     }
@@ -76,19 +78,19 @@ public class SavedSearchesProxy extends SavedSearchesImpl implements DataItemPro
     }
 
     @Override
-    public void setMaxEndHour(LocalDateTime maxEndHour) {
+    public void setMaxEndHour(Date maxEndHour) {
         super.setMaxEndHour(maxEndHour);
         this.modified = true;
     }
 
     @Override
-    public void setMaxStartHour(LocalDateTime maxStartHour) {
+    public void setMaxStartHour(Date maxStartHour) {
         super.setMaxStartHour(maxStartHour);
         this.modified = true;
     }
 
     @Override
-    public void setGenre(String genre) {
+    public void setGenre(Genre genre) {
         super.setGenre(genre);
         this.modified = true;
     }

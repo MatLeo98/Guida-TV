@@ -6,8 +6,10 @@
 package it.univaq.guida.tv.data.model;
 
 import it.univaq.framework.data.DataItem;
+import it.univaq.guida.tv.data.impl.ProgramImpl.Genre;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  *
@@ -17,17 +19,17 @@ public interface SavedSearches extends DataItem<Integer> {
 
     int getChannel();
 
-    LocalDate getEndDate();
+    Date getEndDate();
 
-    String getGenre();
+    Genre getGenre();
 
-    LocalDateTime getMaxEndHour();
+    Date getMaxEndHour();
 
-    LocalDateTime getMaxStartHour();
+    Date getMaxStartHour();
 
     Boolean getSendEmail();
 
-    LocalDate getStartDate();
+    Date getStartDate();
 
     String getTitle();
     
@@ -35,17 +37,17 @@ public interface SavedSearches extends DataItem<Integer> {
 
     void setChannel(int channel);
 
-    void setEndDate(LocalDate endDate);
+    void setEndDate(Date endDate);
 
-    void setGenre(String genre);
+    void setGenre(Genre genre);
 
-    void setMaxEndHour(LocalDateTime maxEndHour);
+    void setMaxEndHour(Date maxEndHour);
 
-    void setMaxStartHour(LocalDateTime maxStartHour);
+    void setMaxStartHour(Date maxStartHour);
 
     void setSendEmail(Boolean sendEmail);
 
-    void setStartDate(LocalDate startDate);
+    void setStartDate(Date startDate);
 
     void setTitle(String title);
     
