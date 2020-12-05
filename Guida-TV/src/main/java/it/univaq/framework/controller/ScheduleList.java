@@ -43,12 +43,23 @@ public class ScheduleList extends BaseController {
        
         
         try {
-           
-           
-            //request.setAttribute("schedule", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getSchedule(1));
+            
             request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
-            request.setAttribute("schedules", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getTodaySchedule());
-            action_schedule(request, response);
+            
+            if (request.getParameter("tsSelect") == null){
+                //TimeSlot timeSelected = TimeSlot.valueOf("sera");
+                request.setAttribute("nowtimeslot", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getCurTimeSlot());
+                request.setAttribute("schedules", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getTodaySchedule((TimeSlot)request.getAttribute("nowtimeslot")));
+                action_schedule(request, response);
+            }else{
+                
+                TimeSlot timeSelected = TimeSlot.valueOf(request.getParameter("tsSelect"));
+                request.setAttribute("schedules", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getTodaySchedule(timeSelected));
+                action_schedule(request, response);
+            }
+            //request.setAttribute("schedule", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getSchedule(1));
+            
+            
            
            
         } catch (NumberFormatException ex) {
@@ -75,16 +86,17 @@ public class ScheduleList extends BaseController {
             out.println("<title>Servlet Lista</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println(" <form action=\"/action_page.php\">");
-            out.println("<label for=\"timeSlot\">Scegli una fascia oraria:</label>");
-            out.println("<select name=\"timeslot\" id=\"timeslot\">");
+            out.println(" <form method=\"get\" action=\"schedules\">");
+            out.println("<label for=\"tsSelect\">Scegli una fascia oraria:</label>");
+            out.println("<select name=\"tsSelect\" id=\"tsSelect\">");
             for(TimeSlot timeslot : timeslots){
                 out.println("<option value=\""+timeslot+"\">"+timeslot.toString()+"</option>");
             }
             out.println("</select>");
             out.println("<br><br>");
+            out.println("<input type=\"submit\" name=\"s\"/>");
             out.println("</form>");
-            //<input type="submit" value="Submit">
+            
            // out.println("<h1>Servlet Lista at " + request.getContextPath() + "</h1>");
             for(Channel c : channels){
                 out.println("<h1>Canale: " + c.getName() + "</h1>");

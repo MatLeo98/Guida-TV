@@ -36,7 +36,8 @@ public class Home extends BaseController {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException{
         
-        try {          
+        try {    
+           
             request.setAttribute("schedule", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getSchedule(1));
             request.setAttribute("onAirPrograms", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getOnAirPrograms());
             action_channel(request, response);                 
@@ -64,6 +65,7 @@ public class Home extends BaseController {
             out.println("<title>Home</title>");            
             out.println("</head>");
             out.println("<body>");
+            
             out.println("<h1>Servlet Home at " + request.getContextPath() + "</h1>");
             for(Schedule s : onAirPrograms){
             out.println("<h1>Canale " + s.getChannel().getName() + "</h1>");

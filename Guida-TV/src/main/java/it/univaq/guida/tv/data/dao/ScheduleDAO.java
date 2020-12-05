@@ -39,13 +39,15 @@ public interface ScheduleDAO {
 
     List<Schedule> getScheduleByTimeSlot(TimeSlot timeslot) throws DataException;
     
-    List<Schedule> getTodaySchedule() throws DataException;
+    List<Schedule> getTodaySchedule(TimeSlot timeslot) throws DataException;
 
     List<Schedule> getScheduleByChannel(Channel channel, LocalDate date) throws DataException; 
     
     List<Schedule> getScheduleBetweenDates(LocalDate startDate, LocalDate endDate) throws DataException;
     
     List<Schedule> getScheduleBetweenTimes(LocalDateTime startTime, LocalDateTime endTime) throws DataException;
+    
+    TimeSlot getCurTimeSlot() throws DataException;
 
     void storeSchedule(Schedule schedule) throws DataException;
     
