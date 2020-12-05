@@ -8,6 +8,7 @@ package it.univaq.framework.controller;
 import it.univaq.framework.data.DataException;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import it.univaq.guida.tv.data.model.Schedule;
+import it.univaq.guida.tv.data.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -66,9 +67,9 @@ public class Home extends BaseController {
             out.println("<body>");
             out.println("<h1>Servlet Home at " + request.getContextPath() + "</h1>");
             for(Schedule s : onAirPrograms){
-            out.println("<h1>Canale " + s.getChannel().getName() + "</h1>");
+            out.println("<h1>" + s.getChannel().getName() + "</h1>");
+            out.println("<h3> Ora in onda: " + s.getProgram().getName() + "</h3>");
             }
-            out.println("<h1>Schedule " + schedule.getChannel().getName() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         } catch (IOException ex) {

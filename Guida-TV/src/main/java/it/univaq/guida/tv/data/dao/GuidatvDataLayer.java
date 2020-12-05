@@ -40,7 +40,7 @@ public class GuidatvDataLayer extends DataLayer{
         registerDAO(Program.class, new ProgramDAO_MySQL(this));
         registerDAO(SavedSearches.class, new SavedSearchesDAO_MySQL(this));
         registerDAO(Schedule.class, new ScheduleDAO_MySQL(this));
-        //registerDAO(User.class, new UserDAO_MySQL(this));
+        registerDAO(User.class, new UserDAO_MySQL(this));
         //registerDAO(Image.class, new ImageDAO_MySQL(this));
     }
 
@@ -73,9 +73,9 @@ public class GuidatvDataLayer extends DataLayer{
         return (ScheduleDAO) getDAO(Schedule.class);
     }
     
-    /*public UserDAO getUserDAO() {
+    public UserDAO getUserDAO() {
         return (UserDAO) getDAO(User.class);
-    }*/
+    }
 
     public ImageDAO getImageDAO() {
         return (ImageDAO) getDAO(Image.class);
