@@ -7,6 +7,7 @@ package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
+import it.univaq.guida.tv.data.impl.ScheduleImpl.TimeSlot;
 import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Schedule;
 import java.io.IOException;
@@ -61,6 +62,7 @@ public class ScheduleList extends BaseController {
     private void action_schedule(HttpServletRequest request, HttpServletResponse response) {
         List<Channel> channels = (List<Channel>) request.getAttribute("channels");
         List<Schedule> schedules = (List<Schedule>) request.getAttribute("schedules");
+        TimeSlot[] timeslots = TimeSlot.class.getEnumConstants(); //VA FATTO IN UN METODO CREDO
         //Schedule schedule = (Schedule) request.getAttribute("schedule");
         /* TODO output your page here. You may use following sample code. */
         
@@ -73,6 +75,16 @@ public class ScheduleList extends BaseController {
             out.println("<title>Servlet Lista</title>");            
             out.println("</head>");
             out.println("<body>");
+            out.println(" <form action=\"/action_page.php\">");
+            out.println("<label for=\"timeSlot\">Scegli una fascia oraria:</label>");
+            out.println("<select name=\"timeslot\" id=\"timeslot\">");
+            for(TimeSlot timeslot : timeslots){
+                out.println("<option value=\""+timeslot+"\">"+timeslot.toString()+"</option>");
+            }
+            out.println("</select>");
+            out.println("<br><br>");
+            out.println("</form>");
+            //<input type="submit" value="Submit">
            // out.println("<h1>Servlet Lista at " + request.getContextPath() + "</h1>");
             for(Channel c : channels){
                 out.println("<h1>Canale: " + c.getName() + "</h1>");
