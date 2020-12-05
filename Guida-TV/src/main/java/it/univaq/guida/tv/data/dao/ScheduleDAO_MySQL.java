@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -48,7 +49,8 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             //precompile all the queries uses in this class
             sOnAirPrograms = connection.prepareStatement("SELECT * FROM schedule WHERE startTime <= CURTIME() && endTime >= CURTIME() && date = CURDATE()");
             //s = connection.prepareStatement("SELECT * FROM episode");SELECT * FROM schedule WHERE '10:30:00' < startTime && '11:40:00' > endTime
-            todaySchedule = connection.prepareStatement("SELECT * FROM schedule WHERE date = CURDATE() ORDER BY channelId");
+            //s = connection.prepareStatement("SELECT * FROM episode");
+            todaySchedule = connection.prepareStatement("SELECT * FROM schedule WHERE date = CURDATE() AND timeSlot = ? ORDER BY channelId");
             scheduleByID = connection.prepareStatement("SELECT * FROM schedule WHERE idSchedule = ?");
             
 
@@ -187,11 +189,13 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     }
 
     @Override
-    public List<Schedule> getTodaySchedule() throws DataException {
+    public List<Schedule> getTodaySchedule(TimeSlot timeslot) throws DataException {
        List<Schedule> result = new ArrayList();
-            
-        try (ResultSet rs = todaySchedule.executeQuery()) {
+        try {
+            todaySchedule.setString(1, timeslot.toString());
+         try(ResultSet rs = todaySchedule.executeQuery()) {
                 while (rs.next()) {
+                    
                     //la query  estrae solo gli ID degli articoli selezionati
                     //poi sarà getArticle che, con le relative query, popolerà
                     //gli oggetti corrispondenti. Meno efficiente, ma così la
@@ -202,11 +206,39 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
                     //article creation logic is better encapsulated
                     result.add((Schedule) getSchedule(rs.getInt("idSchedule")));
                 }
+            }
         }
         catch (SQLException ex) {
             throw new DataException("Unable to load articles by issue", ex);
         }
         return result; 
     }   
+
+    @Override
+    public TimeSlot getCurTimeSlot() throws DataException {
+        TimeSlot fascia = null;
+        LocalTime mattinaMin = LocalTime.parse("06:00:00");
+        LocalTime mattinaMax = LocalTime.parse("11:59:59");
+        LocalTime pomeriggioMin = LocalTime.parse("12:00:00");
+        LocalTime pomeriggioMax = LocalTime.parse("17:59:59");
+        LocalTime seraMin = LocalTime.parse("18:00:00");
+        LocalTime seraMax = LocalTime.parse("23:59:59");
+        LocalTime notteMin = LocalTime.parse("00:00:00");
+        LocalTime notteMax = LocalTime.parse("05:59:59"); 
+        if(mattinaMin.compareTo(LocalTime.now()) <= 0 && mattinaMax.compareTo(LocalTime.now()) >= 0)  
+             fascia = TimeSlot.valueOf("mattina");
+        
+        if(pomeriggioMin.compareTo(LocalTime.now()) <= 0 && pomeriggioMax.compareTo(LocalTime.now()) >= 0) 
+             fascia = TimeSlot.valueOf("pomeriggio");
+             
+        if(seraMin.compareTo(LocalTime.now()) <= 0 && seraMax.compareTo(LocalTime.now()) >= 0)  
+             fascia = TimeSlot.valueOf("sera");
+             
+        if(notteMin.compareTo(LocalTime.now()) <= 0 && notteMax.compareTo(LocalTime.now()) >= 0)
+             fascia = TimeSlot.valueOf("notte");
+        
+        return fascia;
+            
+    }
 }
 
