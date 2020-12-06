@@ -35,6 +35,8 @@ public interface ScheduleDAO {
     Schedule getScheduleByEpisode(Episode episode) throws DataException;
     
     List<Schedule> getOnAirPrograms() throws DataException;
+    
+    List<Schedule> getLastMonthEpisodes(Program program) throws DataException;
 
     List<Schedule> getScheduleByDate(LocalDate date) throws DataException;
 

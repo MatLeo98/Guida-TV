@@ -20,6 +20,10 @@
         <servlet-name>ChannelDetail</servlet-name>
         <servlet-class>it.univaq.framework.controller.ChannelDetail</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ProgramDetail</servlet-name>
+        <servlet-class>it.univaq.framework.controller.ProgramDetail</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>BaseController</servlet-name>
         <url-pattern>/base</url-pattern>
@@ -39,6 +43,10 @@
     <servlet-mapping>
         <servlet-name>ChannelDetail</servlet-name>
         <url-pattern>/channel</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProgramDetail</servlet-name>
+        <url-pattern>/program</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -37,6 +37,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     private PreparedStatement todaySchedule;
     private PreparedStatement scheduleByID;
     private PreparedStatement todayScheduleByChannel;
+    private PreparedStatement lastMonth;
 
     public ScheduleDAO_MySQL(DataLayer d) {
         super(d);
@@ -53,6 +54,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             //s = connection.prepareStatement("SELECT * FROM episode");SELECT * FROM schedule WHERE '10:30:00' < startTime && '11:40:00' > endTime
             //s = connection.prepareStatement("SELECT * FROM episode");
             todaySchedule = connection.prepareStatement("SELECT * FROM schedule WHERE date = CURDATE() AND timeSlot = ? ORDER BY channelId");
+            lastMonth = connection.prepareStatement("SELECT * FROM schedule WHERE DATE(date) >= DATE(NOW()) - INTERVAL 30 DAY AND programId = ?");
             scheduleByID = connection.prepareStatement("SELECT * FROM schedule WHERE idSchedule = ?");
             todayScheduleByChannel = connection.prepareStatement("SELECT * FROM schedule WHERE date = '2020-12-06'");
             
@@ -70,6 +72,10 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
 
             sOnAirPrograms.close();
             todayScheduleByChannel.close();
+            todaySchedule.close();
+            scheduleByID.close();
+            lastMonth.close();
+
 
         } catch (SQLException ex) {
             //
@@ -212,14 +218,6 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
          try(ResultSet rs = todaySchedule.executeQuery()) {
                 while (rs.next()) {
                     
-                    //la query  estrae solo gli ID degli articoli selezionati
-                    //poi sarà getArticle che, con le relative query, popolerà
-                    //gli oggetti corrispondenti. Meno efficiente, ma così la
-                    //logica di creazione degli articoli è meglio incapsulata
-                    //the query extracts only the IDs of the selected articles 
-                    //then getArticle, with its queries, will populate the 
-                    //corresponding objects. Less efficient, but in this way
-                    //article creation logic is better encapsulated
                     result.add((Schedule) getSchedule(rs.getInt("idSchedule")));
                 }
             }
@@ -255,6 +253,24 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
         
         return fascia;
             
+    }
+
+    @Override
+    public List<Schedule> getLastMonthEpisodes(Program program) throws DataException {
+         List<Schedule> result = new ArrayList();
+        try {
+            lastMonth.setInt(1, program.getKey());
+         try(ResultSet rs = lastMonth.executeQuery()) {
+                while (rs.next()) {
+                    
+                    result.add((Schedule) getSchedule(rs.getInt("idSchedule")));
+                }
+            }
+        }
+        catch (SQLException ex) {
+            throw new DataException("Unable to load articles by issue", ex);
+        }
+        return result; 
     }
 }
 
