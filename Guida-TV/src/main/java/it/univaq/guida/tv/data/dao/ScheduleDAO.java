@@ -15,6 +15,7 @@ import it.univaq.guida.tv.data.model.Schedule;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 /**

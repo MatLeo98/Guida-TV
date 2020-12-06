@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,6 +36,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     private PreparedStatement sOnAirPrograms;
     private PreparedStatement todaySchedule;
     private PreparedStatement scheduleByID;
+    private PreparedStatement todayScheduleByChannel;
 
     public ScheduleDAO_MySQL(DataLayer d) {
         super(d);
@@ -52,6 +54,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             //s = connection.prepareStatement("SELECT * FROM episode");
             todaySchedule = connection.prepareStatement("SELECT * FROM schedule WHERE date = CURDATE() AND timeSlot = ? ORDER BY channelId");
             scheduleByID = connection.prepareStatement("SELECT * FROM schedule WHERE idSchedule = ?");
+            todayScheduleByChannel = connection.prepareStatement("SELECT * FROM schedule WHERE date = '2020-12-06'");
             
 
         } catch (SQLException ex) {
@@ -66,7 +69,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
         try {
 
             sOnAirPrograms.close();
-
+            todayScheduleByChannel.close();
 
         } catch (SQLException ex) {
             //
@@ -165,7 +168,20 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
 
     @Override
     public List<Schedule> getScheduleByChannel(Channel channel, LocalDate date) throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Schedule> result = new ArrayList();
+        try {
+            //todayScheduleByChannel.setDate(1, java.sql.Date.valueOf(date));
+         try(ResultSet rs = todayScheduleByChannel.executeQuery()) {
+                while (rs.next()) {
+                   
+                    result.add((Schedule) getSchedule(rs.getInt("idSchedule")));
+                }
+            }
+        }
+        catch (SQLException ex) {
+            throw new DataException("Unable to load schedule by channel", ex);
+        }
+        return result; 
     }
 
     @Override
