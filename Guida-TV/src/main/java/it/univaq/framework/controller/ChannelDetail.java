@@ -35,7 +35,7 @@ public class ChannelDetail extends BaseController {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    LocalDate date = LocalDate.parse("2020-12-06");
+    LocalDate date = LocalDate.now();
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException {

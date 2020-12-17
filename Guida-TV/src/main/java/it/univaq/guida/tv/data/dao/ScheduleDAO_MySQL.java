@@ -56,7 +56,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             todaySchedule = connection.prepareStatement("SELECT * FROM schedule WHERE date = CURDATE() AND timeSlot = ? ORDER BY channelId");
             lastMonth = connection.prepareStatement("SELECT * FROM schedule WHERE DATE(date) >= DATE(NOW()) - INTERVAL 30 DAY AND programId = ?");
             scheduleByID = connection.prepareStatement("SELECT * FROM schedule WHERE idSchedule = ?");
-            todayScheduleByChannel = connection.prepareStatement("SELECT * FROM schedule WHERE date = '2020-12-06'");
+            todayScheduleByChannel = connection.prepareStatement("SELECT * FROM schedule WHERE date = ?");
             
 
         } catch (SQLException ex) {
@@ -176,7 +176,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     public List<Schedule> getScheduleByChannel(Channel channel, LocalDate date) throws DataException {
         List<Schedule> result = new ArrayList();
         try {
-            //todayScheduleByChannel.setDate(1, java.sql.Date.valueOf(date));
+            todayScheduleByChannel.setString(1, date.toString());
          try(ResultSet rs = todayScheduleByChannel.executeQuery()) {
                 while (rs.next()) {
                    
