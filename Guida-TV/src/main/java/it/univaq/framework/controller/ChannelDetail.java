@@ -65,11 +65,10 @@ public class ChannelDetail extends BaseController {
             out.println("<title>Servlet ChannelDetail</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ChannelDetail at " + request.getContextPath() + "</h1>");
             out.println("<h1>" + channel.getName() + "</h1>");
             out.println("<h2>Palinsesto del " + date + "</h2>");
             for(Schedule s : schedule){
-            out.println("<h3>" + s.getProgram().getName() + "</h3>");
+            out.println("<h3> <a href = 'program?id=" + s.getProgram().getKey() + "'>"  + s.getProgram().getName() + "</a></h3>");
             out.println("<h3>Ora di inizio: " + s.getStartTime() + "</h3>");
             out.println("<h3>Ora di fine: " + s.getEndTime() + "</h3>");
             }

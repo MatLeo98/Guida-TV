@@ -105,7 +105,7 @@ public class ScheduleList extends BaseController {
                 for(Schedule s : schedules){
                     if( s.getChannel().getName().equals(c.getName())){
                         //out.println("<h1>Canale: " + s.getChannel().getName() + "</h1>");
-                        out.println("<p>Programma: "+ s.getProgram().getName() +"</p>");
+                        out.println("<p>Programma: <a href = 'program?id=" + s.getProgram().getKey() + "'>" + s.getProgram().getName() +"</a></p>");
                         if(s.getEpisode() != null){
                             out.println("<p>Episodio numero: "+ s.getEpisode().getNumber() + " - "+ s.getEpisode().getName() +"</p>");
                         }

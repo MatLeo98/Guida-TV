@@ -38,7 +38,7 @@ public class Home extends BaseController {
         
         try {    
            
-            request.setAttribute("schedule", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getSchedule(1));
+            //request.setAttribute("schedule", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getSchedule(1));
             request.setAttribute("onAirPrograms", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getOnAirPrograms());
             action_home(request, response);                 
             
@@ -62,10 +62,10 @@ public class Home extends BaseController {
             out.println("</head>");
             out.println("<body>");
             
-            out.println("<h1>Servlet Home at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Programmi in onda </h1>");
             for(Schedule s : onAirPrograms){
             out.println("<h1>" + s.getChannel().getName() + "</h1>");
-            out.println("<h3> Ora in onda: " + s.getProgram().getName() + "</h3>");
+            out.println("<h3> Ora in onda: <a href = 'program?id=" + s.getProgram().getKey() + "'>" + s.getProgram().getName() + "</a></h3>");
             }
             out.println("</body>");
             out.println("</html>");
