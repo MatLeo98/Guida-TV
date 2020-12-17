@@ -71,6 +71,7 @@ public class ChannelDetail extends BaseController {
             out.println("<h3> <a href = 'program?id=" + s.getProgram().getKey() + "'>"  + s.getProgram().getName() + "</a></h3>");
             out.println("<h3>Ora di inizio: " + s.getStartTime() + "</h3>");
             out.println("<h3>Ora di fine: " + s.getEndTime() + "</h3>");
+            out.println("<h3>Genere: " + s.getProgram().getGenre() + "</h3>");
             }
             out.println("</body>");
             out.println("</html>");
