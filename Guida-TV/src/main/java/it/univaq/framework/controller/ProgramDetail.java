@@ -106,7 +106,7 @@ public class ProgramDetail extends BaseController {
             out.println("<h2> Episodi dell'ultimo mese </h2>");
             for(Schedule s : episodes){
                 out.println("<h3> Episodio numero " + s.getEpisode().getNumber() + " - " + s.getEpisode().getName() + "</h3>");
-                out.println("<p> Andato in onda: " + s.getDate() + " dalle ore: " + s.getStartTime() + " alle ore "+ s.getEndTime() + "</p>");
+                out.println("<p> Andato in onda: " + s.getDate() + " dalle ore: " + s.getStartTime() + " alle ore "+ s.getEndTime() + " ( <a href = 'channel?id=" + s.getChannel().getKey() + "'>" + s.getChannel().getName() + "</a> )</p>");
             }
             out.println("</body>");
             out.println("</html>");

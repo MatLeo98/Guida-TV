@@ -64,8 +64,8 @@ public class Home extends BaseController {
             
             out.println("<h1>Programmi in onda </h1>");
             for(Schedule s : onAirPrograms){
-            out.println("<h1>" + s.getChannel().getName() + "</h1>");
             out.println("<h3> Ora in onda: <a href = 'program?id=" + s.getProgram().getKey() + "'>" + s.getProgram().getName() + "</a></h3>");
+            out.println("<h1> <a href = 'channel?id=" + s.getChannel().getKey()+ "'>" + s.getChannel().getName() + " </a></h1>");
             }
             out.println("</body>");
             out.println("</html>");
