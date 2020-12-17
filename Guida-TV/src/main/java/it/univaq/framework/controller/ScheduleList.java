@@ -99,7 +99,8 @@ public class ScheduleList extends BaseController {
             
            // out.println("<h1>Servlet Lista at " + request.getContextPath() + "</h1>");
             for(Channel c : channels){
-                out.println("<h1>Canale: " + c.getName() + "</h1>");
+                
+                out.println("<h1>Canale: <a href = 'channel?id=" + c.getKey() + "'>" + c.getName() + " </a> </h1>");
             
                 for(Schedule s : schedules){
                     if( s.getChannel().getName().equals(c.getName())){

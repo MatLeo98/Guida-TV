@@ -6,6 +6,7 @@
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
+import it.univaq.framework.security.SecurityLayer;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Schedule;
@@ -41,8 +42,8 @@ public class ChannelDetail extends BaseController {
             throws ServletException {
         
         try {
-            
-            Channel channel = ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(1);
+            int id = SecurityLayer.checkNumeric(request.getParameter("id"));
+            Channel channel = ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(id);
             request.setAttribute("channel", channel);           
             request.setAttribute("schedule", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getScheduleByChannel(channel, date));
         } catch (DataException ex) {
