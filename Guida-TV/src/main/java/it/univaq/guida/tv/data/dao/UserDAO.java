@@ -18,7 +18,7 @@ public interface UserDAO {
     
     User getUser(String userEmail) throws DataException;
     
-    User storeUser(User user) throws DataException;
+    void storeUser(String email, String password) throws DataException;
     
     //login
     
