@@ -48,7 +48,7 @@ public class ProgramDetail extends BaseController {
             int id = SecurityLayer.checkNumeric(request.getParameter("id"));
             request.setAttribute("program", ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getProgram(id));
             Program program = (Program) request.getAttribute("program");
-            if(program.getIsSerie()){
+            if(program.IsSerie()){
                 request.setAttribute("episodes", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getLastMonthEpisodes(program));
                 serie_detail(request, response);
             }else

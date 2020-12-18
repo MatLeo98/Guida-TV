@@ -38,6 +38,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     private PreparedStatement scheduleByID;
     private PreparedStatement todayScheduleByChannel;
     private PreparedStatement lastMonth;
+    private PreparedStatement search;
 
     public ScheduleDAO_MySQL(DataLayer d) {
         super(d);
@@ -57,6 +58,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             lastMonth = connection.prepareStatement("SELECT * FROM schedule WHERE DATE(date) >= DATE(NOW()) - INTERVAL 30 DAY AND programId = ?");
             scheduleByID = connection.prepareStatement("SELECT * FROM schedule WHERE idSchedule = ?");
             todayScheduleByChannel = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? ORDER BY startTime");
+            search = connection.prepareStatement("SELECT * FROM schedule,program,channel WHERE programId = idProgram AND channelId = idChannel AND program.name LIKE ? AND genre LIKE ? AND channel.name LIKE ? GROUP BY program.name");
             
 
         } catch (SQLException ex) {
@@ -75,6 +77,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             todaySchedule.close();
             scheduleByID.close();
             lastMonth.close();
+            search.close();
 
 
         } catch (SQLException ex) {
@@ -271,6 +274,24 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             throw new DataException("Unable to load articles by issue", ex);
         }
         return result; 
+    }
+    
+    @Override
+    public List<Schedule> search(String t, String g, String c) throws DataException{
+        List<Schedule> result = new ArrayList();
+            try{
+                search.setString(1, "%" + t + "%");
+                search.setString(2, "%" + g + "%");
+                search.setString(3, "%" + c + "%");
+                try(ResultSet rs = search.executeQuery()) {
+                    while (rs.next()) {                  
+                    result.add((Schedule) getSchedule(rs.getInt("idSchedule")));
+                    }
+                }   
+            }catch(SQLException ex){
+                throw new DataException("Unable to load results", ex);
+            }
+        return result;
     }
 }
 

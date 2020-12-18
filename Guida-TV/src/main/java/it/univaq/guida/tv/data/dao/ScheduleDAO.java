@@ -56,4 +56,6 @@ public interface ScheduleDAO {
     
     void deleteSchedule(Schedule schedule);
     
+    List<Schedule> search(String s, String g, String c) throws DataException;
+    
 }

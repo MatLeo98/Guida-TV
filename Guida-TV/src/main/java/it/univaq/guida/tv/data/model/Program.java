@@ -24,7 +24,7 @@ public interface Program extends DataItem<Integer> {
 
     Image getImage();
 
-    Boolean getIsSerie();
+    Boolean IsSerie();
 
     String getLink();
 

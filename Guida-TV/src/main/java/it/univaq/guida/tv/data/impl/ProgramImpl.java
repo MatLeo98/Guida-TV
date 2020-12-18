@@ -99,7 +99,7 @@ public class ProgramImpl extends DataItemImpl<Integer> implements Program {
     }
 
     @Override
-    public Boolean getIsSerie() {
+    public Boolean IsSerie() {
         return isSerie;
     }
 
