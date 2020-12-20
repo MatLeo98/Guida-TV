@@ -16,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -35,7 +36,40 @@ public class LoginController extends BaseController {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         
-        if (request.getParameter("email") == null){
+        HttpSession s = request.getSession(true);
+         
+        if (request.getParameter("logout") == null) {
+            
+            if (s.getAttribute("email") != null && !((String) s.getAttribute("email")).isEmpty()){
+                logged(request,response);
+            }else{
+                String email = request.getParameter("email");
+                
+                if (email == null || email.isEmpty()) {                       
+                    login_action(request, response);
+                }else{
+                    try {
+                        User user = ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().getUser(email);
+                        if(user != null && user.getPassword().equals(request.getParameter("password"))){
+                            s.setAttribute("email", email);
+                            logged(request, response);
+                        }else{
+                            action_error(request,response);
+                        }
+                    } catch (DataException ex) {
+                        Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                }
+            }       
+        }else{
+           s.invalidate();
+           login_action(request, response); 
+        }
+        
+        
+         
+        /*if (request.getParameter("email") == null){
             login_action(request,response);
         }else{
             try {
@@ -50,7 +84,7 @@ public class LoginController extends BaseController {
                 Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
             } 
            
-        }
+        }*/
             
         }
 
@@ -88,15 +122,20 @@ public class LoginController extends BaseController {
 
     private void logged(HttpServletRequest request, HttpServletResponse response) {
         try (PrintWriter out = response.getWriter()){
+            
+            HttpSession s = request.getSession(false);
+            String email = (String) s.getAttribute("email");
 
-                  User user = (User) request.getAttribute("user");
-                      out.println("<h1> ciao " + user.getKey() + "</h1>");
-                      out.println("<h2> login succesfull! </h2>");
-                      out.println("<a href=\"home\"> Home </a>");
-                        //request.setAttribute("user", user);
-                } catch (IOException ex) {
-                    Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+
+            out.println("<h1> ciao " + email + "</h1>");
+            out.println("<h2> login succesfull! </h2>");
+            out.println("<a href=\"home\"> Home </a>");
+            out.println("<p><a href=\"login?logout=1\">LOGOUT</a></p>");
+               
+        } catch (IOException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     private void action_error(HttpServletRequest request, HttpServletResponse response) {
