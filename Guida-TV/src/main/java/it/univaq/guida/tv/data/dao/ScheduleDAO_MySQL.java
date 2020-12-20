@@ -58,7 +58,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             lastMonth = connection.prepareStatement("SELECT * FROM schedule WHERE DATE(date) >= DATE(NOW()) - INTERVAL 30 DAY AND programId = ?");
             scheduleByID = connection.prepareStatement("SELECT * FROM schedule WHERE idSchedule = ?");
             todayScheduleByChannel = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? ORDER BY startTime");
-            search = connection.prepareStatement("SELECT * FROM schedule,program,channel WHERE programId = idProgram AND channelId = idChannel AND program.name LIKE ? AND genre LIKE ? AND channel.name LIKE ? GROUP BY program.name");
+            search = connection.prepareStatement("SELECT * FROM schedule,program,channel WHERE programId = idProgram AND channelId = idChannel AND program.name LIKE ? AND genre LIKE ? AND channel.name LIKE ? AND startTime >= ? AND startTime <= ? AND date >= ? AND date <= ? GROUP BY program.name");
             
 
         } catch (SQLException ex) {
@@ -277,17 +277,42 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     }
     
     @Override
-    public List<Schedule> search(String t, String g, String c) throws DataException{
+    public List<Schedule> search(String t, String g, String c, String min, String max, String d1, String d2) throws DataException{
         List<Schedule> result = new ArrayList();
             try{
+                
                 search.setString(1, "%" + t + "%");
                 search.setString(2, "%" + g + "%");
                 search.setString(3, "%" + c + "%");
-                try(ResultSet rs = search.executeQuery()) {
-                    while (rs.next()) {                  
-                    result.add((Schedule) getSchedule(rs.getInt("idSchedule")));
-                    }
-                }   
+                if(min.isEmpty()){
+                    search.setString(4, "00:00");
+                }else{
+                    search.setString(4, min);
+                }
+                if(max.isEmpty()){
+                    search.setString(5, "23:59");
+                }else{
+                    search.setString(5, max);   
+                }
+                if(d1.isEmpty()){
+                    LocalDate d = LocalDate.now().minusMonths(1);
+                    String data1 = d.toString();
+                    search.setString(6, data1);
+                }else{
+                    search.setString(6, d1);
+                }
+                if(d2.isEmpty()){
+                    LocalDate d = LocalDate.now().plusDays(12);
+                    String data2 = d.toString();
+                    search.setString(7, data2);
+                }else{
+                    search.setString(7, d2);
+                }              
+                    try(ResultSet rs = search.executeQuery()) {
+                        while (rs.next()) {                  
+                        result.add((Schedule) getSchedule(rs.getInt("idSchedule")));
+                        }
+                    }      
             }catch(SQLException ex){
                 throw new DataException("Unable to load results", ex);
             }

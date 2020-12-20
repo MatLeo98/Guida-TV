@@ -23,7 +23,7 @@ public interface SavedSearches extends DataItem<Integer> {
 
     Genre getGenre();
 
-    Date getMaxEndHour();
+    Date getMinStartHour();
 
     Date getMaxStartHour();
 
@@ -41,7 +41,7 @@ public interface SavedSearches extends DataItem<Integer> {
 
     void setGenre(Genre genre);
 
-    void setMaxEndHour(Date maxEndHour);
+    void setMinStartHour(Date MinStartHour);
 
     void setMaxStartHour(Date maxStartHour);
 

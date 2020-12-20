@@ -22,7 +22,7 @@ public class SavedSearchesImpl extends DataItemImpl<Integer> implements SavedSea
     private String title;
     private Genre genre;
     private Date maxStartHour;
-    private Date maxEndHour;
+    private Date minStartHour;
     private int channel;
     private Date startDate;
     private Date endDate;
@@ -35,7 +35,7 @@ public class SavedSearchesImpl extends DataItemImpl<Integer> implements SavedSea
         title = "";
         genre = null;
         maxStartHour = null;
-        maxEndHour = null;
+        minStartHour = null;
         channel = 0;
         startDate = null;
         endDate = null;
@@ -75,13 +75,13 @@ public class SavedSearchesImpl extends DataItemImpl<Integer> implements SavedSea
     }
 
     @Override
-    public Date getMaxEndHour() {
-        return maxEndHour;
+    public Date getMinStartHour() {
+        return minStartHour;
     }
 
     @Override
-    public void setMaxEndHour(Date maxEndHour) {
-        this.maxEndHour = maxEndHour;
+    public void setMinStartHour(Date minStartHour) {
+        this.minStartHour = minStartHour;
     }
 
     @Override

@@ -11,6 +11,10 @@ import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import it.univaq.guida.tv.data.model.Schedule;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,7 +35,12 @@ public class SearchResults extends BaseController {
             String tit = request.getParameter("title");
             String gen = request.getParameter("genre");
             String ch = request.getParameter("channel");
-            request.setAttribute("search", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().search(tit, gen, ch));
+            String date1 = request.getParameter("date1");
+            String date2 = request.getParameter("date2");
+            String min = request.getParameter("min");
+            String max = request.getParameter("max");
+
+            request.setAttribute("search", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().search(tit, gen, ch, min, max, date1, date2));
         action_results(request, response);
         }catch (NumberFormatException ex) {
             request.setAttribute("message", "Home key not specified");           
@@ -51,6 +60,7 @@ public class SearchResults extends BaseController {
             out.println("<title>Servlet SearchResults</title>");            
             out.println("</head>");
             out.println("<body>");
+            out.println("<button type='submit'>Salva questi criteri di ricerca</button>");
             out.println("<h1>RISULTATI:</h1>");
             for(Schedule s : search){
             out.println("<h3><a href = 'program?id=" + s.getProgram().getKey() + "'>" + s.getProgram().getName() + "</a></h3>");

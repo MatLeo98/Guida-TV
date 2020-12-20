@@ -77,6 +77,14 @@ public class Home extends BaseController {
             out.println("<option value = '" + c.getName() + "'>" + c.getName() + "</option>");
             }
             out.println("</select>");
+            out.println("Ora Min:");
+            out.println("<input type='time' id='min' name='min'>");
+            out.println("Ora Max:");
+            out.println("<input type='time' id='max' name='max'>");
+            out.println("Da:");
+            out.println("<input type='date' id='date1' name='date1'>");
+            out.println("A:");
+            out.println("<input type='date' id='date2' name='date2'>");
             out.println("<button type='submit'>Search</button>");
             out.println("</form>");
             out.println("<h1>Programmi in onda </h1>");
