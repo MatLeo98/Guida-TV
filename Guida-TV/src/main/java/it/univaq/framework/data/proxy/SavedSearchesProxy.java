@@ -78,8 +78,8 @@ public class SavedSearchesProxy extends SavedSearchesImpl implements DataItemPro
     }
 
     @Override
-    public void setMaxEndHour(Date maxEndHour) {
-        super.setMaxEndHour(maxEndHour);
+    public void setMinStartHour(Date minStartHour) {
+        super.setMinStartHour(minStartHour);
         this.modified = true;
     }
 
