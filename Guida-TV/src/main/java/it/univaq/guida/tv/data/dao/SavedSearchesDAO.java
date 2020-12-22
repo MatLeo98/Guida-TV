@@ -18,7 +18,11 @@ public interface SavedSearchesDAO {
     
     SavedSearches createSavedSearch();
     
+    SavedSearches getSavedSearch(int key) throws DataException;
+    
     List<SavedSearches> getSavedSearches (User user) throws DataException;
+    
+    void storeSavedSearches(String titolo, String genere, String channel, String dateMin, String dateMax, String minTime, String maxTime, String email) throws DataException;
     
     void deleteSavedSearch();
     

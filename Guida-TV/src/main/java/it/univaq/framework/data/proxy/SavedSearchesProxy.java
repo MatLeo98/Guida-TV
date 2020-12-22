@@ -72,7 +72,7 @@ public class SavedSearchesProxy extends SavedSearchesImpl implements DataItemPro
     }
 
     @Override
-    public void setChannel(int channel) {
+    public void setChannel(String channel) {
         super.setChannel(channel);
         this.modified = true;
     }

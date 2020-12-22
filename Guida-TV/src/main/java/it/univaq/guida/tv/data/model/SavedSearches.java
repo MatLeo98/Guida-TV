@@ -17,7 +17,7 @@ import java.util.Date;
  */
 public interface SavedSearches extends DataItem<Integer> {
 
-    int getChannel();
+    String getChannel();
 
     Date getEndDate();
 
@@ -35,7 +35,7 @@ public interface SavedSearches extends DataItem<Integer> {
     
     User getUser();
 
-    void setChannel(int channel);
+    void setChannel(String channel);
 
     void setEndDate(Date endDate);
 

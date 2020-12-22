@@ -22,6 +22,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -39,9 +40,25 @@ public class SearchResults extends BaseController {
             String date2 = request.getParameter("date2");
             String min = request.getParameter("min");
             String max = request.getParameter("max");
-
-            request.setAttribute("search", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().search(tit, gen, ch, min, max, date1, date2));
-        action_results(request, response);
+            if(request.getParameter("saved") != null){
+                HttpSession session = request.getSession(false);
+                String email = (String) session.getAttribute("email");
+                tit = (String) session.getAttribute("title");
+                gen = (String) session.getAttribute("genre");
+                ch = (String) session.getAttribute("channel");
+                date1 = (String) session.getAttribute("date1");
+                date2 =(String) session.getAttribute("date2");
+                min = (String) session.getAttribute("min");
+                max = (String) session.getAttribute("max");
+                ((GuidatvDataLayer)request.getAttribute("datalayer")).getSavedSearchesDAO().storeSavedSearches(tit, gen, ch, date1, date2, min, max, email);
+                request.setAttribute("search", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().search(tit, gen, ch, min, max, date1, date2));
+                action_results(request, response);
+                
+              
+            }else{
+                request.setAttribute("search", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().search(tit, gen, ch, min, max, date1, date2));
+            }
+             action_results(request, response);
         }catch (NumberFormatException ex) {
             request.setAttribute("message", "Home key not specified");           
         } catch (DataException ex) { 
@@ -49,7 +66,11 @@ public class SearchResults extends BaseController {
         }
     }
     
-    private void action_results(HttpServletRequest request, HttpServletResponse response){
+    private void action_results(HttpServletRequest request, HttpServletResponse response){ 
+        HttpSession session = request.getSession(false);
+        String email = (String) session.getAttribute("email");
+                 
+        
         response.setContentType("text/html;charset=UTF-8");
         List<Schedule> search = (List<Schedule>) request.getAttribute("search");
         try (PrintWriter out = response.getWriter()) {
@@ -60,7 +81,26 @@ public class SearchResults extends BaseController {
             out.println("<title>Servlet SearchResults</title>");            
             out.println("</head>");
             out.println("<body>");
+            out.println("<body>");
+            if(email != null){
+                String tit = request.getParameter("title");
+                String gen = request.getParameter("genre");
+                String ch = request.getParameter("channel");
+                String date1 = request.getParameter("date1");
+                String date2 = request.getParameter("date2");
+                String min = request.getParameter("min");
+                String max = request.getParameter("max");
+                session.setAttribute("title", tit);
+                session.setAttribute("genre", gen);
+                session.setAttribute("channel", ch);
+                session.setAttribute("date1", date1);
+                session.setAttribute("date2", date2);
+                session.setAttribute("min", min);
+                session.setAttribute("max", max);
+            out.println("<form method=\"post\" action=\"searchresults?saved=1\">");
             out.println("<button type='submit'>Salva questi criteri di ricerca</button>");
+            out.println("</form>");
+            }
             out.println("<h1>RISULTATI:</h1>");
             for(Schedule s : search){
             out.println("<h3><a href = 'program?id=" + s.getProgram().getKey() + "'>" + s.getProgram().getName() + "</a></h3>");

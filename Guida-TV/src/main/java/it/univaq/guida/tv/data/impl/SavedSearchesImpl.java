@@ -23,7 +23,7 @@ public class SavedSearchesImpl extends DataItemImpl<Integer> implements SavedSea
     private Genre genre;
     private Date maxStartHour;
     private Date minStartHour;
-    private int channel;
+    private String channel;
     private Date startDate;
     private Date endDate;
     private Boolean sendEmail;
@@ -36,7 +36,7 @@ public class SavedSearchesImpl extends DataItemImpl<Integer> implements SavedSea
         genre = null;
         maxStartHour = null;
         minStartHour = null;
-        channel = 0;
+        channel = null;
         startDate = null;
         endDate = null;
         sendEmail = false;
@@ -85,12 +85,12 @@ public class SavedSearchesImpl extends DataItemImpl<Integer> implements SavedSea
     }
 
     @Override
-    public int getChannel() {
+    public String getChannel() {
         return channel;
     }
 
     @Override
-    public void setChannel(int channel) {
+    public void setChannel(String channel) {
         this.channel = channel;
     }
 
