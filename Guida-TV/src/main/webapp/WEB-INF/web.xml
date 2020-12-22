@@ -32,9 +32,25 @@
         <servlet-name>LoginController</servlet-name>
         <servlet-class>it.univaq.framework.controller.LoginController</servlet-class>
     </servlet>
-    <servlet>    
+    <servlet>
         <servlet-name>SearchResults</servlet-name>
         <servlet-class>it.univaq.framework.controller.SearchResults</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Admin</servlet-name>
+        <servlet-class>it.univaq.framework.controller.Admin</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Insert</servlet-name>
+        <servlet-class>it.univaq.framework.controller.Insert</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Edit</servlet-name>
+        <servlet-class>it.univaq.framework.controller.Edit</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Delete</servlet-name>
+        <servlet-class>it.univaq.framework.controller.Delete</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>BaseController</servlet-name>
@@ -68,9 +84,25 @@
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>    
+    <servlet-mapping>
         <servlet-name>SearchResults</servlet-name>
         <url-pattern>/searchresults</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Admin</servlet-name>
+        <url-pattern>/admin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Insert</servlet-name>
+        <url-pattern>/admin/insert</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Edit</servlet-name>
+        <url-pattern>/admin/edit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Delete</servlet-name>
+        <url-pattern>/admin/delete</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

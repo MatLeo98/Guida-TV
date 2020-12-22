@@ -13,7 +13,6 @@ import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -41,7 +40,9 @@ public class LoginController extends BaseController {
         if (request.getParameter("logout") == null) {
             
             if (s.getAttribute("email") != null && !((String) s.getAttribute("email")).isEmpty()){
-                logged(request,response);
+           
+                    logged(request, response);
+              
             }else{
                 String email = request.getParameter("email");
                 
@@ -52,7 +53,9 @@ public class LoginController extends BaseController {
                         User user = ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().getUser(email);
                         if(user != null && user.getPassword().equals(request.getParameter("password"))){
                             s.setAttribute("email", email);
-                            logged(request, response);
+                            
+                                logged(request, response);
+                                                   
                         }else{
                             action_error(request,response);
                         }
@@ -129,7 +132,29 @@ public class LoginController extends BaseController {
 
             out.println("<h1> ciao " + email + "</h1>");
             out.println("<h2> login succesfull! </h2>");
+                if(email.equalsIgnoreCase("admin@email.it")){
+                    out.println("<a href=\"admin\"> Gestione pagina (admin) </a>"); 
+                }else{
             out.println("<a href=\"home\"> Home </a>");
+                }
+            out.println("<p><a href=\"login?logout=1\">LOGOUT</a></p>");
+               
+        } catch (IOException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    private void admin_logged (HttpServletRequest request, HttpServletResponse response) {
+        try (PrintWriter out = response.getWriter()){
+            
+            HttpSession s = request.getSession(false);
+            String email = (String) s.getAttribute("email");
+
+
+            out.println("<h1> ciao " + email + "</h1>");
+            out.println("<h2> login succesfull! </h2>");
+            out.println("<a href=\"admin\"> Gestione pagina (admin) </a>");
             out.println("<p><a href=\"login?logout=1\">LOGOUT</a></p>");
                
         } catch (IOException ex) {

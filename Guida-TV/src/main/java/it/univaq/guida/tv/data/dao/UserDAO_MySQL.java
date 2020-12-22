@@ -16,6 +16,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -192,7 +194,7 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
                 ((DataItemProxy) user).setModified(false);
             }
         } catch (SQLException ex) {
-            throw new DataException("Unable to store article", ex);
+            Logger.getLogger(UserDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

@@ -7,6 +7,7 @@ package it.univaq.guida.tv.data.dao;
 
 import it.univaq.framework.data.DAO;
 import it.univaq.framework.data.DataException;
+import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
 import it.univaq.framework.data.proxy.ChannelProxy;
 import it.univaq.guida.tv.data.impl.ChannelImpl;
@@ -29,6 +30,7 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
     
     private PreparedStatement allChannels;
     private PreparedStatement channelByID;
+    private PreparedStatement insertChannel;
 
     public ChannelDAO_MySQL(DataLayer d) {
         super(d);
@@ -43,6 +45,7 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
             //precompile all the queries uses in this class
             allChannels = connection.prepareStatement("SELECT idChannel FROM channel");
             channelByID = connection.prepareStatement("SELECT * FROM channel WHERE idChannel = ?");
+            insertChannel = connection.prepareStatement("INSERT INTO channel (idChannel,name) VALUES(?,?)");
             
 
         } catch (SQLException ex) {
@@ -126,8 +129,33 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
     }
 
     @Override
-    public void storeChannel(Channel channel) throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void storeChannel(Integer num, String channel) throws DataException {
+        try {
+            insertChannel.setInt(1, num);
+            insertChannel.setString(2, channel);
+            if (insertChannel.executeUpdate() == 1) {
+                    
+                    try (ResultSet keys = insertChannel.getGeneratedKeys()) {
+                        
+                        if (keys.next()) {
+                            
+                            int key = keys.getInt(1);
+                            
+                            Channel c = getChannel(num);
+                            c.setKey(key);
+                            
+                            dataLayer.getCache().add(Channel.class, c);
+                        }
+                    }
+                }
+            
+            Channel c = getChannel(num);
+            if (c instanceof DataItemProxy) {
+                ((DataItemProxy) c).setModified(false);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ChannelDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }        
     }
 
     @Override

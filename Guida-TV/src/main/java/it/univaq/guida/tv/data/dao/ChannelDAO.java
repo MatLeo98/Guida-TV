@@ -23,7 +23,7 @@ public interface ChannelDAO {
     
     List<Channel> getChannels() throws DataException;
     
-    void storeChannel (Channel channel) throws DataException;
+    void storeChannel (Integer num, String channel) throws DataException;
     
     void deleteChannel();
     
