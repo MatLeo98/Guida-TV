@@ -7,8 +7,8 @@ package it.univaq.guida.tv.data.dao;
 
 import it.univaq.framework.data.DAO;
 import it.univaq.framework.data.DataException;
+import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
-import it.univaq.framework.data.proxy.EpisodeProxy;
 import it.univaq.framework.data.proxy.ProgramProxy;
 import it.univaq.guida.tv.data.impl.ProgramImpl;
 import it.univaq.guida.tv.data.impl.ProgramImpl.Genre;
@@ -17,7 +17,11 @@ import it.univaq.guida.tv.data.model.Program;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -26,6 +30,8 @@ import java.util.List;
 public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
     
     private PreparedStatement programByID;
+    private PreparedStatement allPrograms;
+    private PreparedStatement insertProgram;
 
     public ProgramDAO_MySQL(DataLayer d) {
         super(d);
@@ -39,6 +45,8 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
             //precompiliamo tutte le query utilizzate nella classe
             //precompile all the queries uses in this class
             programByID = connection.prepareStatement("SELECT * FROM program WHERE idProgram = ?");
+            allPrograms = connection.prepareStatement("SELECT idProgram FROM program");
+            insertProgram = connection.prepareStatement("INSERT INTO program (name, description, genre, link, isSerie, seasonsNumber) VALUES(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             
 
         } catch (SQLException ex) {
@@ -53,6 +61,8 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
         try {
 
             programByID.close();
+            allPrograms.close();
+            insertProgram.close();
 
 
         } catch (SQLException ex) {
@@ -128,7 +138,16 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
 
     @Override
     public List<Program> getPrograms() throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Program> programs = new ArrayList();
+        
+            try (ResultSet rs = allPrograms.executeQuery()) {
+            while (rs.next()) {
+                programs.add((Program) getProgram(rs.getInt("idProgram")));
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load channels", ex);
+        }
+        return programs;
     }
 
     @Override
@@ -137,8 +156,37 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
     }
 
     @Override
-    public void storeProgram(Program program) throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void storeProgram(String n, String desc, String gen, String l, Boolean serie, Integer sN) throws DataException {
+       try {
+            insertProgram.setString(1, n);
+            insertProgram.setString(2, desc);
+            insertProgram.setString(3, gen);
+            insertProgram.setString(4, l);
+            insertProgram.setBoolean(5, serie);
+            insertProgram.setInt(6, sN);
+            Program p = null;
+            if (insertProgram.executeUpdate() == 1) {
+                    
+                    try (ResultSet keys = insertProgram.getGeneratedKeys()) {
+                        
+                        if (keys.next()) {
+                            
+                            int key = keys.getInt(1);
+                            
+                            p = getProgram(key);
+                            p.setKey(key);
+                            
+                            dataLayer.getCache().add(Program.class, p);
+                        }
+                    }
+                }
+
+            if (p instanceof DataItemProxy) {
+                ((DataItemProxy) p).setModified(false);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ProgramDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

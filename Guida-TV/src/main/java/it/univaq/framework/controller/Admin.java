@@ -42,11 +42,11 @@ public class Admin extends BaseController {
             out.println("<a href='admin/insert?program=1'> Inserisci programma </a> <br>");
             out.println("<a href=''> Modifica programma </a> <br>");
             out.println("<a href=''> Elimina programma </a> <br>");
-            out.println("<a href=''> Inserisci episodio </a> <br>");
+            out.println("<a href='admin/insert?episode=1'> Inserisci episodio </a> <br>");
             out.println("<a href=''> Modifica episodio </a> <br>");
             out.println("<a href=''> Elimina episodio </a>");
             out.println("<h2> Azioni sui palinsesti </h2>");
-            out.println("<a href=''> Inserisci palinsesto </a> <br>");
+            out.println("<a href='admin/insert?schedule=1'> Inserisci palinsesto </a> <br>");
             out.println("<a href=''> Modifica palinsesto </a> <br>");
             out.println("<a href=''> Elimina palinsesto </a>");
             out.println("</body>");

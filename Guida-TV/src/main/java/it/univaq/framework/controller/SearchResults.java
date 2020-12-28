@@ -69,8 +69,9 @@ public class SearchResults extends BaseController {
     private void action_results(HttpServletRequest request, HttpServletResponse response){ 
         HttpSession session = request.getSession(false);
         String email = null;
-        if(session != null)
+        if(session != null){
             email = (String) session.getAttribute("email");
+        }
                  
         
         response.setContentType("text/html;charset=UTF-8");

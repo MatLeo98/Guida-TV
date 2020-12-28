@@ -10,13 +10,11 @@ import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
 import it.univaq.framework.data.proxy.ChannelProxy;
-import it.univaq.guida.tv.data.impl.ChannelImpl;
-import it.univaq.guida.tv.data.impl.ImageImpl;
 import it.univaq.guida.tv.data.model.Channel;
-import it.univaq.guida.tv.data.model.Image;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -45,7 +43,7 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
             //precompile all the queries uses in this class
             allChannels = connection.prepareStatement("SELECT idChannel FROM channel");
             channelByID = connection.prepareStatement("SELECT * FROM channel WHERE idChannel = ?");
-            insertChannel = connection.prepareStatement("INSERT INTO channel (idChannel,name) VALUES(?,?)");
+            insertChannel = connection.prepareStatement("INSERT INTO channel (idChannel,name) VALUES(?,?)", Statement.RETURN_GENERATED_KEYS);
             
 
         } catch (SQLException ex) {

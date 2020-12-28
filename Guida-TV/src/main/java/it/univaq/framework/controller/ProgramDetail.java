@@ -63,7 +63,6 @@ public class ProgramDetail extends BaseController {
     private void program_detail(HttpServletRequest request, HttpServletResponse response) {
         
         Program program = (Program) request.getAttribute("program");
-        
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
