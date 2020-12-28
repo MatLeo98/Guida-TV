@@ -7,6 +7,7 @@ package it.univaq.guida.tv.data.dao;
 
 import it.univaq.framework.data.DAO;
 import it.univaq.framework.data.DataException;
+import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
 import it.univaq.framework.data.proxy.ScheduleProxy;
 import it.univaq.guida.tv.data.impl.ScheduleImpl;
@@ -18,6 +19,8 @@ import it.univaq.guida.tv.data.model.Schedule;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -39,6 +42,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     private PreparedStatement todayScheduleByChannel;
     private PreparedStatement lastMonth;
     private PreparedStatement search;
+    private PreparedStatement insertSchedule;
 
     public ScheduleDAO_MySQL(DataLayer d) {
         super(d);
@@ -59,6 +63,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             scheduleByID = connection.prepareStatement("SELECT * FROM schedule WHERE idSchedule = ?");
             todayScheduleByChannel = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? ORDER BY startTime");
             search = connection.prepareStatement("SELECT * FROM schedule,program,channel WHERE programId = idProgram AND channelId = idChannel AND program.name LIKE ? AND genre LIKE ? AND channel.name LIKE ? AND startTime >= ? AND startTime <= ? AND date >= ? AND date <= ? GROUP BY program.name");
+            insertSchedule = connection.prepareStatement("INSERT INTO schedule (startTime, endTime, date, timeSlot, channelId, programId) VALUES(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             
 
         } catch (SQLException ex) {
@@ -78,6 +83,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             scheduleByID.close();
             lastMonth.close();
             search.close();
+            insertSchedule.close();
 
 
         } catch (SQLException ex) {
@@ -204,8 +210,38 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     }
 
     @Override
-    public void storeSchedule(Schedule schedule) throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void storeSchedule(Integer ck, Integer pk, String st, String et, String d) throws DataException {
+        try {
+            insertSchedule.setString(1, st.toString());
+            insertSchedule.setString(2, et.toString());
+            insertSchedule.setString(3, d);       
+            insertSchedule.setString(4, generateTS(st, et).toString());           
+            insertSchedule.setInt(5, ck);
+            insertSchedule.setInt(6, pk);
+            
+            Schedule s = null;
+            if (insertSchedule.executeUpdate() == 1) {
+                    
+                    try (ResultSet keys = insertSchedule.getGeneratedKeys()) {
+                        
+                        if (keys.next()) {
+                                    
+                            int key = keys.getInt(1);
+                            
+                            s = getSchedule(key);
+                            s.setKey(key);
+                            
+                            dataLayer.getCache().add(Schedule.class, s);
+                        }
+                    }
+                }
+
+            if (s instanceof DataItemProxy) {
+                ((DataItemProxy) s).setModified(false);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ScheduleDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -317,6 +353,35 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
                 throw new DataException("Unable to load results", ex);
             }
         return result;
+    }
+    
+   @Override
+    public TimeSlot generateTS(String s, String e) throws DataException {
+        TimeSlot ts = null;
+        LocalTime mattinaMin = LocalTime.parse("06:00:00");
+        LocalTime mattinaMax = LocalTime.parse("11:59:59");
+        LocalTime pomeriggioMin = LocalTime.parse("12:00:00");
+        LocalTime pomeriggioMax = LocalTime.parse("17:59:59");
+        LocalTime seraMin = LocalTime.parse("18:00:00");
+        LocalTime seraMax = LocalTime.parse("23:59:59");
+        LocalTime notteMin = LocalTime.parse("00:00:00");
+        LocalTime notteMax = LocalTime.parse("05:59:59"); 
+        LocalTime start = LocalTime.parse(s);
+        LocalTime end = LocalTime.parse(e);
+        if(mattinaMin.compareTo(start) <= 0 && mattinaMax.compareTo(end) >= 0)  
+             ts = TimeSlot.valueOf("mattina");
+        
+        if(pomeriggioMin.compareTo(start) <= 0 && pomeriggioMax.compareTo(end) >= 0) 
+             ts = TimeSlot.valueOf("pomeriggio");
+             
+        if(seraMin.compareTo(start) <= 0 && seraMax.compareTo(end) >= 0)  
+             ts = TimeSlot.valueOf("sera");
+             
+        if(notteMin.compareTo(start) <= 0 && notteMax.compareTo(end) >= 0)
+             ts = TimeSlot.valueOf("notte");
+        
+        return ts;
+            
     }
 }
 

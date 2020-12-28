@@ -7,20 +7,15 @@ package it.univaq.guida.tv.data.dao;
 
 import it.univaq.framework.data.DAO;
 import it.univaq.framework.data.DataException;
+import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
-import it.univaq.framework.data.proxy.ChannelProxy;
 import it.univaq.framework.data.proxy.EpisodeProxy;
-import it.univaq.guida.tv.data.impl.ChannelImpl;
-import it.univaq.guida.tv.data.impl.EpisodeImpl;
-import it.univaq.guida.tv.data.impl.ImageImpl;
-import it.univaq.guida.tv.data.impl.ProgramImpl;
-import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Episode;
-import it.univaq.guida.tv.data.model.Image;
 import it.univaq.guida.tv.data.model.Program;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -34,6 +29,8 @@ public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
     
     private PreparedStatement s;
     private PreparedStatement episodeByID;
+    private PreparedStatement insertEpisode;
+    private PreparedStatement programEpisodes;
 
     public EpisodeDAO_MySQL(DataLayer d) {
         super(d);
@@ -48,7 +45,8 @@ public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
             //precompile all the queries uses in this class
             s = connection.prepareStatement("SELECT * FROM episode");
             episodeByID = connection.prepareStatement("SELECT * FROM episode WHERE idEpisode = ?");
-            
+            insertEpisode = connection.prepareStatement("INSERT INTO episode (name, seasonNumber, number, programId) VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            programEpisodes = connection.prepareStatement("SELECT * FROM episode WHERE programId = ?");
 
         } catch (SQLException ex) {
             throw new DataException("Error initializing data layer", ex);
@@ -63,6 +61,8 @@ public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
 
             s.close();
             episodeByID.close();
+            insertEpisode.close();
+            programEpisodes.close();
 
 
         } catch (SQLException ex) {
@@ -120,12 +120,58 @@ public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
 
     @Override
     public List<Episode> getProgramEpisodes(Program program) throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Episode> result = new ArrayList();
+        try {
+            programEpisodes.setInt(1, program.getKey());
+         try(ResultSet rs = programEpisodes.executeQuery()) {
+                while (rs.next()) {
+                   
+                    result.add((Episode) getEpisode(rs.getInt("idSchedule")));
+                }
+            }
+        }
+        catch (SQLException ex) {
+            throw new DataException("Unable to load program's episodes", ex);
+        }
+        return result; 
     }
 
     @Override
     public List<Episode> getLastMonthEpisodes(Program program) throws DataException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void storeEpisode(String n, Integer numS, Integer numE, Integer pk) throws DataException{
+          try {
+            insertEpisode.setString(1, n);
+            insertEpisode.setInt(2, numS);
+            insertEpisode.setInt(3, numE);
+            insertEpisode.setInt(4, pk);
+            
+            Episode e = null;
+            if (insertEpisode.executeUpdate() == 1) {
+                    
+                    try (ResultSet keys = insertEpisode.getGeneratedKeys()) {
+                        
+                        if (keys.next()) {
+                                    
+                            int key = keys.getInt(1);
+                            
+                            e = getEpisode(key);
+                            e.setKey(key);
+                            
+                            dataLayer.getCache().add(Episode.class, e);
+                        }
+                    }
+                }
+
+            if (e instanceof DataItemProxy) {
+                ((DataItemProxy) e).setModified(false);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ProgramDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

@@ -15,7 +15,7 @@ import it.univaq.guida.tv.data.model.Schedule;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -52,10 +52,12 @@ public interface ScheduleDAO {
     
     TimeSlot getCurTimeSlot() throws DataException;
 
-    void storeSchedule(Schedule schedule) throws DataException;
+    void storeSchedule(Integer ck, Integer pk, String st, String et, String d) throws DataException;
     
     void deleteSchedule(Schedule schedule);
     
     List<Schedule> search(String s, String g, String c, String min, String max, String d1, String d2) throws DataException;
+    
+    TimeSlot generateTS(String s, String e) throws DataException;
     
 }
