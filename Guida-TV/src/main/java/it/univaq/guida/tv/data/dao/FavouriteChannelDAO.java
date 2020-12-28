@@ -18,8 +18,12 @@ public interface FavouriteChannelDAO {
     
     FavouriteChannel createFavouriteChannel();
     
+    FavouriteChannel getFavouriteChannel(int key) throws DataException;
+    
     List<FavouriteChannel> getFavouriteChannels(User user) throws DataException;
     
     void deleteFavouriteChannel();
+    
+    void storeFavChannel(String[] channels, String[] timeslots, String email);
     
 }

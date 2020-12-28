@@ -15,7 +15,10 @@ import it.univaq.guida.tv.data.model.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,7 +26,8 @@ import java.util.List;
  */
 public class FavouriteChannelDAO_MySQL extends DAO implements FavouriteChannelDAO{
     
-    private PreparedStatement favChannelByID;
+    private PreparedStatement favChannelById;
+    private PreparedStatement storeFavChannels;
 
     public FavouriteChannelDAO_MySQL(DataLayer d) {
         super(d);
@@ -36,7 +40,8 @@ public class FavouriteChannelDAO_MySQL extends DAO implements FavouriteChannelDA
 
             //precompiliamo tutte le query utilizzate nella classe
             //precompile all the queries uses in this class
-            favChannelByID = connection.prepareStatement("SELECT * FROM favouritechannel WHERE idFavChannel = ?");
+            favChannelById = connection.prepareStatement("SELECT * FROM favouritechannel WHERE idFavChannel = ?");
+            storeFavChannels = connection.prepareStatement("INSERT INTO favouritechannel (timeSlot,emailUser,channelId) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
             
 
         } catch (SQLException ex) {
@@ -51,7 +56,8 @@ public class FavouriteChannelDAO_MySQL extends DAO implements FavouriteChannelDA
         try {
 
             
-            favChannelByID.close();
+            favChannelById.close();
+            storeFavChannels.close();
 
 
         } catch (SQLException ex) {
@@ -68,7 +74,7 @@ public class FavouriteChannelDAO_MySQL extends DAO implements FavouriteChannelDA
     public FavouriteChannelProxy createFavouriteChannel(ResultSet rs) throws DataException{
         FavouriteChannelProxy favChannel = createFavouriteChannel();
         try {
-            favChannel.setKey(rs.getInt("idFavProgram"));
+            favChannel.setKey(rs.getInt("idFavChannel"));
             favChannel.setTimeSlot(TimeSlot.valueOf(rs.getString("timeSlot")));
             favChannel.setUserKey(rs.getString("emailUser"));
             favChannel.setChannelKey(rs.getInt("channelId"));
@@ -77,6 +83,33 @@ public class FavouriteChannelDAO_MySQL extends DAO implements FavouriteChannelDA
             throw new DataException("Unable to create FavouriteChannel object form ResultSet", ex);
         }
         return favChannel;
+    }
+    
+    @Override
+    public FavouriteChannel getFavouriteChannel(int key) throws DataException {
+       FavouriteChannel favChannel = null;
+        //prima vediamo se l'oggetto è già stato caricato
+        //first look for this object in the cache
+        if (dataLayer.getCache().has(FavouriteChannel.class, key)) {
+            favChannel = dataLayer.getCache().get(FavouriteChannel.class, key);
+        } else {
+            //altrimenti lo carichiamo dal database
+            //otherwise load it from database
+            try {
+                favChannelById.setInt(1, key);
+                try (ResultSet rs = favChannelById.executeQuery()) {
+                    if (rs.next()) {
+                        favChannel = createFavouriteChannel(rs);
+                        //e lo mettiamo anche nella cache
+                        //and put it also in the cache
+                        dataLayer.getCache().add(FavouriteChannel.class, favChannel);
+                    }
+                }
+            } catch (SQLException ex) {
+                throw new DataException("Unable to load Favourite Channel by ID", ex);
+            }
+        }
+        return favChannel;  
     }
 
     @Override
@@ -88,6 +121,48 @@ public class FavouriteChannelDAO_MySQL extends DAO implements FavouriteChannelDA
     public void deleteFavouriteChannel() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void storeFavChannel(String[] channels, String[] timeslots, String email) {
+        ciclo:
+        for(String c : channels){
+            for(String ts : timeslots){
+                try {
+                    if(c.equals("default"))
+                        break ciclo;
+                    storeFavChannels.setString(1,ts);
+                    storeFavChannels.setString(2,email);
+                    storeFavChannels.setInt(3,Integer.parseInt(c));
+                    
+                    
+                    if (storeFavChannels.executeUpdate() == 1) {
+                    
+                    try (ResultSet keys = storeFavChannels.getGeneratedKeys()) {
+                        
+                        if (keys.next()) {
+                            
+                            int key = keys.getInt(1);
+                            
+                            FavouriteChannel favChannel = getFavouriteChannel(key);
+                            favChannel.setKey(key);
+                            
+                            dataLayer.getCache().add(FavouriteChannel.class, favChannel);
+                        }
+                    }   catch (DataException ex) {
+                            Logger.getLogger(FavouriteChannelDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                }
+                    
+                    
+                } catch (SQLException ex) {
+                    Logger.getLogger(FavouriteChannelDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+            }
+        }
+    }
+
+    
     
     
     

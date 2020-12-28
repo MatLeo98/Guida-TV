@@ -52,6 +52,10 @@
         <servlet-name>Delete</servlet-name>
         <servlet-class>it.univaq.framework.controller.Delete</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ProfileController</servlet-name>
+        <servlet-class>it.univaq.framework.controller.ProfileController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>BaseController</servlet-name>
         <url-pattern>/base</url-pattern>
@@ -103,6 +107,10 @@
     <servlet-mapping>
         <servlet-name>Delete</servlet-name>
         <url-pattern>/admin/delete</url-pattern>
+       </servlet-mapping>
+    <servlet-mapping>  
+        <servlet-name>ProfileController</servlet-name>
+        <url-pattern>/profile</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

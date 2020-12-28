@@ -20,6 +20,8 @@ public interface UserDAO {
     
     void storeUser(String email, String password) throws DataException;
     
+    void setNewsletter(String email, Boolean scelta);
+    
     //login
     
 }

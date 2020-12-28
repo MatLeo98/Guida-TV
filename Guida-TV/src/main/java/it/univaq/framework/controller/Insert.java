@@ -24,16 +24,17 @@ public class Insert extends BaseController {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         if(request.getParameter("channel") != null){
-            if(request.getParameter("channelNumber") == null){
+            if(request.getParameter("channelnumber") == null){
+                System.out.println(request.getParameter("channelnumber"));
                 action_insert(request, response);
             }else{
                 insert_done(request, response);
             }
-        }else{
+        }
             if(request.getParameter("program") != null){
                 System.out.println("Programma");
             }
-        }
+       
         
     }
     
@@ -47,10 +48,21 @@ public class Insert extends BaseController {
             out.println("</head>");
             out.println("<body>");
             out.println("<h1> Inserisci un nuovo canale: </h1>");
-            out.println("<form action='insert'>");
+           /* out.println("<form action='insert'>");
             out.println("<input type='text' placeholder='Numero canale' name='channelNumber'>");
             out.println("<input type='text' placeholder='Nome canale' name='channelName'>");
             out.println("<button type='submit'>Crea</button>");
+            out.println("</form>");*/
+           out.println("<form method=\"post\" action=\"insert?channel=1\">");
+                out.println("<input type=\"text\" id=\"channelnumber\" name=\"channelnumber\" placeholder=\"Numero Canale\"/>");
+                out.println("<br><br>");
+                out.println("<input type=\"text\" id=\"channelname\" name=\"channelname\" placeholder=\"Nome Canale\"/>");
+                out.println("<br><br>");
+                
+                out.println("<input type=\"submit\" name=\"crea\" value=\"CREA\"/>");
+                out.println("<br><br>");
+                out.println("<a href=\"admin\"> Torna a admin </a>");
+            out.println(" </center>");
             out.println("</form>");
             out.println("</body>");
             out.println("</html>");
@@ -60,12 +72,24 @@ public class Insert extends BaseController {
     }
     
     private void insert_done(HttpServletRequest request, HttpServletResponse response){
-        Integer n = Integer.parseInt(request.getParameter("channelNumber"));
-            try {
-                ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().storeChannel(n ,request.getParameter("channelName"));
-            } catch (DataException ex) {
-                Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
-            }
+       
+        
+        response.setContentType("text/html;charset=UTF-8");        
+        try (PrintWriter out = response.getWriter()) {  
+            ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().storeChannel(Integer.parseInt(request.getParameter("channelnumber")) ,request.getParameter("channelname"));
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet Insert</title>"); 
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1> Canale inserito </h1>");
+            
+        } catch (DataException ex) {
+            Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

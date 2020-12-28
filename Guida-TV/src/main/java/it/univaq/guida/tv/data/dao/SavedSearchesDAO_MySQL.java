@@ -11,12 +11,14 @@ import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
 import it.univaq.framework.data.proxy.SavedSearchesProxy;
 import it.univaq.guida.tv.data.impl.ProgramImpl.Genre;
+import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.SavedSearches;
 import it.univaq.guida.tv.data.model.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,6 +32,7 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
     private PreparedStatement s;
     private PreparedStatement storeSearches; 
     private PreparedStatement SSByKey;
+    private PreparedStatement savedSByUser;
     
 
     public SavedSearchesDAO_MySQL(DataLayer d) {
@@ -44,6 +47,7 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
             //precompiliamo tutte le query utilizzate nella classe
             //precompile all the queries uses in this class
             s = connection.prepareStatement("SELECT * FROM savedsearches");   
+            savedSByUser = connection.prepareStatement("SELECT * FROM savedsearches WHERE emailUser = ?");  
             SSByKey = connection.prepareStatement("SELECT * FROM savedsearches WHERE idSavedS = ?");
             
             storeSearches = connection.prepareStatement("INSERT INTO savedsearches (title, genre, minStartHour, maxStartHour, channel, startDate, endDate, emailUser) VALUES(?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -61,6 +65,7 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
         try {
 
             s.close();
+            savedSByUser.close();
             storeSearches.close();
             SSByKey.close();
 
@@ -123,7 +128,21 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
 
     @Override
     public List<SavedSearches> getSavedSearches(User user) throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<SavedSearches> searches = new ArrayList();
+        
+            
+        
+            try {
+                savedSByUser.setString(1,user.getKey());
+                ResultSet rs = savedSByUser.executeQuery();
+                
+            while (rs.next()) {
+                searches.add((SavedSearches) getSavedSearch(rs.getInt("idSavedS")));
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load saved searches", ex);
+        }
+        return searches;
     }
 
     @Override

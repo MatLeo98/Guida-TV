@@ -135,7 +135,7 @@ public class LoginController extends BaseController {
                 if(email.equalsIgnoreCase("admin@email.it")){
                     out.println("<a href=\"admin\"> Gestione pagina (admin) </a>"); 
                 }else{
-            out.println("<a href=\"home\"> Home </a>");
+                    out.println("<a href=\"home\"> Home </a>");
                 }
             out.println("<p><a href=\"login?logout=1\">LOGOUT</a></p>");
                
