@@ -9,6 +9,7 @@ import it.univaq.framework.data.DataException;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import it.univaq.guida.tv.data.impl.ScheduleImpl;
 import it.univaq.guida.tv.data.model.Channel;
+import it.univaq.guida.tv.data.model.FavouriteChannel;
 import it.univaq.guida.tv.data.model.FavouriteProgram;
 import it.univaq.guida.tv.data.model.Program;
 import it.univaq.guida.tv.data.model.SavedSearches;
@@ -51,10 +52,15 @@ public class ProfileController extends BaseController {
                 if (!(request.getParameter("emailgiornaliera") == null)){
                     setEmail(request,response);
                 }  
+                if(request.getParameter("daymail") != null){
+                    setEmailSS(request,response);
+                }
                 User user = ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().getUser((String)s.getAttribute("email"));
                 request.setAttribute("savedS",((GuidatvDataLayer)request.getAttribute("datalayer")).getSavedSearchesDAO().getSavedSearches(user));
-                request.setAttribute("favProgramsId",((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteProgramDAO().getFavouritePrograms(user));
-                request.setAttribute(("favPrograms"),getFavPrograms(request,response));
+                request.setAttribute("favPrograms",((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteProgramDAO().getFavouritePrograms(user));
+                request.setAttribute("favChannels",((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteChannelDAO().getFavouriteChannels(user));
+                
+                
                 actions(request,response);
                 
                 
@@ -86,7 +92,8 @@ public class ProfileController extends BaseController {
          List<Channel> channels = (List<Channel>) request.getAttribute("channels");
          ScheduleImpl.TimeSlot[] timeslots = ScheduleImpl.TimeSlot.class.getEnumConstants();
          List<SavedSearches> savedS = (List<SavedSearches>) request.getAttribute("savedS");
-         List<Program> programs = (List<Program>) request.getAttribute("favPrograms");
+         List<FavouriteProgram> programs = (List<FavouriteProgram>) request.getAttribute("favPrograms");
+         List<FavouriteChannel> favCh = (List<FavouriteChannel>) request.getAttribute("favChannels");
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
         out.println("<!DOCTYPE html>");
@@ -146,42 +153,38 @@ public class ProfileController extends BaseController {
                 
                   out.println("<th>Email giornaliera</th>");
                 
-                  out.println("<th>Vedi</th>");
+                  out.println("<th>Vedi Risultati</th>");
                 out.println("</tr>");
                 
                 for(SavedSearches s : savedS){
                     
                     out.println("<tr>");
-                         out.println("<td>" + s.getTitle() + "</td>");
+                         out.println("<td style=\"text-align:center\">" + s.getTitle() + "</td>");
                     
-                         out.println("<td>" + s.getGenre() + "</td>");
+                         out.println("<td style=\"text-align:center\">" + s.getGenre() + "</td>");
                     
-                         out.println("<td>" + s.getMinStartHour()+ "</td>");
+                         out.println("<td style=\"text-align:center\">" + s.getMinStartHour()+ "</td>");
                     
-                         out.println("<td>" + s.getMaxStartHour()+ "</td>");
+                         out.println("<td style=\"text-align:center\">" + s.getMaxStartHour()+ "</td>");
                     
-                         out.println("<td>" + s.getChannel()+ "</td>");
+                         out.println("<td style=\"text-align:center\">" + s.getChannel()+ "</td>");
                    
-                         out.println("<td>" + s.getStartDate()+ "</td>");
+                         out.println("<td style=\"text-align:center\">" + s.getStartDate()+ "</td>");
                     
-                         out.println("<td>" + s.getEndDate()+ "</td>");
-                    out.println("<form method=\"post\" action=\"profile\">");
-                    out.println("<td>");
-                    out.println(" <input type=\"radio\" name=\"emailgiornaliera\" id=\"abilita\" value=\"1\" />");
-                    out.println("<label for='abilita'> Sì </label>");
-                    
-                     out.println("<input type=\"radio\" name=\"emailgiornaliera\" id=\"disabilita\" value=\"0\" checked=\"checked\" />");
-                    out.println("<label for='disabilita'> No </label>");
-                    out.println("<input type=\"submit\" name=\"salva\" value=\"SALVA\"/>");
+                         out.println("<td style=\"text-align:center\">" + s.getEndDate()+ "</td>");
+                    out.println("<form method=\"post\" action=\"profile?daymail="+s.getKey()+"\">");
+                    out.println("<td style=\"text-align:center\">");
+                    out.println(" <button name='daymailss' type='submit' value='0'>NO</button>");
+                    out.println(" <button  name='daymailss' type='submit' value='1'>SI</button>");
                     out.println("</form>");
                 out.println("</td>");
                     
-                         out.println("<td><button href=\"search\"> VEDI </button></td>");
+                         out.println("<td style=\"text-align:center\"><a href='searchresults?title="+s.getTitle()+"&genre="+ s.getGenre() +"&channel=" + s.getChannel()+ "&min="+ s.getMinStartHour()+ "&max=" + s.getMaxStartHour()+ "&date1=" + s.getStartDate()+ "&date2=" + s.getEndDate()+ "'><button> VEDI</button> </a></td>");
                     out.println("</tr>");
                 }
                     out.println("</table>");
                     
-                    
+                    out.println("<br><br><br>");
                     
                     
                     out.println("<center><h2> Ecco i tuoi programmi preferiti</h2></center>");
@@ -201,18 +204,18 @@ public class ProfileController extends BaseController {
                 
                 out.println("</tr>");
                 
-                for(Program p : programs){
+                for(FavouriteProgram p : programs){
                     
                     out.println("<tr>");
-                         out.println("<td>" + p.getName() + "</td>");
+                         out.println("<td style=\"text-align:center\">" + p.getProgram().getName() + "</td>");
                     
-                         out.println("<td>" + p.getDescription()+ "</td>");
+                         out.println("<td style=\"text-align:center\">" + p.getProgram().getDescription()+ "</td>");
                     
-                         out.println("<td>" + p.getGenre()+ "</td>");
+                         out.println("<td style=\"text-align:center\">" + p.getProgram().getGenre()+ "</td>");
                     
-                         out.println("<td>" + p.getLink()+ "</td>");
+                         out.println("<td style=\"text-align:center\">" + p.getProgram().getLink()+ "</td>");
                     
-                     out.println("<td>");
+                     out.println("<td style=\"text-align:center\">");
                     out.println("<form method=\"post\" action=\"profile\">");
                     
                
@@ -226,7 +229,54 @@ public class ProfileController extends BaseController {
                    
                 
                 
-                out.println("<br><br>");
+                out.println("<br><br><br>");
+                
+                
+                 out.println("<center><h2> Ecco i tuoi canali preferiti</h2></center>");
+                out.println("<br>");
+                out.println("<table style=\"width:100%\">");
+                out.println("<tr>");
+                  out.println("<th>Canale</th>");
+                
+                  out.println("<th>Nome</th>");
+                  
+                  out.println("<th>Fascia Oraria</th>");
+                
+                  out.println("<th>Elimina</th>");
+                
+                
+                out.println("</tr>");
+                
+                for(FavouriteChannel c : favCh){
+                    
+                    Integer var = c.getChannel().getKey();
+                    
+                    out.println("<tr>");
+                    if(var != request.getAttribute("canale")){
+                       
+                         out.println("<td  style=\"text-align:center\">" + c.getChannel().getKey() + "</td>");
+                    
+                         out.println("<td style=\"text-align:center\">" + c.getChannel().getName()+ "</td>");
+                    }else{
+                        out.println("<td  style=\"text-align:center\"></td>");
+                    
+                         out.println("<td style=\"text-align:center\"></td>");
+                    }
+                         request.setAttribute("canale", c.getChannel().getKey());
+                    
+                         out.println("<td style=\"text-align:center\">" + c.getTimeSlot()+ "</td>");
+                    
+                     out.println("<td style=\"text-align:center\">");
+                    out.println("<form method=\"post\" action=\"profile\">");
+                    
+               
+                    out.println("<input type=\"submit\" name=\"elimina\" value=\"ELIMINA\"/>");
+                    out.println("</form>");
+                out.println("</td>");
+                    
+                      
+                }
+                    out.println("</table>");
                 
             out.println("</body>");
             out.println("</html>");
@@ -262,19 +312,18 @@ public class ProfileController extends BaseController {
         ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().setNewsletter(email,newsletter);
     }
 
-    private List<Program> getFavPrograms(HttpServletRequest request, HttpServletResponse response) {
-        List<FavouriteProgram> favPrograms = (List<FavouriteProgram>) request.getAttribute("favProgramsId");
-        List<Program> programs = new ArrayList<>();
-        for(FavouriteProgram fp : favPrograms){
-            try {
-                Program p = ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getProgram(fp.getProgram().getKey());
-                System.out.println("Programma" + p.getName());
-                programs.add(p);
-            } catch (DataException ex) {
-                Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+    private void setEmailSS(HttpServletRequest request, HttpServletResponse response) {
+        
+       Integer id = Integer.parseInt(request.getParameter("daymail"));
+       Boolean dayMail = (Integer.parseInt(request.getParameter("daymailss"))==1);
+       
+        try {
+            ((GuidatvDataLayer)request.getAttribute("datalayer")).getSavedSearchesDAO().setDayMail(id,dayMail);
+            
+        } catch (DataException ex) {
+            Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return programs;
+       
     }
     
 

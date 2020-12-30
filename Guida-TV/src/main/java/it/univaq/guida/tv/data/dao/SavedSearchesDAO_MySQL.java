@@ -9,6 +9,7 @@ import it.univaq.framework.data.DAO;
 import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
+import it.univaq.framework.data.OptimisticLockException;
 import it.univaq.framework.data.proxy.SavedSearchesProxy;
 import it.univaq.guida.tv.data.impl.ProgramImpl.Genre;
 import it.univaq.guida.tv.data.model.Channel;
@@ -34,6 +35,7 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
     private PreparedStatement SSByKey;
     private PreparedStatement savedSByUser;
      private PreparedStatement last;
+      private PreparedStatement dayMail;
     
 
     public SavedSearchesDAO_MySQL(DataLayer d) {
@@ -52,7 +54,7 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
             SSByKey = connection.prepareStatement("SELECT * FROM savedsearches WHERE idSavedS = ?");
             last = connection.prepareStatement("SELECT * FROM savedsearches WHERE emailUser = ? ORDER BY idSavedS DESC ");
             storeSearches = connection.prepareStatement("INSERT INTO savedsearches (title, genre, minStartHour, maxStartHour, channel, startDate, endDate, emailUser) VALUES(?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            
+            dayMail = connection.prepareStatement("UPDATE savedsearches SET sendEmail = ? WHERE idSavedS = ?");
 
         } catch (SQLException ex) {
             throw new DataException("Error initializing data layer", ex);
@@ -70,6 +72,7 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
             storeSearches.close();
             SSByKey.close();
             last.close();
+            dayMail.close();
 
         } catch (SQLException ex) {
             //
@@ -215,6 +218,20 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
                 throw new DataException("Unable to load SavedSearch by ID", ex);
             }
         return ss;
+    }
+
+    @Override
+    public void setDayMail(int key, boolean email) throws DataException{
+       try {
+            dayMail.setBoolean(1, email);
+            dayMail.setInt(2, key);
+            if (dayMail.executeUpdate() == 0) {
+                SavedSearches ss = getSavedSearch(key);
+                    throw new OptimisticLockException(ss);
+                }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     

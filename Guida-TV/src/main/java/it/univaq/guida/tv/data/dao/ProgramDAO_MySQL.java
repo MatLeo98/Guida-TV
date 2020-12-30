@@ -5,6 +5,7 @@
  */
 package it.univaq.guida.tv.data.dao;
 
+import it.univaq.framework.controller.ProfileController;
 import it.univaq.framework.data.DAO;
 import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItemProxy;
@@ -13,6 +14,7 @@ import it.univaq.framework.data.proxy.ProgramProxy;
 import it.univaq.guida.tv.data.impl.ProgramImpl;
 import it.univaq.guida.tv.data.impl.ProgramImpl.Genre;
 import it.univaq.guida.tv.data.model.Episode;
+import it.univaq.guida.tv.data.model.FavouriteProgram;
 import it.univaq.guida.tv.data.model.Program;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -193,5 +195,7 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
     public void deleteProgram(Program program) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    
     
 }

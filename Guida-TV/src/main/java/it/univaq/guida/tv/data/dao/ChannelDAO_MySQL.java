@@ -5,12 +5,14 @@
  */
 package it.univaq.guida.tv.data.dao;
 
+import it.univaq.framework.controller.ProfileController;
 import it.univaq.framework.data.DAO;
 import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
 import it.univaq.framework.data.proxy.ChannelProxy;
 import it.univaq.guida.tv.data.model.Channel;
+import it.univaq.guida.tv.data.model.FavouriteChannel;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -160,5 +162,7 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
     public void deleteChannel() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    
     
 }

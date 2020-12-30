@@ -16,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +29,7 @@ public class FavouriteChannelDAO_MySQL extends DAO implements FavouriteChannelDA
     
     private PreparedStatement favChannelById;
     private PreparedStatement storeFavChannels;
+     private PreparedStatement favChannelsByUser;
 
     public FavouriteChannelDAO_MySQL(DataLayer d) {
         super(d);
@@ -42,7 +44,7 @@ public class FavouriteChannelDAO_MySQL extends DAO implements FavouriteChannelDA
             //precompile all the queries uses in this class
             favChannelById = connection.prepareStatement("SELECT * FROM favouritechannel WHERE idFavChannel = ?");
             storeFavChannels = connection.prepareStatement("INSERT INTO favouritechannel (timeSlot,emailUser,channelId) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            
+            favChannelsByUser = connection.prepareStatement("SELECT * FROM favouritechannel WHERE emailUser = ?");
 
         } catch (SQLException ex) {
             throw new DataException("Error initializing data layer", ex);
@@ -58,7 +60,7 @@ public class FavouriteChannelDAO_MySQL extends DAO implements FavouriteChannelDA
             
             favChannelById.close();
             storeFavChannels.close();
-
+            favChannelsByUser.close();
 
         } catch (SQLException ex) {
             //
@@ -114,7 +116,22 @@ public class FavouriteChannelDAO_MySQL extends DAO implements FavouriteChannelDA
 
     @Override
     public List<FavouriteChannel> getFavouriteChannels(User user) throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<FavouriteChannel> favC = new ArrayList();
+        try {
+            favChannelsByUser.setString(1,user.getKey());
+            
+        
+            try (ResultSet rs = favChannelsByUser.executeQuery()) {
+            while (rs.next()) {
+                favC.add((FavouriteChannel) getFavouriteChannel(rs.getInt("idFavChannel")));
+            }
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load favourite channels", ex);
+        }
+        
+        
+        return favC;
     }
 
     @Override
