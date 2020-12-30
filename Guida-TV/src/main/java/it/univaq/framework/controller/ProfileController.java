@@ -9,10 +9,13 @@ import it.univaq.framework.data.DataException;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import it.univaq.guida.tv.data.impl.ScheduleImpl;
 import it.univaq.guida.tv.data.model.Channel;
+import it.univaq.guida.tv.data.model.FavouriteProgram;
+import it.univaq.guida.tv.data.model.Program;
 import it.univaq.guida.tv.data.model.SavedSearches;
 import it.univaq.guida.tv.data.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,6 +53,8 @@ public class ProfileController extends BaseController {
                 }  
                 User user = ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().getUser((String)s.getAttribute("email"));
                 request.setAttribute("savedS",((GuidatvDataLayer)request.getAttribute("datalayer")).getSavedSearchesDAO().getSavedSearches(user));
+                request.setAttribute("favProgramsId",((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteProgramDAO().getFavouritePrograms(user));
+                request.setAttribute(("favPrograms"),getFavPrograms(request,response));
                 actions(request,response);
                 
                 
@@ -81,6 +86,7 @@ public class ProfileController extends BaseController {
          List<Channel> channels = (List<Channel>) request.getAttribute("channels");
          ScheduleImpl.TimeSlot[] timeslots = ScheduleImpl.TimeSlot.class.getEnumConstants();
          List<SavedSearches> savedS = (List<SavedSearches>) request.getAttribute("savedS");
+         List<Program> programs = (List<Program>) request.getAttribute("favPrograms");
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
         out.println("<!DOCTYPE html>");
@@ -174,6 +180,49 @@ public class ProfileController extends BaseController {
                     out.println("</tr>");
                 }
                     out.println("</table>");
+                    
+                    
+                    
+                    
+                    out.println("<center><h2> Ecco i tuoi programmi preferiti</h2></center>");
+                out.println("<br>");
+                out.println("<table style=\"width:100%\">");
+                out.println("<tr>");
+                  out.println("<th>Nome</th>");
+                
+                  out.println("<th>Descrizione</th>");
+                
+                  out.println("<th>Genere</th>");
+               
+                  out.println("<th>Link</th>");
+                
+                  out.println("<th>Elimina</th>");
+                
+                
+                out.println("</tr>");
+                
+                for(Program p : programs){
+                    
+                    out.println("<tr>");
+                         out.println("<td>" + p.getName() + "</td>");
+                    
+                         out.println("<td>" + p.getDescription()+ "</td>");
+                    
+                         out.println("<td>" + p.getGenre()+ "</td>");
+                    
+                         out.println("<td>" + p.getLink()+ "</td>");
+                    
+                     out.println("<td>");
+                    out.println("<form method=\"post\" action=\"profile\">");
+                    
+               
+                    out.println("<input type=\"submit\" name=\"elimina\" value=\"ELIMINA\"/>");
+                    out.println("</form>");
+                out.println("</td>");
+                    
+                      
+                }
+                    out.println("</table>");
                    
                 
                 
@@ -211,6 +260,21 @@ public class ProfileController extends BaseController {
         }
         ((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteChannelDAO().storeFavChannel(channels,timeslots, email);
         ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().setNewsletter(email,newsletter);
+    }
+
+    private List<Program> getFavPrograms(HttpServletRequest request, HttpServletResponse response) {
+        List<FavouriteProgram> favPrograms = (List<FavouriteProgram>) request.getAttribute("favProgramsId");
+        List<Program> programs = new ArrayList<>();
+        for(FavouriteProgram fp : favPrograms){
+            try {
+                Program p = ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getProgram(fp.getProgram().getKey());
+                System.out.println("Programma" + p.getName());
+                programs.add(p);
+            } catch (DataException ex) {
+                Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return programs;
     }
     
 

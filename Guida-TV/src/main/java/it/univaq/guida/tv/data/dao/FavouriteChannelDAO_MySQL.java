@@ -151,7 +151,7 @@ public class FavouriteChannelDAO_MySQL extends DAO implements FavouriteChannelDA
                     }   catch (DataException ex) {
                             Logger.getLogger(FavouriteChannelDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                }
+                    }
                     
                     
                 } catch (SQLException ex) {

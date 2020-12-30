@@ -10,6 +10,7 @@ import it.univaq.framework.data.DataItemImpl;
 import it.univaq.guida.tv.data.impl.ScheduleImpl.TimeSlot;
 import it.univaq.guida.tv.data.model.FavouriteProgram;
 import it.univaq.guida.tv.data.model.Program;
+import it.univaq.guida.tv.data.model.SavedSearches;
 import it.univaq.guida.tv.data.model.User;
 
 /**
@@ -18,26 +19,26 @@ import it.univaq.guida.tv.data.model.User;
  */
 public class FavouriteProgramImpl extends DataItemImpl<Integer> implements FavouriteProgram {
 
-    private TimeSlot timeSlot;
+    private SavedSearches ss;
     
     private Program program;
     private User user;
     
     public FavouriteProgramImpl(){
         super();
-        timeSlot = null;
+        ss = null;
         program = null;
         user = null;
     } 
     
     @Override
-    public TimeSlot getTimeSlot() {
-        return timeSlot;
+    public SavedSearches getSavedSearch() {
+        return ss;
     }
 
     @Override
-    public void setTimeSlot(TimeSlot timeSlot) {
-        this.timeSlot = timeSlot;
+    public void setSavedSearch(SavedSearches ss) {
+        this.ss = ss;
     }
 
     @Override
@@ -59,6 +60,10 @@ public class FavouriteProgramImpl extends DataItemImpl<Integer> implements Favou
     public void setUser(User user) {
         this.user = user;
     }
+
+    
+
+    
     
     
     

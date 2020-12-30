@@ -33,6 +33,7 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
     private PreparedStatement storeSearches; 
     private PreparedStatement SSByKey;
     private PreparedStatement savedSByUser;
+     private PreparedStatement last;
     
 
     public SavedSearchesDAO_MySQL(DataLayer d) {
@@ -49,7 +50,7 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
             s = connection.prepareStatement("SELECT * FROM savedsearches");   
             savedSByUser = connection.prepareStatement("SELECT * FROM savedsearches WHERE emailUser = ?");  
             SSByKey = connection.prepareStatement("SELECT * FROM savedsearches WHERE idSavedS = ?");
-            
+            last = connection.prepareStatement("SELECT * FROM savedsearches WHERE emailUser = ? ORDER BY idSavedS DESC ");
             storeSearches = connection.prepareStatement("INSERT INTO savedsearches (title, genre, minStartHour, maxStartHour, channel, startDate, endDate, emailUser) VALUES(?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             
 
@@ -68,6 +69,7 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
             savedSByUser.close();
             storeSearches.close();
             SSByKey.close();
+            last.close();
 
         } catch (SQLException ex) {
             //
@@ -86,8 +88,8 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
             savedSearch.setKey(rs.getInt("idSavedS"));
             savedSearch.setTitle(rs.getString("title"));
             savedSearch.setGenre(Genre.valueOf(rs.getString("genre")));
-            savedSearch.setMaxStartHour(rs.getDate("maxStartHour"));
-            savedSearch.setMinStartHour(rs.getDate("minStartHour"));
+            savedSearch.setMaxStartHour(rs.getTime("maxStartHour").toLocalTime());
+            savedSearch.setMinStartHour(rs.getTime("minStartHour").toLocalTime());
             savedSearch.setChannel(rs.getString("channel"));
             savedSearch.setStartDate(rs.getDate("startDate"));
             savedSearch.setEndDate(rs.getDate("endDate"));
@@ -151,8 +153,11 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
     }
 
     @Override
-    public void storeSavedSearches(String titolo, String genere, String channel, String dateMin, String dateMax, String minTime, String maxTime, String email) throws DataException {
-        try {System.out.println(minTime +"-" +maxTime);
+    public SavedSearches storeSavedSearches(String titolo, String genere, String channel, String dateMin, String dateMax, String minTime, String maxTime, String email) throws DataException {
+        SavedSearches ss = null;
+        try {
+            
+            System.out.println(minTime +"-" +maxTime);
             storeSearches.setString(1,titolo);
             storeSearches.setString(2,genere);
             storeSearches.setTime(3,java.sql.Time.valueOf(minTime+":00"));
@@ -162,7 +167,7 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
             storeSearches.setDate(7,java.sql.Date.valueOf(dateMax));
             storeSearches.setString(8,email);
             System.out.println("sql:" + storeSearches);
-            SavedSearches ss = null;
+            
             if (storeSearches.executeUpdate() == 1) {
                  try (ResultSet keys = storeSearches.getGeneratedKeys()) {
                      if (keys.next()) {
@@ -191,7 +196,25 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
             Logger.getLogger(SavedSearchesDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        return ss;
         
+    }
+
+    @Override
+    public SavedSearches getLast(String email) throws DataException{
+        SavedSearches ss = null;
+        try {
+                last.setString(1,email);
+                try (ResultSet rs = last.executeQuery()) {
+                    if (rs.next()) {
+                        
+                       ss = createSavedSearch(rs);
+                    }
+                }
+            } catch (SQLException ex) {
+                throw new DataException("Unable to load SavedSearch by ID", ex);
+            }
+        return ss;
     }
 
     

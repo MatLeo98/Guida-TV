@@ -207,7 +207,7 @@ public class Insert extends BaseController {
             out.println("Data:");
             out.println("<input type='date' id='date' name='date'>");
             out.println("<button type='submit'>Crea</button>");
-            out.println("</form>");*/
+            out.println("</form>");
            out.println("<form method=\"post\" action=\"insert?channel=1\">");
                 out.println("<input type=\"text\" id=\"channelnumber\" name=\"channelnumber\" placeholder=\"Numero Canale\"/>");
                 out.println("<br><br>");
