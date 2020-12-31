@@ -30,6 +30,7 @@ public class FavouriteChannelDAO_MySQL extends DAO implements FavouriteChannelDA
     private PreparedStatement favChannelById;
     private PreparedStatement storeFavChannels;
      private PreparedStatement favChannelsByUser;
+     private PreparedStatement delFavCh;
 
     public FavouriteChannelDAO_MySQL(DataLayer d) {
         super(d);
@@ -45,6 +46,7 @@ public class FavouriteChannelDAO_MySQL extends DAO implements FavouriteChannelDA
             favChannelById = connection.prepareStatement("SELECT * FROM favouritechannel WHERE idFavChannel = ?");
             storeFavChannels = connection.prepareStatement("INSERT INTO favouritechannel (timeSlot,emailUser,channelId) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
             favChannelsByUser = connection.prepareStatement("SELECT * FROM favouritechannel WHERE emailUser = ?");
+            delFavCh = connection.prepareStatement("DELETE FROM favouritechannel WHERE idFavChannel = ?");
 
         } catch (SQLException ex) {
             throw new DataException("Error initializing data layer", ex);
@@ -61,6 +63,7 @@ public class FavouriteChannelDAO_MySQL extends DAO implements FavouriteChannelDA
             favChannelById.close();
             storeFavChannels.close();
             favChannelsByUser.close();
+            delFavCh.close();
 
         } catch (SQLException ex) {
             //
@@ -135,8 +138,16 @@ public class FavouriteChannelDAO_MySQL extends DAO implements FavouriteChannelDA
     }
 
     @Override
-    public void deleteFavouriteChannel() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void deleteFavouriteChannel(int key) {
+        try {
+            
+            delFavCh.setInt(1,key);
+            delFavCh.executeUpdate();
+                
+        } catch (SQLException ex) {
+            Logger.getLogger(FavouriteChannelDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     @Override

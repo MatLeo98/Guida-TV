@@ -36,6 +36,8 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
     private PreparedStatement savedSByUser;
      private PreparedStatement last;
       private PreparedStatement dayMail;
+      private PreparedStatement delSS;
+      private PreparedStatement delSSProg;
     
 
     public SavedSearchesDAO_MySQL(DataLayer d) {
@@ -55,6 +57,8 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
             last = connection.prepareStatement("SELECT * FROM savedsearches WHERE emailUser = ? ORDER BY idSavedS DESC ");
             storeSearches = connection.prepareStatement("INSERT INTO savedsearches (title, genre, minStartHour, maxStartHour, channel, startDate, endDate, emailUser) VALUES(?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             dayMail = connection.prepareStatement("UPDATE savedsearches SET sendEmail = ? WHERE idSavedS = ?");
+            delSS = connection.prepareStatement("DELETE FROM savedsearches WHERE idSavedS = ?");
+            delSSProg = connection.prepareStatement("DELETE FROM favouriteprogram WHERE savedSearchId = ?");
 
         } catch (SQLException ex) {
             throw new DataException("Error initializing data layer", ex);
@@ -73,6 +77,7 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
             SSByKey.close();
             last.close();
             dayMail.close();
+            delSSProg.close();
 
         } catch (SQLException ex) {
             //
@@ -151,8 +156,18 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
     }
 
     @Override
-    public void deleteSavedSearch() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void deleteSavedSearch(int key) {
+        try {
+            
+            delSS.setInt(1,key);
+            delSS.executeUpdate();
+            delSSProg.setInt(1, key);
+            delSSProg.executeUpdate();
+            
+                
+        } catch (SQLException ex) {
+            Logger.getLogger(SavedSearchesDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

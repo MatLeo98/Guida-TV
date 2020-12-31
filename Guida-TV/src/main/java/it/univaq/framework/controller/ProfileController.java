@@ -55,6 +55,16 @@ public class ProfileController extends BaseController {
                 if(request.getParameter("daymail") != null){
                     setEmailSS(request,response);
                 }
+                System.out.println(request.getParameter("delch"));
+                if(request.getParameter("delch") != null){
+                    delFavChannel(request,response);
+                }
+                if(request.getParameter("delprog") != null){
+                    delFavProgram(request,response);
+                }
+                if(request.getParameter("delSS") != null){
+                    delSS(request,response);
+                }
                 User user = ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().getUser((String)s.getAttribute("email"));
                 request.setAttribute("savedS",((GuidatvDataLayer)request.getAttribute("datalayer")).getSavedSearchesDAO().getSavedSearches(user));
                 request.setAttribute("favPrograms",((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteProgramDAO().getFavouritePrograms(user));
@@ -154,6 +164,7 @@ public class ProfileController extends BaseController {
                   out.println("<th>Email giornaliera</th>");
                 
                   out.println("<th>Vedi Risultati</th>");
+                   out.println("<th>Elimina</th>");
                 out.println("</tr>");
                 
                 for(SavedSearches s : savedS){
@@ -176,11 +187,20 @@ public class ProfileController extends BaseController {
                     out.println("<td style=\"text-align:center\">");
                     out.println(" <button name='daymailss' type='submit' value='0'>NO</button>");
                     out.println(" <button  name='daymailss' type='submit' value='1'>SI</button>");
+                    out.println("</td>");
+                   
                     out.println("</form>");
-                out.println("</td>");
+                
                     
-                         out.println("<td style=\"text-align:center\"><a href='searchresults?title="+s.getTitle()+"&genre="+ s.getGenre() +"&channel=" + s.getChannel()+ "&min="+ s.getMinStartHour()+ "&max=" + s.getMaxStartHour()+ "&date1=" + s.getStartDate()+ "&date2=" + s.getEndDate()+ "'><button> VEDI</button> </a></td>");
-                    out.println("</tr>");
+                    out.println("<td style=\"text-align:center\"><a href='searchresults?title="+s.getTitle()+"&genre="+ s.getGenre() +"&channel=" + s.getChannel()+ "&min="+ s.getMinStartHour()+ "&max=" + s.getMaxStartHour()+ "&date1=" + s.getStartDate()+ "&date2=" + s.getEndDate()+ "'><button> VEDI</button> </a></td>");
+                    out.println("<td style=\"text-align:center\">");
+                    out.println("<form method=\"post\" action=\"profile?delSS=" +s.getKey()+"\">");
+                    
+               
+                    out.println("<input type=\"submit\" name=\"elimina\" value=\"ELIMINA\"/>");
+                    out.println("</form>");
+                    out.println("</td>");
+                         out.println("</tr>");
                 }
                     out.println("</table>");
                     
@@ -216,12 +236,12 @@ public class ProfileController extends BaseController {
                          out.println("<td style=\"text-align:center\">" + p.getProgram().getLink()+ "</td>");
                     
                      out.println("<td style=\"text-align:center\">");
-                    out.println("<form method=\"post\" action=\"profile\">");
+                    out.println("<form method=\"post\" action=\"profile?delprog=" +p.getKey()+"\">");
                     
                
                     out.println("<input type=\"submit\" name=\"elimina\" value=\"ELIMINA\"/>");
                     out.println("</form>");
-                out.println("</td>");
+                    out.println("</td>");
                     
                       
                 }
@@ -267,12 +287,16 @@ public class ProfileController extends BaseController {
                          out.println("<td style=\"text-align:center\">" + c.getTimeSlot()+ "</td>");
                     
                      out.println("<td style=\"text-align:center\">");
-                    out.println("<form method=\"post\" action=\"profile\">");
+                    out.println("<form method=\"post\" action=\"profile?delch=" +c.getKey()+"\">");
                     
                
                     out.println("<input type=\"submit\" name=\"elimina\" value=\"ELIMINA\"/>");
                     out.println("</form>");
-                out.println("</td>");
+                    
+                    
+                    
+                    out.println("</td>");
+                
                     
                       
                 }
@@ -324,6 +348,24 @@ public class ProfileController extends BaseController {
             Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
         }
        
+    }
+
+    private void delFavChannel(HttpServletRequest request, HttpServletResponse response) {
+       Integer id = Integer.parseInt(request.getParameter("delch"));
+      
+       ((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteChannelDAO().deleteFavouriteChannel(id);
+    }
+
+    private void delFavProgram(HttpServletRequest request, HttpServletResponse response) {
+       Integer id = Integer.parseInt(request.getParameter("delprog"));
+      
+       ((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteProgramDAO().deleteFavouriteProgram(id);
+    }
+
+    private void delSS(HttpServletRequest request, HttpServletResponse response) {
+        Integer id = Integer.parseInt(request.getParameter("delSS"));
+      
+       ((GuidatvDataLayer)request.getAttribute("datalayer")).getSavedSearchesDAO().deleteSavedSearch(id);
     }
     
 

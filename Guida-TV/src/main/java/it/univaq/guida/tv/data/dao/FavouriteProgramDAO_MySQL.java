@@ -33,6 +33,7 @@ public class FavouriteProgramDAO_MySQL extends DAO implements FavouriteProgramDA
     private PreparedStatement favProgramByID;
     private PreparedStatement favProgramsByUser;
     private PreparedStatement storeFavPrograms;
+    private PreparedStatement delFavProg;
 
     public FavouriteProgramDAO_MySQL(DataLayer d) {
         super(d);
@@ -48,6 +49,7 @@ public class FavouriteProgramDAO_MySQL extends DAO implements FavouriteProgramDA
             favProgramByID = connection.prepareStatement("SELECT * FROM favouriteprogram WHERE idFavProgram = ?");
             favProgramsByUser = connection.prepareStatement("SELECT * FROM favouriteprogram WHERE emailUser = ?");
             storeFavPrograms = connection.prepareStatement("INSERT INTO favouriteprogram (emailUser,programId,savedSearchId) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            delFavProg = connection.prepareStatement("DELETE FROM favouriteprogram WHERE idFavProgram = ?");
 
         } catch (SQLException ex) {
             throw new DataException("Error initializing data layer", ex);
@@ -62,6 +64,7 @@ public class FavouriteProgramDAO_MySQL extends DAO implements FavouriteProgramDA
             favProgramsByUser.close();
             storeFavPrograms.close();
             favProgramByID.close();
+            delFavProg.close();
 
 
         } catch (SQLException ex) {
@@ -169,8 +172,15 @@ public class FavouriteProgramDAO_MySQL extends DAO implements FavouriteProgramDA
     }
 
     @Override
-    public void deleteFavouriteProgram(FavouriteProgram favProgram) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void deleteFavouriteProgram(int key) {
+        try {
+            
+            delFavProg.setInt(1,key);
+            delFavProg.executeUpdate();
+                
+        } catch (SQLException ex) {
+            Logger.getLogger(FavouriteProgramDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     

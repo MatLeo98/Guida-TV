@@ -26,6 +26,6 @@ public interface FavouriteProgramDAO {
     
     void storeFavPrograms (List<Program> programs, String email, Integer SavedSId) throws DataException;
     
-    void deleteFavouriteProgram(FavouriteProgram favProgram);
+    void deleteFavouriteProgram(int key);
     
 }
