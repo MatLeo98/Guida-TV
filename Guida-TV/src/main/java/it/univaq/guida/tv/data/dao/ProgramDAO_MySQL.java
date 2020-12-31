@@ -10,6 +10,7 @@ import it.univaq.framework.data.DAO;
 import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
+import it.univaq.framework.data.OptimisticLockException;
 import it.univaq.framework.data.proxy.ProgramProxy;
 import it.univaq.guida.tv.data.impl.ProgramImpl;
 import it.univaq.guida.tv.data.impl.ProgramImpl.Genre;
@@ -156,37 +157,66 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
     }
 
     @Override
-    public void storeProgram(String n, String desc, String gen, String l, Boolean serie, Integer sN) throws DataException {
-       try {
-            insertProgram.setString(1, n);
-            insertProgram.setString(2, desc);
-            insertProgram.setString(3, gen);
-            insertProgram.setString(4, l);
-            insertProgram.setBoolean(5, serie);
-            insertProgram.setInt(6, sN);
-            Program p = null;
-            if (insertProgram.executeUpdate() == 1) {
-                    
-                    try (ResultSet keys = insertProgram.getGeneratedKeys()) {
-                        
-                        if (keys.next()) {
-                            
-                            int key = keys.getInt(1);
-                            
-                            p = getProgram(key);
-                            p.setKey(key);
-                            
-                            dataLayer.getCache().add(Program.class, p);
-                        }
-                    }
-                }
+    public void storeProgram(Program program) throws DataException {
+        try{
+        if (program.getKey() != null && program.getKey() > 0) {//update
+            
+                updateProgram.setString(1, program.getName());
+                updateProgram.setString(2, program.getDescription());
+                updateProgram.setString(3, program.getGenre().toString());
+                updateProgram.setString(4, program.getLink());
+                updateProgram.setBoolean(5, program.IsSerie());
+                updateProgram.setInt(6, program.getSeasonsNumber());
+                
+                long current_version = program.getVersion();
+                long next_version = current_version + 1;
+                
 
-            if (p instanceof DataItemProxy) {
-                ((DataItemProxy) p).setModified(false);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(ProgramDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                updateProgram.setLong(7, next_version);
+                updateProgram.setInt(8, program.getKey());
+                updateProgram.setLong(9, current_version);
+                
+                if (updateProgram.executeUpdate() == 0) {
+                    throw new OptimisticLockException(program);
+                }
+                
+                program.setVersion(next_version);
+                
+            
+        }else{//insert
+            
+                 insertProgram.setString(1, program.getName());
+                 insertProgram.setString(2, program.getDescription());
+                 insertProgram.setString(3, program.getGenre().toString());
+                 insertProgram.setString(4, program.getLink());
+                 insertProgram.setBoolean(5, program.IsSerie());
+                 insertProgram.setInt(6, program.getSeasonsNumber());
+                 Program p = null;
+                 if (insertProgram.executeUpdate() == 1) {
+
+                         try (ResultSet keys = insertProgram.getGeneratedKeys()) {
+
+                             if (keys.next()) {
+
+                                 int key = keys.getInt(1);
+
+                                 p = getProgram(key);
+                                 p.setKey(key);
+
+                                 dataLayer.getCache().add(Program.class, p);
+                             }
+                         }
+                     }
+                 
+                 }
+
+                 if (program instanceof DataItemProxy) {
+                     ((DataItemProxy) program).setModified(false);
+                 }
+             } catch (SQLException ex) {
+                 Logger.getLogger(ProgramDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+             }
+        
     }
 
     @Override
