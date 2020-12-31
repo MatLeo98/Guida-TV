@@ -8,7 +8,6 @@ package it.univaq.framework.controller;
 import it.univaq.framework.data.DataException;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import it.univaq.guida.tv.data.impl.ProgramImpl;
-import it.univaq.guida.tv.data.impl.ProgramImpl.Genre;
 import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Program;
 import java.io.IOException;
@@ -85,26 +84,15 @@ public class Insert extends BaseController {
             out.println("</head>");
             out.println("<body>");
             out.println("<h1> Inserisci un nuovo canale: </h1>");
-            out.println("<form method=\"post\" action=\"insert?channel=1\">");
-
- out.println("<input type=\"text\" id=\"channelNumber\" name=\"channelNumber\" placeholder=\"Numero Canale\"/>");
-
- out.println("<br><br>");
-
- out.println("<input type=\"text\" id=\"channelName\" name=\"channelName\" placeholder=\"Nome Canale\"/>");
-
- out.println("<br><br>");
-
-
- out.println("<input type=\"submit\" name=\"crea\" value=\"CREA\"/>");
-
- out.println("<br><br>");
-
- out.println("<a href=\"admin\"> Torna a admin </a>");
-
- out.println(" </center>");
-
- out.println("</form>");
+            out.println("<form method='post' action='insert?channel=1'>");
+            out.println("<input type='text' id='channelNumber' name='channelNumber' placeholder='Numero Canale'/>");
+            out.println("<br><br>");
+            out.println("<input type='text' id='channelName' name='channelName' placeholder='Nome Canale'/>");
+            out.println("<br><br>");
+            out.println("<input type='submit' name='crea' value='CREA'/>");
+            out.println("<br><br>");            
+            out.println(" </center>");
+            out.println("</form>");
             out.println("</body>");
             out.println("</html>");
         } catch (IOException ex) {
@@ -245,6 +233,9 @@ public class Insert extends BaseController {
                 out.println("</head>");
                 out.println("<body>");
                 out.println("<h1> Inserimento effettuato </h1>");
+                out.println("<a href='javascript:history.back()'> Inserisci un nuovo canale </a>");
+                out.println("</body>");
+                out.println("</html>");
             } catch (DataException ex) {
                 Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {

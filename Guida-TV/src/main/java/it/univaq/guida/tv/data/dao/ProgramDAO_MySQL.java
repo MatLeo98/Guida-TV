@@ -32,6 +32,7 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
     private PreparedStatement programByID;
     private PreparedStatement allPrograms;
     private PreparedStatement insertProgram;
+    private PreparedStatement updateProgram;
 
     public ProgramDAO_MySQL(DataLayer d) {
         super(d);
@@ -42,12 +43,10 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
         try {
             super.init();
 
-            //precompiliamo tutte le query utilizzate nella classe
-            //precompile all the queries uses in this class
             programByID = connection.prepareStatement("SELECT * FROM program WHERE idProgram = ?");
             allPrograms = connection.prepareStatement("SELECT idProgram FROM program");
             insertProgram = connection.prepareStatement("INSERT INTO program (name, description, genre, link, isSerie, seasonsNumber) VALUES(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            
+            updateProgram = connection.prepareStatement("UPDATE program SET name = ?, description = ?, genre = ?, link = ?, isSerie = ?, seasonsNumber = ?, version = ? WHERE idProgram = ? AND version = ?");
 
         } catch (SQLException ex) {
             throw new DataException("Error initializing data layer", ex);
@@ -56,13 +55,12 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
     
     @Override
     public void destroy() throws DataException {
-        //anche chiudere i PreparedStamenent � una buona pratica...
-        //also closing PreparedStamenents is a good practice...
         try {
 
             programByID.close();
             allPrograms.close();
             insertProgram.close();
+            updateProgram.close();
 
 
         } catch (SQLException ex) {

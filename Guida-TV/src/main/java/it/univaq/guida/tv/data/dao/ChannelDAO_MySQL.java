@@ -9,12 +9,12 @@ import it.univaq.framework.data.DAO;
 import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
+import it.univaq.framework.data.OptimisticLockException;
 import it.univaq.framework.data.proxy.ChannelProxy;
 import it.univaq.guida.tv.data.model.Channel;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -29,6 +29,7 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
     private PreparedStatement allChannels;
     private PreparedStatement channelByID;
     private PreparedStatement insertChannel;
+    private PreparedStatement updateChannel;
 
     public ChannelDAO_MySQL(DataLayer d) {
         super(d);
@@ -43,8 +44,8 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
             //precompile all the queries uses in this class
             allChannels = connection.prepareStatement("SELECT idChannel FROM channel");
             channelByID = connection.prepareStatement("SELECT * FROM channel WHERE idChannel = ?");
-            insertChannel = connection.prepareStatement("INSERT INTO channel (idChannel,name) VALUES(?,?)", Statement.RETURN_GENERATED_KEYS);
-            
+            insertChannel = connection.prepareStatement("INSERT INTO channel (idChannel,name) VALUES(?,?)");
+            updateChannel = connection.prepareStatement("UPDATE channel SET name = ?, version = ? WHERE idChannel = ? AND version = ?");
 
         } catch (SQLException ex) {
             throw new DataException("Error initializing newspaper data layer", ex);
@@ -59,6 +60,8 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
 
             channelByID.close();
             allChannels.close();
+            insertChannel.close();
+            updateChannel.close();
 
 
         } catch (SQLException ex) {
@@ -128,32 +131,49 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
 
     @Override
     public void storeChannel(Integer num, String channel) throws DataException {
-        try {
-            insertChannel.setInt(1, num);
-            insertChannel.setString(2, channel);
-            if (insertChannel.executeUpdate() == 1) {
-                    
-                    try (ResultSet keys = insertChannel.getGeneratedKeys()) {
+        Channel c = getChannel(num);
+        try {        
+            channelByID.setInt(1, num);
+            ResultSet rs = channelByID.executeQuery();
+            if(!(rs.next())){
+                //try {
+                    insertChannel.setInt(1, num);
+                    insertChannel.setString(2, channel);
+                    if (insertChannel.executeUpdate() == 1) {                        
                         
-                        if (keys.next()) {
-                            
-                            int key = keys.getInt(1);
-                            
-                            Channel c = getChannel(num);
-                            c.setKey(key);
-                            
-                            dataLayer.getCache().add(Channel.class, c);
-                        }
                     }
-                }
+                    
+                    
+                    if (c instanceof DataItemProxy) {
+                        ((DataItemProxy) c).setModified(false);
+                    }
+                /*} catch (SQLException ex) {
+                    Logger.getLogger(ChannelDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+                }*/
+            }else{             
+                /*if (user instanceof DataItemProxy && !((DataItemProxy) user).isModified()) {
+                    return;
+                }*/
+                
+                updateChannel.setString(1,channel);                
             
-            Channel c = getChannel(num);
-            if (c instanceof DataItemProxy) {
-                ((DataItemProxy) c).setModified(false);
+                long current_version = c.getVersion();
+                long next_version = current_version + 1;
+
+                updateChannel.setLong(2, next_version);
+                updateChannel.setLong(4, current_version);
+                
+                updateChannel.setInt(3, num);
+
+                if (updateChannel.executeUpdate() == 0) {
+                    throw new OptimisticLockException(c);
+                }
+                c.setVersion(next_version);
+            
             }
         } catch (SQLException ex) {
             Logger.getLogger(ChannelDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        }
     }
 
     @Override
