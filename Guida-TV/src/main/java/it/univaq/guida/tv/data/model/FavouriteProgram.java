@@ -17,13 +17,13 @@ public interface FavouriteProgram extends DataItem<Integer>{
 
     Program getProgram();
 
-    ScheduleImpl.TimeSlot getTimeSlot();
+    SavedSearches getSavedSearch();
 
     User getUser();
 
     void setProgram(Program program);
 
-    void setTimeSlot(ScheduleImpl.TimeSlot timeSlot);
+    void setSavedSearch(SavedSearches ss);
 
     void setUser(User user);
     

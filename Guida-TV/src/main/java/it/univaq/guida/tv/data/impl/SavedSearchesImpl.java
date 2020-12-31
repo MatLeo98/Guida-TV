@@ -11,6 +11,7 @@ import it.univaq.guida.tv.data.model.SavedSearches;
 import it.univaq.guida.tv.data.model.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 
 /**
@@ -21,8 +22,8 @@ public class SavedSearchesImpl extends DataItemImpl<Integer> implements SavedSea
     
     private String title;
     private Genre genre;
-    private Date maxStartHour;
-    private Date minStartHour;
+    private LocalTime maxStartHour;
+    private LocalTime minStartHour;
     private String channel;
     private Date startDate;
     private Date endDate;
@@ -65,22 +66,22 @@ public class SavedSearchesImpl extends DataItemImpl<Integer> implements SavedSea
     }
 
     @Override
-    public Date getMaxStartHour() {
+    public LocalTime getMaxStartHour() {
         return maxStartHour;
     }
 
     @Override
-    public void setMaxStartHour(Date maxStartHour) {
+    public void setMaxStartHour(LocalTime maxStartHour) {
         this.maxStartHour = maxStartHour;
     }
 
     @Override
-    public Date getMinStartHour() {
+    public LocalTime getMinStartHour() {
         return minStartHour;
     }
 
     @Override
-    public void setMinStartHour(Date minStartHour) {
+    public void setMinStartHour(LocalTime minStartHour) {
         this.minStartHour = minStartHour;
     }
 

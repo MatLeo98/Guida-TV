@@ -10,11 +10,13 @@ import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
 import it.univaq.guida.tv.data.dao.EpisodeDAO;
 import it.univaq.guida.tv.data.dao.ProgramDAO;
+import it.univaq.guida.tv.data.dao.SavedSearchesDAO;
 import it.univaq.guida.tv.data.dao.UserDAO;
 import it.univaq.guida.tv.data.impl.FavouriteProgramImpl;
 import it.univaq.guida.tv.data.impl.ScheduleImpl;
 import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.Program;
+import it.univaq.guida.tv.data.model.SavedSearches;
 import it.univaq.guida.tv.data.model.User;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,6 +29,7 @@ public class FavouriteProgramProxy extends FavouriteProgramImpl implements DataI
     
     protected boolean modified;
     protected int program_key = 0;
+     protected int savedS_key = 0;
     protected String user_key = ""; //email
     
     protected DataLayer dataLayer;
@@ -38,6 +41,7 @@ public class FavouriteProgramProxy extends FavouriteProgramImpl implements DataI
         this.dataLayer = d;
         this.modified = false;
         this.program_key = 0;
+        this.savedS_key = 0;
         this.user_key = "";
         
     }
@@ -88,9 +92,22 @@ public class FavouriteProgramProxy extends FavouriteProgramImpl implements DataI
     }
 
     @Override
-    public void setTimeSlot(ScheduleImpl.TimeSlot timeSlot) {
-        super.setTimeSlot(timeSlot); 
+    public void setSavedSearch(SavedSearches ss) {
+        super.setSavedSearch(ss); 
         this.modified = true;
+    }
+    
+    @Override
+    public SavedSearches getSavedSearch() {
+        if (super.getSavedSearch() == null && savedS_key > 0) {
+            try {
+                super.setSavedSearch(((SavedSearchesDAO) dataLayer.getDAO(SavedSearches.class)).getSavedSearch(savedS_key));
+            } catch (DataException ex) {
+                Logger.getLogger(FavouriteProgramProxy.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return super.getSavedSearch();
     }
     
     
@@ -111,6 +128,11 @@ public class FavouriteProgramProxy extends FavouriteProgramImpl implements DataI
     public void setProgramKey(int program_key) {
         this.program_key = program_key;
         super.setProgram(null);
+    }
+
+    public void setSavedSearchKey(int savedS_key) {
+        this.savedS_key = savedS_key;
+        super.setSavedSearch(null);
     }
     
 }

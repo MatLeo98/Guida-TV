@@ -8,6 +8,7 @@ package it.univaq.guida.tv.data.dao;
 import it.univaq.framework.data.DataException;
 import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.FavouriteProgram;
+import it.univaq.guida.tv.data.model.Program;
 import it.univaq.guida.tv.data.model.User;
 import java.util.List;
 
@@ -20,6 +21,10 @@ public interface FavouriteProgramDAO {
     FavouriteProgram createFavouriteProgram();
     
     List<FavouriteProgram> getFavouritePrograms(User user) throws DataException;
+    
+    public FavouriteProgram getFavouriteProgram(int key) throws DataException;
+    
+    void storeFavPrograms (List<Program> programs, String email, Integer SavedSId) throws DataException;
     
     void deleteFavouriteProgram(FavouriteProgram favProgram);
     

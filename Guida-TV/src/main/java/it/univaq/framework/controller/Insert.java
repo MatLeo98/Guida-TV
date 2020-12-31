@@ -196,6 +196,17 @@ public class Insert extends BaseController {
             out.println("<input type='date' id='date' name='date'>");
             out.println("<button type='submit'>Crea</button>");
             out.println("</form>");
+           out.println("<form method=\"post\" action=\"insert?channel=1\">");
+                out.println("<input type=\"text\" id=\"channelnumber\" name=\"channelnumber\" placeholder=\"Numero Canale\"/>");
+                out.println("<br><br>");
+                out.println("<input type=\"text\" id=\"channelname\" name=\"channelname\" placeholder=\"Nome Canale\"/>");
+                out.println("<br><br>");
+                
+                out.println("<input type=\"submit\" name=\"crea\" value=\"CREA\"/>");
+                out.println("<br><br>");
+                out.println("<a href=\"admin\"> Torna a admin </a>");
+            out.println(" </center>");
+            out.println("</form>");
             out.println("</body>");
             out.println("</html>");
         } catch (IOException ex) {

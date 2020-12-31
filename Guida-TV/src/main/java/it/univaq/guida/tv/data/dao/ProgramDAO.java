@@ -8,6 +8,7 @@ package it.univaq.guida.tv.data.dao;
 import it.univaq.framework.data.DataException;
 import it.univaq.guida.tv.data.impl.ProgramImpl.Genre;
 import it.univaq.guida.tv.data.model.Episode;
+import it.univaq.guida.tv.data.model.FavouriteProgram;
 import it.univaq.guida.tv.data.model.Program;
 import java.time.LocalDate;
 import java.util.List;

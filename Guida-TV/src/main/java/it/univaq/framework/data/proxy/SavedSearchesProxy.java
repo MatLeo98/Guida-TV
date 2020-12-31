@@ -14,6 +14,7 @@ import it.univaq.guida.tv.data.impl.SavedSearchesImpl;
 import it.univaq.guida.tv.data.model.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -78,13 +79,13 @@ public class SavedSearchesProxy extends SavedSearchesImpl implements DataItemPro
     }
 
     @Override
-    public void setMinStartHour(Date minStartHour) {
+    public void setMinStartHour(LocalTime minStartHour) {
         super.setMinStartHour(minStartHour);
         this.modified = true;
     }
 
     @Override
-    public void setMaxStartHour(Date maxStartHour) {
+    public void setMaxStartHour(LocalTime maxStartHour) {
         super.setMaxStartHour(maxStartHour);
         this.modified = true;
     }

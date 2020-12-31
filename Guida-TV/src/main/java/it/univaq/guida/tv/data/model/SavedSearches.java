@@ -9,6 +9,7 @@ import it.univaq.framework.data.DataItem;
 import it.univaq.guida.tv.data.impl.ProgramImpl.Genre;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 
 /**
@@ -23,9 +24,9 @@ public interface SavedSearches extends DataItem<Integer> {
 
     Genre getGenre();
 
-    Date getMinStartHour();
+    LocalTime getMinStartHour();
 
-    Date getMaxStartHour();
+    LocalTime getMaxStartHour();
 
     Boolean getSendEmail();
 
@@ -41,9 +42,9 @@ public interface SavedSearches extends DataItem<Integer> {
 
     void setGenre(Genre genre);
 
-    void setMinStartHour(Date MinStartHour);
+    void setMinStartHour(LocalTime MinStartHour);
 
-    void setMaxStartHour(Date maxStartHour);
+    void setMaxStartHour(LocalTime maxStartHour);
 
     void setSendEmail(Boolean sendEmail);
 

@@ -8,6 +8,7 @@ package it.univaq.guida.tv.data.dao;
 import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.proxy.ChannelProxy;
 import it.univaq.guida.tv.data.model.Channel;
+import it.univaq.guida.tv.data.model.FavouriteChannel;
 import java.sql.ResultSet;
 import java.util.List;
 
@@ -26,5 +27,7 @@ public interface ChannelDAO {
     void storeChannel (Integer num, String channel) throws DataException;
     
     void deleteChannel();
+
+   
     
 }

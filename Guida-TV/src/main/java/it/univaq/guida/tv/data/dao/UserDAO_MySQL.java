@@ -27,6 +27,7 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
     
     private PreparedStatement UserByEmail;
     private PreparedStatement register;
+    private PreparedStatement setNewsletter;
 
     public UserDAO_MySQL(DataLayer d) {
         super(d);
@@ -41,6 +42,7 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
             //precompile all the queries uses in this class
             UserByEmail = connection.prepareStatement("SELECT * FROM user WHERE email = ?");      
             register = connection.prepareStatement("INSERT INTO user (email,password) VALUES(?,?)", Statement.RETURN_GENERATED_KEYS);
+            setNewsletter = connection.prepareStatement("UPDATE user SET newsletter = ? WHERE email = ?");
 
         } catch (SQLException ex) {
             throw new DataException("Error initializing data layer", ex);
@@ -54,6 +56,8 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
         try {
 
             UserByEmail.close();
+            register.close();
+            setNewsletter.close();
 
         } catch (SQLException ex) {
             //
@@ -196,6 +200,24 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    public void setNewsletter(String email, Boolean bln) {
+        try {
+            setNewsletter.setBoolean(1, bln);
+            setNewsletter.setString(2, email);
+            if (setNewsletter.executeUpdate() == 0) {
+                User user = getUser(email);
+                    throw new OptimisticLockException(user);
+                }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DataException ex) {
+            Logger.getLogger(UserDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
     }
     
     

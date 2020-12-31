@@ -6,14 +6,18 @@
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
+import it.univaq.framework.data.DataLayer;
 import it.univaq.framework.security.SecurityLayer;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
+import it.univaq.guida.tv.data.model.Program;
+import it.univaq.guida.tv.data.model.SavedSearches;
 import it.univaq.guida.tv.data.model.Schedule;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -50,8 +54,9 @@ public class SearchResults extends BaseController {
                 date2 =(String) session.getAttribute("date2");
                 min = (String) session.getAttribute("min");
                 max = (String) session.getAttribute("max");
-                ((GuidatvDataLayer)request.getAttribute("datalayer")).getSavedSearchesDAO().storeSavedSearches(tit, gen, ch, date1, date2, min, max, email);
+                request.setAttribute("savedS", ((GuidatvDataLayer)request.getAttribute("datalayer")).getSavedSearchesDAO().storeSavedSearches(tit, gen, ch, date1, date2, min, max, email));
                 request.setAttribute("search", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().search(tit, gen, ch, min, max, date1, date2));
+                store_prefPrograms(request,response);
                 action_results(request, response);
                 
               
@@ -70,7 +75,7 @@ public class SearchResults extends BaseController {
         HttpSession session = request.getSession(false);
         String email = null;
         if(session != null){
-        email = (String) session.getAttribute("email");
+            email = (String) session.getAttribute("email");
         }
                  
         
@@ -111,6 +116,24 @@ public class SearchResults extends BaseController {
             out.println("</body>");
             out.println("</html>");
         } catch (IOException ex) {
+            Logger.getLogger(SearchResults.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void store_prefPrograms(HttpServletRequest request, HttpServletResponse response) {
+       List<Schedule> search = (List<Schedule>) request.getAttribute("search");
+       HttpSession session = request.getSession(false);
+       String email = (String) session.getAttribute("email");
+       List<Program> programs = new ArrayList<>();
+       DataLayer datalayer = (DataLayer)request.getAttribute("datalayer");
+       SavedSearches ss;
+       for (Schedule s : search){
+           programs.add(s.getProgram());
+       }
+        try {
+            ss = ((GuidatvDataLayer)request.getAttribute("datalayer")).getSavedSearchesDAO().getLast(email);           
+            ((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteProgramDAO().storeFavPrograms(programs, email, ss.getKey());
+        } catch (DataException ex) {
             Logger.getLogger(SearchResults.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
