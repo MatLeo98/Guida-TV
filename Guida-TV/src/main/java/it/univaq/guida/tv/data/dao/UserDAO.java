@@ -7,6 +7,7 @@ package it.univaq.guida.tv.data.dao;
 
 import it.univaq.framework.data.DataException;
 import it.univaq.guida.tv.data.model.User;
+import java.util.List;
 
 /**
  *
@@ -18,10 +19,14 @@ public interface UserDAO {
     
     User getUser(String userEmail) throws DataException;
     
-    void storeUser(String email, String password) throws DataException;
+    List<User> getSubUsers() throws DataException;
+    
+    void storeUser(String email, String password, String URI) throws DataException;
     
     void setNewsletter(String email, Boolean scelta);
     
     //login
+
+    public void setConfirmed(String email);
     
 }

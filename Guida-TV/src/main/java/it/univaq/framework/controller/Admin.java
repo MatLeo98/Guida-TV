@@ -5,13 +5,19 @@
  */
 package it.univaq.framework.controller;
 
+import it.univaq.framework.data.DataException;
+import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
+import it.univaq.guida.tv.data.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -21,7 +27,44 @@ import javax.servlet.http.HttpServletResponse;
 public class Admin extends BaseController {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        action_admin(request, response);
+        HttpSession s = request.getSession(false);
+            
+            if (s != null && s.getAttribute("email") != null && !((String) s.getAttribute("email")).isEmpty()){  
+                if(s.getAttribute("email").equals("admin@email.it")){
+                    if(request.getParameter("sendemail") != null)
+                        sendEmail(request,response);
+                    action_admin(request, response);
+                }else{
+                    try (PrintWriter out = response.getWriter()) {
+                        response.setContentType("text/html;charset=UTF-8");
+                         out.println("<!DOCTYPE html>");
+                         out.println("<html>");
+                         out.println("<body>");
+                        out.println("<h3> Non sei autorizzato ad accedere a questa pagina </h3>");
+                        out.println("<br><br>");
+                        out.println("<a href=\"home\">HOME</a>"); //DA CAMBIARE CHE VA DIRETTAMENTE ALLA PAGINA LOGIN
+                        out.println("</body>");
+                        out.println("</html>");
+                    } catch (IOException ex) {
+                        Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }else{
+                try (PrintWriter out = response.getWriter()) {
+                    response.setContentType("text/html;charset=UTF-8");
+                     out.println("<!DOCTYPE html>");
+                     out.println("<html>");
+                     out.println("<body>");
+                    out.println("<h3> Devi essere loggato per accedere a questa pagina");
+                    out.println("<br><br>");
+                    out.println("<a href=\"login\">GO TO LOGIN</a>"); //DA CAMBIARE CHE VA DIRETTAMENTE ALLA PAGINA LOGIN
+                    out.println("</body>");
+                    out.println("</html>");
+                } catch (IOException ex) {
+                    Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        
     }
     
     private void action_admin(HttpServletRequest request, HttpServletResponse response) {      
@@ -49,9 +92,25 @@ public class Admin extends BaseController {
             out.println("<a href='admin/insert?schedule=1'> Inserisci palinsesto </a> <br>");
             out.println("<a href='admin/edit?schedule=1'> Modifica palinsesto </a> <br>");
             out.println("<a href=''> Elimina palinsesto </a>");
+            out.println("<br><br><br>");
+            out.println("<a href='admin?sendemail=1'> SEND EMAILS </a>");
             out.println("</body>");
             out.println("</html>");
         } catch (IOException ex) {
+            Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void sendEmail(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            List<User> users = new ArrayList();
+            users = (List<User>) ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().getSubUsers();
+            for(User u : users){
+                //schedules di oggi per canali preferiti
+                //schedules di oggi per programmi preferiti che hanno la newsletter per la ricerca salvata
+            }
+            
+        } catch (DataException ex) {
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

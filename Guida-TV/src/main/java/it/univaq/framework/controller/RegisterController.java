@@ -11,11 +11,13 @@ import it.univaq.guida.tv.data.impl.ScheduleImpl;
 import it.univaq.guida.tv.data.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -77,11 +79,16 @@ public class RegisterController extends BaseController{
         if (request.getParameter("email") != null && request.getParameter("password") != null && request.getParameter("confermapw") != null) {
             if(request.getParameter("password").equals(request.getParameter("confermapw"))){
                 try (PrintWriter out = response.getWriter()){
-
-                    ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().storeUser(request.getParameter("email"),request.getParameter("password"));
+                    String URI = UUID.randomUUID().toString();
+                    ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().storeUser(request.getParameter("email"),request.getParameter("password"), URI);
                     user = ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().getUser(request.getParameter("email"));
                       out.println("<h1> ciao " + user.getKey() + "</h1>");
                       out.println("<a href=\"login\"> LOGIN </a>");
+                      out.println("<a href=\"confirm?URI="+URI+"\"> CONFERMA EMAIL </a>");
+                      HttpSession s = request.getSession(true);
+                      s.setAttribute("URI",URI);
+                      
+                      
                         //request.setAttribute("user", user);
                 } catch (DataException ex) {
                     Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);

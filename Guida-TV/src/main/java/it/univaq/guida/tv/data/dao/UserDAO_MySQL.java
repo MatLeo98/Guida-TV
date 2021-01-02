@@ -11,11 +11,14 @@ import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
 import it.univaq.framework.data.OptimisticLockException;
 import it.univaq.framework.data.proxy.UserProxy;
+import it.univaq.guida.tv.data.model.Schedule;
 import it.univaq.guida.tv.data.model.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +31,8 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
     private PreparedStatement UserByEmail;
     private PreparedStatement register;
     private PreparedStatement setNewsletter;
+    private PreparedStatement setConfirmed;
+    private PreparedStatement getSubUsers;
 
     public UserDAO_MySQL(DataLayer d) {
         super(d);
@@ -41,8 +46,10 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
             //precompiliamo tutte le query utilizzate nella classe
             //precompile all the queries uses in this class
             UserByEmail = connection.prepareStatement("SELECT * FROM user WHERE email = ?");      
-            register = connection.prepareStatement("INSERT INTO user (email,password) VALUES(?,?)", Statement.RETURN_GENERATED_KEYS);
+            register = connection.prepareStatement("INSERT INTO user (email,password,URI) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
             setNewsletter = connection.prepareStatement("UPDATE user SET newsletter = ? WHERE email = ?");
+            setConfirmed = connection.prepareStatement("UPDATE user SET confirmed = 1 WHERE email = ?");
+            getSubUsers = connection.prepareStatement("SELECT * FROM user WHERE newsletter = 1"); 
 
         } catch (SQLException ex) {
             throw new DataException("Error initializing data layer", ex);
@@ -58,6 +65,8 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
             UserByEmail.close();
             register.close();
             setNewsletter.close();
+            setConfirmed.close();
+            getSubUsers.close();
 
         } catch (SQLException ex) {
             //
@@ -75,6 +84,7 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
         try{
             user.setKey(rs.getString("email"));
             user.setPassword(rs.getString("password"));
+            user.setUri(rs.getString("URI"));
             user.setConfirmed(rs.getBoolean("confirmed"));
             user.setNewsletter(rs.getBoolean("newsletter"));
             user.setVersion(rs.getInt("version"));
@@ -112,7 +122,7 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
     }
 
     @Override
-    public void storeUser(String email, String password) throws DataException {
+    public void storeUser(String email, String password, String URI) throws DataException {
        try {
             /*if (user.getKey() != null && !user.getKey().isEmpty()) { //update
                 //non facciamo nulla se l'oggetto è un proxy e indica di non aver subito modifiche
@@ -150,6 +160,7 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
             } else {*/ //insert
                 register.setString(1, email);
                 register.setString(2, password);
+                register.setString(3, URI);
                 
                 if (register.executeUpdate() == 1) {
                     //per leggere la chiave generata dal database
@@ -218,6 +229,41 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
         }
         
         
+    }
+
+    @Override
+    public void setConfirmed(String email) {
+        try {
+           
+            setConfirmed.setString(1, email);
+            if (setConfirmed.executeUpdate() == 0) {
+                User user = getUser(email);
+                    throw new OptimisticLockException(user);
+                }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DataException ex) {
+            Logger.getLogger(UserDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public List<User> getSubUsers() throws DataException {
+        List<User> users = new ArrayList();
+        
+                       
+            try (ResultSet rs = getSubUsers.executeQuery()) {
+                while (rs.next()) {
+                     users.add((User) getUser(rs.getString("email")));
+            }
+        } catch (SQLException ex) {
+            try {
+                throw new DataException("Unable to load users", ex);
+            } catch (DataException ex1) {
+                Logger.getLogger(UserDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+        return users;
     }
     
     

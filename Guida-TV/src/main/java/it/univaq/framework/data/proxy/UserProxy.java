@@ -82,6 +82,12 @@ public class UserProxy extends UserImpl implements DataItemProxy{
         this.modified = true;
     }
     
+    @Override
+    public void setUri(String uri) {
+        super.setUri(uri);
+        this.modified = true;
+    }
+    
     public void setModified(boolean dirty) {
         this.modified = dirty;
     }

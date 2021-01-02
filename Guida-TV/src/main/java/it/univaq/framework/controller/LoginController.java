@@ -36,6 +36,7 @@ public class LoginController extends BaseController {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         
         HttpSession s = request.getSession(true);
+        
          
         if (request.getParameter("logout") == null) {
             

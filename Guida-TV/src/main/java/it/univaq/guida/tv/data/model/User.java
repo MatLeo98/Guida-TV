@@ -21,6 +21,8 @@ public interface User extends DataItem<String>{
     Boolean getNewsletter();
 
     String getPassword();
+    
+    String getUri();
 
     void setConfirmed(Boolean confirmed);
     
@@ -35,6 +37,8 @@ public interface User extends DataItem<String>{
     void setNewsletter(Boolean newsletter);
 
     void setPassword(String password);
+    
+    void setUri(String URI);
     
     public void setSavedSearches(List<SavedSearches> savedSearches);
     

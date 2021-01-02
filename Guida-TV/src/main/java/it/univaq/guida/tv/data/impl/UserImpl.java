@@ -19,33 +19,27 @@ import it.univaq.guida.tv.data.model.FavouriteChannel;
  */
 public class UserImpl extends DataItemImpl<String> implements User {
 
+    
+
     //private String email;
     private String password;
     private Boolean confirmed;
     private Boolean newsletter;
+    private String uri;
     List<SavedSearches> savedSearches;
     List<FavouriteChannel> favouriteChannels;
     List<FavouriteProgram> favouritePrograms;
 
     public UserImpl(){
 
-    super();
-    //email = "";
-    password = "";
-    confirmed = false;
-    newsletter = false;
+        super();
+        //email = "";
+        password = "";
+        confirmed = false;
+        newsletter = false;
+        uri = "";
 
     }
-
-   /* @Override
-    public String getEmail() {
-        return email;
-    }
-
-    @Override
-    public void setEmail(String email) {
-        this.email = email;
-    }*/
 
     @Override
     public String getPassword() {
@@ -75,6 +69,16 @@ public class UserImpl extends DataItemImpl<String> implements User {
     @Override
     public void setNewsletter(Boolean newsletter) {
         this.newsletter = newsletter;
+    }
+    
+    @Override
+    public String getUri() {
+        return uri;
+    }
+
+    @Override
+    public void setUri(String uri) {
+        this.uri = uri;
     }
     
     @Override
