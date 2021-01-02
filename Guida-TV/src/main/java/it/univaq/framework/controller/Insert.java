@@ -112,7 +112,7 @@ public class Insert extends BaseController {
             out.println("<body>");
             out.println("<h1> Inserisci un nuovo programma: </h1>");
             out.println("<form method='post' action='insert?program=1'>");            
-            out.println("<input type='text' placeholder='Nome canale' name='programName'>");
+            out.println("<input type='text' placeholder='Nome programma' name='programName'>");
             out.println("<input type='text' placeholder='Descrizione' name='programDescription'>");
             out.println("<select name='genre' id='genre'>");
             for(ProgramImpl.Genre g : genres){
@@ -215,6 +215,7 @@ public class Insert extends BaseController {
     }
     
     private void insert_done(HttpServletRequest request, HttpServletResponse response){
+            
 
             try (PrintWriter out = response.getWriter()){
                 if(request.getParameter("channel") != null){
@@ -222,9 +223,17 @@ public class Insert extends BaseController {
                     ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().storeChannel(n, request.getParameter("channelName"));
                 }
                 if(request.getParameter("program") != null){
-                    Integer ns = Integer.parseInt(request.getParameter("nSeasons"));
-                    Boolean is = (Integer.parseInt(request.getParameter("serie")) == 1);
-                    ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().storeProgram(request.getParameter("programName"), request.getParameter("programDescription"), request.getParameter("genre"), request.getParameter("link"), is , ns);
+                    Program program = ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().createProgram();
+                    program.setName(request.getParameter("programName"));
+                    program.setDescription(request.getParameter("programDescription"));
+                    program.setGenre(ProgramImpl.Genre.valueOf(request.getParameter("genre")));
+                    program.setLink(request.getParameter("link"));
+                    program.setIsSerie(Boolean.valueOf(request.getParameter("serie")));
+                    if(program.IsSerie()){
+                    program.setSeasonsNumber(Integer.parseInt(request.getParameter("nSeasons")));
+                    }
+                   
+                    ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().storeProgram(program);
                 }
                 if(request.getParameter("episode") != null){                   
                     Integer ns = Integer.parseInt(request.getParameter("seasonNumber"));

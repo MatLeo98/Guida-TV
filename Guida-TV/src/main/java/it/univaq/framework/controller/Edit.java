@@ -6,8 +6,10 @@
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
+import it.univaq.framework.security.SecurityLayer;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import it.univaq.guida.tv.data.impl.ProgramImpl;
+import it.univaq.guida.tv.data.impl.ProgramImpl.Genre;
 import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Program;
 import java.io.IOException;
@@ -50,26 +52,31 @@ public class Edit extends BaseController {
             }
         }  
         if(request.getParameter("program") != null){
-            if(request.getParameter("programName") == null){
-                if(request.getParameter("pr") != null){ 
-                    try { 
-                        Integer id = Integer.parseInt(request.getParameter("pr"));
-                        request.setAttribute("programSelected", ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getProgram(id));
-                        } catch (DataException ex) {
-                        Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
-                        }      
-                }
-                        try {
-                            request.setAttribute("programs", ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getPrograms());
-                            program_edit(request, response);
-                        } catch (DataException ex) {
+            int program_key;           
+                if(request.getParameter("prog") == null){
+                                  
+                    if(request.getParameter("pr") != null){ 
+                        try { 
+                            Integer id = Integer.parseInt(request.getParameter("pr"));
+                            request.setAttribute("programSelected", ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getProgram(id));
+                            } catch (DataException ex) {
                             Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    
-                
-            }else{
-                edit_done(request, response);
-            }
+                            }      
+                    }
+                            try {
+                                request.setAttribute("programs", ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getPrograms());
+                                program_edit(request, response);
+                            } catch (DataException ex) {
+                                Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
+
+                }else{
+                    program_key = SecurityLayer.checkNumeric(request.getParameter("prog"));
+                    request.setAttribute("key", program_key);
+                    edit_done(request, response);
+                }
+            
         }
     }
     
@@ -126,7 +133,7 @@ public class Edit extends BaseController {
             out.println("<body>");
             out.println("<h1> Modifica un programma: </h1>");
             out.println("<form method='post' action='edit?program=1'>");
-            out.println("Programma da modificare:");
+            out.println("Programma da modificare:");           
             out.println("<select name='pr' id='pr'>");
             for(Program p : programs){
             out.println("<option value = '" + p.getKey() + "'>" + p.getName() + "</option>");
@@ -134,7 +141,8 @@ public class Edit extends BaseController {
             out.println("</select>");
             out.println("<input type='submit' name='select' value='SELEZIONA'/>");
             out.println("</form>");
-            out.println("<form method='post' action='insert?program=1'>");            
+            out.println("<form method='post' action='edit?program=1'>");  
+            out.println("<input type='text' name='prog' value='" + programSelected.getKey() + "'/>");
             out.println("<input type='text' placeholder='Nome canale' name='programName' value='" + programSelected.getName() + "'>");
             out.println("<input type='text' placeholder='Descrizione' name='programDescription' value='" + programSelected.getDescription() + "'>");
             out.println("<select name='genre' id='genre'>");
@@ -155,7 +163,7 @@ public class Edit extends BaseController {
                 out.println("<input type='radio' name='serie' value='0' checked> No");
                 out.println("<input type='radio' name='serie' value='1'> Sì");  
             }
-            out.println("<button type='submit'>Crea</button>");
+            out.println("<button type='submit'>Modifica</button>");
             out.println("</form>");
             out.println("</body>");
             out.println("</html>");
@@ -169,6 +177,19 @@ public class Edit extends BaseController {
         if(request.getParameter("channel") != null){
             Integer n = Integer.parseInt(request.getParameter("channelNumber"));
             ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().storeChannel(n, request.getParameter("channelName"));
+        }
+        if(request.getParameter("program") != null){
+            int key = (int)request.getAttribute("key");
+            Program program = ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getProgram(key);
+            program.setName(request.getParameter("programName"));
+            program.setDescription(request.getParameter("programDescription"));
+            program.setGenre(Genre.valueOf(request.getParameter("genre")));
+            program.setLink(request.getParameter("link"));
+            program.setIsSerie(Boolean.valueOf(request.getParameter("serie")));
+            if(program.IsSerie()){
+            program.setSeasonsNumber(Integer.parseInt(request.getParameter("nSeasons")));
+            }
+            ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().storeProgram(program);
         }
         out.println("<!DOCTYPE html>");
         out.println("<html>");

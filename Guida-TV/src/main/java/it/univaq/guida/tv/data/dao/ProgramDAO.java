@@ -33,7 +33,7 @@ public interface ProgramDAO {
 
     List<Program> getTvSeries() throws DataException;
 
-    void storeProgram(String n, String desc, String gen, String l, Boolean serie, Integer sN) throws DataException;
+    void storeProgram(Program program) throws DataException;
     
     void deleteProgram(Program program);
     
