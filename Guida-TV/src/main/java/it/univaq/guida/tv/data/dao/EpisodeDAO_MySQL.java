@@ -9,6 +9,7 @@ import it.univaq.framework.data.DAO;
 import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
+import it.univaq.framework.data.OptimisticLockException;
 import it.univaq.framework.data.proxy.EpisodeProxy;
 import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.Program;
@@ -31,6 +32,7 @@ public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
     private PreparedStatement episodeByID;
     private PreparedStatement insertEpisode;
     private PreparedStatement programEpisodes;
+    private PreparedStatement updateEpisode;
 
     public EpisodeDAO_MySQL(DataLayer d) {
         super(d);
@@ -47,6 +49,7 @@ public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
             episodeByID = connection.prepareStatement("SELECT * FROM episode WHERE idEpisode = ?");
             insertEpisode = connection.prepareStatement("INSERT INTO episode (name, seasonNumber, number, programId) VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             programEpisodes = connection.prepareStatement("SELECT * FROM episode WHERE programId = ?");
+            updateEpisode = connection.prepareStatement("UPDATE episode SET name = ?, seasonNumber = ?, number = ?, version = ? WHERE idEpisode = ? AND version = ?");
 
         } catch (SQLException ex) {
             throw new DataException("Error initializing data layer", ex);
@@ -63,6 +66,7 @@ public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
             episodeByID.close();
             insertEpisode.close();
             programEpisodes.close();
+            updateEpisode.close();
 
 
         } catch (SQLException ex) {
@@ -126,7 +130,7 @@ public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
          try(ResultSet rs = programEpisodes.executeQuery()) {
                 while (rs.next()) {
                    
-                    result.add((Episode) getEpisode(rs.getInt("idSchedule")));
+                    result.add((Episode) getEpisode(rs.getInt("idEpisode")));
                 }
             }
         }
@@ -142,33 +146,54 @@ public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
     }
     
     @Override
-    public void storeEpisode(String n, Integer numS, Integer numE, Integer pk) throws DataException{
+    public void storeEpisode(Episode episode) throws DataException{
           try {
-            insertEpisode.setString(1, n);
-            insertEpisode.setInt(2, numS);
-            insertEpisode.setInt(3, numE);
-            insertEpisode.setInt(4, pk);
-            
-            Episode e = null;
-            if (insertEpisode.executeUpdate() == 1) {
-                    
-                    try (ResultSet keys = insertEpisode.getGeneratedKeys()) {
-                        
-                        if (keys.next()) {
-                                    
-                            int key = keys.getInt(1);
-                            
-                            e = getEpisode(key);
-                            e.setKey(key);
-                            
-                            dataLayer.getCache().add(Episode.class, e);
+              if (episode.getKey() != null && episode.getKey() > 0) {//update
+                updateEpisode.setString(1, episode.getName());
+                updateEpisode.setInt(2, episode.getSeasonNumber());
+                updateEpisode.setInt(3, episode.getNumber());
+                
+                long current_version = episode.getVersion();
+                long next_version = current_version + 1;
+                
+                updateEpisode.setLong(4, next_version);
+                updateEpisode.setInt(5, episode.getKey());
+                updateEpisode.setLong(6, current_version);
+                
+                if (updateEpisode.executeUpdate() == 0) {
+                    throw new OptimisticLockException(episode);
+                }
+                
+                episode.setVersion(next_version);
+                
+              }else{//insert
+                    insertEpisode.setString(1, episode.getName());
+                    insertEpisode.setInt(2, episode.getSeasonNumber());
+                    insertEpisode.setInt(3, episode.getNumber());
+                    insertEpisode.setInt(4, episode.getProgram().getKey());
+
+                    Episode e = null;
+                    if (insertEpisode.executeUpdate() == 1) {
+
+                        try (ResultSet keys = insertEpisode.getGeneratedKeys()) {
+
+                            if (keys.next()) {
+
+                                int key = keys.getInt(1);
+
+                                e = getEpisode(key);
+                                e.setKey(key);
+
+                                dataLayer.getCache().add(Episode.class, e);
+                            }
                         }
                     }
-                }
+               }
 
-            if (e instanceof DataItemProxy) {
-                ((DataItemProxy) e).setModified(false);
-            }
+                if (episode instanceof DataItemProxy) {
+                    ((DataItemProxy) episode).setModified(false);
+                }
+              
         } catch (SQLException ex) {
             Logger.getLogger(ProgramDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
         }

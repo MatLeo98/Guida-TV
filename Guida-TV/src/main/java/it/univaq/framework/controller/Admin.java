@@ -91,14 +91,12 @@ public class Admin extends BaseController {
             out.println("<a href='admin/edit?program=1'> Modifica programma </a> <br>");
             out.println("<a href=''> Elimina programma </a> <br>");
             out.println("<a href='admin/insert?episode=1'> Inserisci episodio </a> <br>");
-            out.println("<a href='admin/edit?episode=1'> Modifica episodio </a> <br>");
-            out.println("<a href=''> Elimina episodio </a>");
+            out.println("<a href='admin/edit?episode=1'> Modifica/Elimina episodio </a> <br>");
             out.println("<h2> Azioni sui palinsesti </h2>");
             out.println("<a href='admin/insert?schedule=1'> Inserisci palinsesto </a> <br>");
-            out.println("<a href='admin/edit?schedule=1'> Modifica palinsesto </a> <br>");
-            out.println("<a href=''> Elimina palinsesto </a>");
+            out.println("<a href='admin/edit?schedule=1'> Modifica/Elimina palinsesto </a> <br>");
             out.println("<br><br><br>");
-            out.println("<a href='admin?sendemail=1'> SEND EMAILS </a>");
+            out.println("<a href='admin?sendemail=1'> SEND EMAILS </a>");           
             out.println("</body>");
             out.println("</html>");
         } catch (IOException ex) {

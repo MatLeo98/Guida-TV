@@ -25,7 +25,7 @@ public interface EpisodeDAO {
     
     List<Episode> getLastMonthEpisodes(Program program) throws DataException;
     
-    void storeEpisode(String n, Integer numS, Integer numE, Integer pk) throws DataException;
+    void storeEpisode(Episode episode) throws DataException;
     
     void deleteEpisode(Episode episode);
     

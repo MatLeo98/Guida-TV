@@ -9,6 +9,7 @@ import it.univaq.framework.data.DataException;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import it.univaq.guida.tv.data.impl.ProgramImpl;
 import it.univaq.guida.tv.data.model.Channel;
+import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.Program;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -58,15 +59,25 @@ public class Insert extends BaseController {
         }
         
         if(request.getParameter("schedule") != null){
-            if(request.getParameter("pr") == null){
-                try {
+            if(request.getParameter("ch") == null){
+                try{
+                    if(request.getParameter("pr") != null){
+                            try {
+                                Integer id = Integer.parseInt(request.getParameter("pr"));
+                                Program pro = ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getProgram(id);
+                                request.setAttribute("programSelected", pro);
+                                request.setAttribute("episodes", ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getProgramEpisodes(pro));
+                                request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
+                                
+                            } catch (DataException ex) {
+                            Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
+                            }        
+                    }
                     request.setAttribute("programs", ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getPrograms());
-                    request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
-                    //request.setAttribute("episodes", ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getProgramEpisodes());
                     schedule_insert(request, response);
-                } catch (DataException ex) {
-                    Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
-                } 
+                }catch (DataException ex) {
+                                Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }else{
                 insert_done(request, response);
             } 
@@ -152,6 +163,7 @@ public class Insert extends BaseController {
             out.println("<input type='text' placeholder='Numero episodio' name='episodeNumber'>");
             out.println("<select name='p' id='p'>");
             for(Program p : programs){
+                if(p.IsSerie())
             out.println("<option value = '" + p.getKey() + "'>" + p.getName() + "</option>");
             }
             out.println("</select>");
@@ -164,10 +176,12 @@ public class Insert extends BaseController {
         }
     }
     
-    private void schedule_insert(HttpServletRequest request, HttpServletResponse response){
+    private void schedule_insert(HttpServletRequest request, HttpServletResponse response) throws DataException{
         response.setContentType("text/html;charset=UTF-8");   
         List<Program> programs = (List<Program>) request.getAttribute("programs");
         List<Channel> channels = (List<Channel>) request.getAttribute("channels");
+        Program programSelected = (Program) request.getAttribute("programSelected");
+        List<Episode> episodes = (List<Episode>) request.getAttribute("episodes");
         try (PrintWriter out = response.getWriter()) {  
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -177,17 +191,29 @@ public class Insert extends BaseController {
             out.println("<body>");
             out.println("<h1> Inserisci un nuovo palinsesto: </h1>");
             out.println("<form method='post' action='insert?schedule=1'>");
+            out.println("Scegli il programma:");
             out.println("<select name='pr' id='pr'>");
             for(Program p : programs){
-            out.println("<option value = '" + p.getKey() + "'>" + p.getName() + "</option>");
+            out.println("<option value = '" + p.getKey() + "'>" + p.getName() + "</option>");       
             }
-            out.println("</select>");           
+              out.println("</select>");
+              out.println("<input type='submit' name='select' value='SELEZIONA'/>");
+            out.println("</form>");
+            out.println("<form method='post' action='insert?schedule=1'>");
+            if(programSelected.IsSerie()){
+                out.println("Episodio:");
+                out.println("<select name='ch' id='ch'>");
+                for(Episode e : episodes){
+                out.println("<option value = '" + e.getKey() + "'>" + e.getName() + "</option>");
+                }
+                out.println("</select>");
+            }
+            out.println("Canale:");
             out.println("<select name='ch' id='ch'>");
             for(Channel c : channels){
             out.println("<option value = '" + c.getKey() + "'>" + c.getName() + "</option>");
             }
             out.println("</select>");
-            //VA IMPLEMENTATO IL METODO GETPROGRAMEPISODES() IN EPISODEDAO PER PRENDERE GLI EPISODI DEL PROGRAMMA CHE SELEZIONO
             out.println("Ora inizio:");
             out.println("<input type='time' id='start' name='start'>");
             out.println("Ora fine:");
@@ -195,17 +221,6 @@ public class Insert extends BaseController {
             out.println("Data:");
             out.println("<input type='date' id='date' name='date'>");
             out.println("<button type='submit'>Crea</button>");
-            out.println("</form>");
-           out.println("<form method=\"post\" action=\"insert?channel=1\">");
-                out.println("<input type=\"text\" id=\"channelnumber\" name=\"channelnumber\" placeholder=\"Numero Canale\"/>");
-                out.println("<br><br>");
-                out.println("<input type=\"text\" id=\"channelname\" name=\"channelname\" placeholder=\"Nome Canale\"/>");
-                out.println("<br><br>");
-                
-                out.println("<input type=\"submit\" name=\"crea\" value=\"CREA\"/>");
-                out.println("<br><br>");
-                out.println("<a href=\"admin\"> Torna a admin </a>");
-            out.println(" </center>");
             out.println("</form>");
             out.println("</body>");
             out.println("</html>");
@@ -235,11 +250,15 @@ public class Insert extends BaseController {
                    
                     ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().storeProgram(program);
                 }
-                if(request.getParameter("episode") != null){                   
-                    Integer ns = Integer.parseInt(request.getParameter("seasonNumber"));
-                    Integer ne = Integer.parseInt(request.getParameter("episodeNumber"));
-                    Integer p = Integer.parseInt(request.getParameter("p"));
-                   ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().storeEpisode(request.getParameter("episodeName"), ns, ne, p); 
+                if(request.getParameter("episode") != null){
+                    Episode episode = ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().createEpisode();
+                    episode.setName(request.getParameter("episodeName"));
+                    episode.setSeasonNumber(Integer.parseInt(request.getParameter("seasonNumber")));
+                    episode.setNumber(Integer.parseInt(request.getParameter("episodeNumber")));
+                    Integer id = Integer.parseInt(request.getParameter("p"));
+                    Program program = ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getProgram(id);
+                    episode.setProgram(program);
+                   ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().storeEpisode(episode); 
                 }
                 if(request.getParameter("schedule") != null){    
                     Integer p = Integer.parseInt(request.getParameter("pr"));
