@@ -7,9 +7,14 @@ package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
+import it.univaq.guida.tv.data.model.Channel;
+import it.univaq.guida.tv.data.model.FavouriteChannel;
+import it.univaq.guida.tv.data.model.FavouriteProgram;
+import it.univaq.guida.tv.data.model.Schedule;
 import it.univaq.guida.tv.data.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -102,12 +107,24 @@ public class Admin extends BaseController {
     }
 
     private void sendEmail(HttpServletRequest request, HttpServletResponse response) {
+         System.out.println("ciao");
         try {
             List<User> users = new ArrayList();
             users = (List<User>) ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().getSubUsers();
             for(User u : users){
                 //schedules di oggi per canali preferiti
+                List<FavouriteChannel> channels = ((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteChannelDAO().getFavouriteChannels(u);
+                for(FavouriteChannel fc : channels){
+                    List<Schedule> todayByC = ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getScheduleByFavChannel(fc.getChannel(),LocalDate.now(),fc.getTimeSlot());
+                    for(Schedule s : todayByC){
+                        System.out.println(s.getProgram().getName());
+                    }
+                }
                 //schedules di oggi per programmi preferiti che hanno la newsletter per la ricerca salvata
+                List<FavouriteProgram> programs = ((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteProgramDAO().getFavouritePrograms(u);
+                for(FavouriteProgram fp : programs){
+                    //List<Schedule> todayByP = ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getScheduleByProgram(fc.getChannel(),LocalDate.now());
+                }
             }
             
         } catch (DataException ex) {

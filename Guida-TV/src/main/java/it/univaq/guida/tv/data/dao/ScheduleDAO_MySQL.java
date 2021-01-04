@@ -43,6 +43,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     private PreparedStatement lastMonth;
     private PreparedStatement search;
     private PreparedStatement insertSchedule;
+     private PreparedStatement todayScheduleByFavCh;
 
     public ScheduleDAO_MySQL(DataLayer d) {
         super(d);
@@ -61,7 +62,9 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             todaySchedule = connection.prepareStatement("SELECT * FROM schedule WHERE date = CURDATE() AND timeSlot = ? ORDER BY channelId");
             lastMonth = connection.prepareStatement("SELECT * FROM schedule WHERE DATE(date) >= DATE(NOW()) - INTERVAL 30 DAY AND programId = ?");
             scheduleByID = connection.prepareStatement("SELECT * FROM schedule WHERE idSchedule = ?");
-            todayScheduleByChannel = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? ORDER BY startTime");
+            todayScheduleByChannel = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? AND channelId = ? ORDER BY startTime");
+            todayScheduleByFavCh = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? AND channelId = ? AND timeSlot = ? ORDER BY startTime");
+            //todayScheduleByProgram = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? ORDER BY startTime");
             search = connection.prepareStatement("SELECT * FROM schedule,program,channel WHERE programId = idProgram AND channelId = idChannel AND program.name LIKE ? AND genre LIKE ? AND channel.name LIKE ? AND startTime >= ? AND startTime <= ? AND date >= ? AND date <= ? GROUP BY program.name");
             insertSchedule = connection.prepareStatement("INSERT INTO schedule (startTime, endTime, date, timeSlot, channelId, programId) VALUES(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             
@@ -84,6 +87,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             lastMonth.close();
             search.close();
             insertSchedule.close();
+            todayScheduleByFavCh.close();
 
 
         } catch (SQLException ex) {
@@ -145,7 +149,21 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
 
     @Override
     public Schedule getScheduleByProgram(Program program) throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
+        /*List<Schedule> result = new ArrayList();
+        try {
+            todayScheduleByChannel.setString(1, date.toString());
+         try(ResultSet rs = todayScheduleByChannel.executeQuery()) {
+                while (rs.next()) {
+                   
+                    result.add((Schedule) getSchedule(rs.getInt("idSchedule")));
+                }
+            }
+        }
+        catch (SQLException ex) {
+            throw new DataException("Unable to load schedule by channel", ex);
+        }
+        return result;*/ 
     }
 
     @Override
@@ -186,7 +204,30 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
         List<Schedule> result = new ArrayList();
         try {
             todayScheduleByChannel.setString(1, date.toString());
+            todayScheduleByChannel.setInt(2, channel.getKey());
+            
          try(ResultSet rs = todayScheduleByChannel.executeQuery()) {
+                while (rs.next()) {
+                   
+                    result.add((Schedule) getSchedule(rs.getInt("idSchedule")));
+                }
+            }
+        }
+        catch (SQLException ex) {
+            throw new DataException("Unable to load schedule by channel", ex);
+        }
+        return result; 
+    }
+    
+    @Override
+    public List<Schedule> getScheduleByFavChannel(Channel channel, LocalDate date, TimeSlot timeslot) throws DataException {
+        List<Schedule> result = new ArrayList();
+        try {
+            todayScheduleByFavCh.setString(1, date.toString());
+            todayScheduleByFavCh.setInt(2, channel.getKey());
+             todayScheduleByFavCh.setString(3, timeslot.toString());
+            
+         try(ResultSet rs = todayScheduleByFavCh.executeQuery()) {
                 while (rs.next()) {
                    
                     result.add((Schedule) getSchedule(rs.getInt("idSchedule")));
