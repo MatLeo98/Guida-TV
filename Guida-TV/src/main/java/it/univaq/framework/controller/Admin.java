@@ -12,6 +12,7 @@ import it.univaq.guida.tv.data.model.FavouriteChannel;
 import it.univaq.guida.tv.data.model.FavouriteProgram;
 import it.univaq.guida.tv.data.model.Schedule;
 import it.univaq.guida.tv.data.model.User;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
@@ -36,6 +37,7 @@ public class Admin extends BaseController {
             
             if (s != null && s.getAttribute("email") != null && !((String) s.getAttribute("email")).isEmpty()){  
                 if(s.getAttribute("email").equals("admin@email.it")){
+                   
                     if(request.getParameter("sendemail") != null)
                         sendEmail(request,response);
                     action_admin(request, response);
@@ -105,27 +107,47 @@ public class Admin extends BaseController {
     }
 
     private void sendEmail(HttpServletRequest request, HttpServletResponse response) {
-         System.out.println("ciao");
+         
+          
         try {
-            List<User> users = new ArrayList();
+            List<User> users = null;
             users = (List<User>) ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().getSubUsers();
             for(User u : users){
+                FileWriter fw=new FileWriter("S:\\Programmi\\xampp\\htdocs\\univaq-Guida-TV\\Guida-TV\\Guida-TV\\src\\main\\java\\it\\univaq\\guida\\tv\\data\\files\\emailto"+u.getKey()+".txt");
+                fw.write("Ciao "+u.getKey()+"\r\n\r\n");
+                
                 //schedules di oggi per canali preferiti
                 List<FavouriteChannel> channels = ((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteChannelDAO().getFavouriteChannels(u);
+                fw.write("Ecco i programmi che andranno in onda oggi in base ai tuoi canali preferiti: \r\n");
                 for(FavouriteChannel fc : channels){
                     List<Schedule> todayByC = ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getScheduleByFavChannel(fc.getChannel(),LocalDate.now(),fc.getTimeSlot());
                     for(Schedule s : todayByC){
-                        System.out.println(s.getProgram().getName());
-                    }
+                      
+         
+                          fw.write(s.getChannel().getName() + " alle "+ s.getStartTime() +" - "+ s.getProgram().getName()+ "\r\n\r\n");    
+      
+                    }    
                 }
+                
+                fw.write("Ecco i programmi che andranno in onda oggi in base alle tue ricerche salvate: \r\n");
                 //schedules di oggi per programmi preferiti che hanno la newsletter per la ricerca salvata
                 List<FavouriteProgram> programs = ((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteProgramDAO().getFavouritePrograms(u);
                 for(FavouriteProgram fp : programs){
-                    //List<Schedule> todayByP = ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getScheduleByProgram(fc.getChannel(),LocalDate.now());
+                    if(fp.getSavedSearch().getSendEmail()){
+                        List<Schedule> todayByP = ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getScheduleByProgram(fp.getProgram(),LocalDate.now());
+                        for(Schedule s : todayByP){
+                           
+                            fw.write(s.getChannel().getName() + " alle "+ s.getStartTime() +" - "+ s.getProgram().getName()+"\r\n"); 
+                             
+                        }
+                    }
                 }
+                fw.close();
             }
             
         } catch (DataException ex) {
+            Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -44,6 +44,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     private PreparedStatement search;
     private PreparedStatement insertSchedule;
      private PreparedStatement todayScheduleByFavCh;
+      private PreparedStatement todayScheduleByProgram;
 
     public ScheduleDAO_MySQL(DataLayer d) {
         super(d);
@@ -64,7 +65,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             scheduleByID = connection.prepareStatement("SELECT * FROM schedule WHERE idSchedule = ?");
             todayScheduleByChannel = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? AND channelId = ? ORDER BY startTime");
             todayScheduleByFavCh = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? AND channelId = ? AND timeSlot = ? ORDER BY startTime");
-            //todayScheduleByProgram = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? ORDER BY startTime");
+            todayScheduleByProgram = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? AND programId = ? ORDER BY startTime");
             search = connection.prepareStatement("SELECT * FROM schedule,program,channel WHERE programId = idProgram AND channelId = idChannel AND program.name LIKE ? AND genre LIKE ? AND channel.name LIKE ? AND startTime >= ? AND startTime <= ? AND date >= ? AND date <= ? GROUP BY program.name");
             insertSchedule = connection.prepareStatement("INSERT INTO schedule (startTime, endTime, date, timeSlot, channelId, programId) VALUES(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             
@@ -88,6 +89,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             search.close();
             insertSchedule.close();
             todayScheduleByFavCh.close();
+            todayScheduleByProgram.close();
 
 
         } catch (SQLException ex) {
@@ -148,12 +150,13 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     }
 
     @Override
-    public Schedule getScheduleByProgram(Program program) throws DataException {
-        return null;
-        /*List<Schedule> result = new ArrayList();
+    public List<Schedule> getScheduleByProgram(Program program, LocalDate date) throws DataException {
+        List<Schedule> result = new ArrayList();
         try {
-            todayScheduleByChannel.setString(1, date.toString());
-         try(ResultSet rs = todayScheduleByChannel.executeQuery()) {
+            todayScheduleByProgram.setString(1, date.toString());
+            todayScheduleByProgram.setInt(2, program.getKey());
+            
+         try(ResultSet rs = todayScheduleByProgram.executeQuery()) {
                 while (rs.next()) {
                    
                     result.add((Schedule) getSchedule(rs.getInt("idSchedule")));
@@ -161,13 +164,13 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             }
         }
         catch (SQLException ex) {
-            throw new DataException("Unable to load schedule by channel", ex);
+            throw new DataException("Unable to load schedule by programs", ex);
         }
-        return result;*/ 
+        return result; 
     }
 
     @Override
-    public Schedule getScheduleByEpisode(Episode episode) throws DataException {
+    public List<Schedule> getScheduleByEpisode(Episode episode) throws DataException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
