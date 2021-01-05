@@ -9,6 +9,7 @@ import it.univaq.framework.data.DAO;
 import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
+import it.univaq.framework.data.OptimisticLockException;
 import it.univaq.framework.data.proxy.ScheduleProxy;
 import it.univaq.guida.tv.data.impl.ScheduleImpl;
 import it.univaq.guida.tv.data.impl.ScheduleImpl.TimeSlot;
@@ -43,8 +44,10 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     private PreparedStatement lastMonth;
     private PreparedStatement search;
     private PreparedStatement insertSchedule;
-     private PreparedStatement todayScheduleByFavCh;
-      private PreparedStatement todayScheduleByProgram;
+    private PreparedStatement todayScheduleByFavCh;
+    private PreparedStatement todayScheduleByProgram;
+    private PreparedStatement scheduleByChannel;
+    private PreparedStatement updateSchedule;
 
     public ScheduleDAO_MySQL(DataLayer d) {
         super(d);
@@ -67,8 +70,9 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             todayScheduleByFavCh = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? AND channelId = ? AND timeSlot = ? ORDER BY startTime");
             todayScheduleByProgram = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? AND programId = ? ORDER BY startTime");
             search = connection.prepareStatement("SELECT * FROM schedule,program,channel WHERE programId = idProgram AND channelId = idChannel AND program.name LIKE ? AND genre LIKE ? AND channel.name LIKE ? AND startTime >= ? AND startTime <= ? AND date >= ? AND date <= ? GROUP BY program.name");
-            insertSchedule = connection.prepareStatement("INSERT INTO schedule (startTime, endTime, date, timeSlot, channelId, programId) VALUES(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            
+            insertSchedule = connection.prepareStatement("INSERT INTO schedule (startTime, endTime, date, timeSlot, channelId, programId, episodeId) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            scheduleByChannel = connection.prepareStatement("SELECT * FROM schedule WHERE date >= ? AND channelId = ? ORDER BY date");
+            updateSchedule = connection.prepareStatement("UPDATE schedule SET startTime = ?, endTime = ?, date = ?, timeSlot = ?, episodeId = ?, version = ? WHERE idSchedule = ? AND version = ?");
 
         } catch (SQLException ex) {
             throw new DataException("Error initializing newspaper data layer", ex);
@@ -90,6 +94,8 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             insertSchedule.close();
             todayScheduleByFavCh.close();
             todayScheduleByProgram.close();
+            scheduleByChannel.close();
+            updateSchedule.close();
 
 
         } catch (SQLException ex) {
@@ -108,9 +114,9 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
         ScheduleProxy schedule = createSchedule();
         try {
             schedule.setKey(rs.getInt("idSchedule"));
-            schedule.setStartTime(rs.getTime("startTime").toString());
-            schedule.setEndTime(rs.getTime("endTime").toString());
-            schedule.setDate(rs.getDate("date"));
+            schedule.setStartTime(rs.getTime("startTime").toLocalTime());
+            schedule.setEndTime(rs.getTime("endTime").toLocalTime());
+            schedule.setDate(rs.getDate("date").toLocalDate());
             schedule.setTimeslot(TimeSlot.valueOf(rs.getString("timeSlot")));
             schedule.setProgramKey(rs.getInt("programId"));
             schedule.setChannelKey(rs.getInt("channelId"));
@@ -223,6 +229,26 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     }
     
     @Override
+    public List<Schedule> getScheduleByChannelAdmin(Channel channel, LocalDate date) throws DataException {
+        List<Schedule> result = new ArrayList();
+        try {
+            scheduleByChannel.setString(1, date.toString());
+            scheduleByChannel.setInt(2, channel.getKey());
+            
+         try(ResultSet rs = scheduleByChannel.executeQuery()) {
+                while (rs.next()) {
+                   
+                    result.add((Schedule) getSchedule(rs.getInt("idSchedule")));
+                }
+            }
+        }
+        catch (SQLException ex) {
+            throw new DataException("Unable to load schedule by channel", ex);
+        }
+        return result; 
+    }
+    
+    @Override
     public List<Schedule> getScheduleByFavChannel(Channel channel, LocalDate date, TimeSlot timeslot) throws DataException {
         List<Schedule> result = new ArrayList();
         try {
@@ -254,14 +280,49 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     }
 
     @Override
-    public void storeSchedule(Integer ck, Integer pk, String st, String et, String d) throws DataException {
+    public void storeSchedule(Schedule schedule) throws DataException {
         try {
-            insertSchedule.setString(1, st.toString());
-            insertSchedule.setString(2, et.toString());
-            insertSchedule.setString(3, d);       
-            insertSchedule.setString(4, generateTS(st, et).toString());           
-            insertSchedule.setInt(5, ck);
-            insertSchedule.setInt(6, pk);
+            String start = schedule.getStartTime().toString();
+            String end = schedule.getEndTime().toString(); 
+            if (schedule.getKey() != null && schedule.getKey() > 0) {//update
+                
+                updateSchedule.setString(1, start);
+                updateSchedule.setString(2, end);
+                updateSchedule.setString(3, schedule.getDate().toString());       
+                updateSchedule.setString(4, generateTS(start, end).toString());           
+                
+                if(schedule.getProgram().IsSerie()){
+                updateSchedule.setInt(5, schedule.getEpisode().getKey());
+                }else{
+                   updateSchedule.setInt(5, 0); 
+                }
+                
+                long current_version = schedule.getVersion();
+                long next_version = current_version + 1;
+                
+
+                updateSchedule.setLong(6, next_version);
+                updateSchedule.setInt(7, schedule.getKey());
+                updateSchedule.setLong(8, current_version);
+                
+                if (updateSchedule.executeUpdate() == 0) {
+                    throw new OptimisticLockException(schedule);
+                }
+                
+                schedule.setVersion(next_version);
+                
+            }else{//insert            
+            insertSchedule.setString(1, start);
+            insertSchedule.setString(2, end);
+            insertSchedule.setString(3, schedule.getDate().toString());       
+            insertSchedule.setString(4, generateTS(start, end).toString());           
+            insertSchedule.setInt(5, schedule.getChannel().getKey());
+            insertSchedule.setInt(6, schedule.getProgram().getKey());
+            if(schedule.getProgram().IsSerie()){
+            insertSchedule.setInt(7, schedule.getEpisode().getKey());
+            }else{
+               insertSchedule.setInt(7, 0); 
+            }
             
             Schedule s = null;
             if (insertSchedule.executeUpdate() == 1) {
@@ -280,8 +341,9 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
                     }
                 }
 
-            if (s instanceof DataItemProxy) {
-                ((DataItemProxy) s).setModified(false);
+            }
+            if (schedule instanceof DataItemProxy) {
+                ((DataItemProxy) schedule).setModified(false);
             }
         } catch (SQLException ex) {
             Logger.getLogger(ScheduleDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);

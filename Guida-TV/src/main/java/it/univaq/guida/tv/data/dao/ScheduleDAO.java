@@ -46,6 +46,8 @@ public interface ScheduleDAO {
 
     List<Schedule> getScheduleByChannel(Channel channel, LocalDate date) throws DataException; 
     
+     List<Schedule> getScheduleByChannelAdmin(Channel channel, LocalDate date) throws DataException;
+    
     List<Schedule> getScheduleByFavChannel(Channel channel, LocalDate date, TimeSlot timeslot) throws DataException;
     
     List<Schedule> getScheduleBetweenDates(LocalDate startDate, LocalDate endDate) throws DataException;
@@ -54,7 +56,7 @@ public interface ScheduleDAO {
     
     TimeSlot getCurTimeSlot() throws DataException;
 
-    void storeSchedule(Integer ck, Integer pk, String st, String et, String d) throws DataException;
+    void storeSchedule(Schedule schedule) throws DataException;
     
     void deleteSchedule(Schedule schedule);
     

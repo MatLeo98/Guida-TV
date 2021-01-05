@@ -9,7 +9,8 @@ import it.univaq.framework.data.DataItem;
 import it.univaq.guida.tv.data.impl.ScheduleImpl.TimeSlot;
 import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.Program;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 /**
  *
@@ -19,29 +20,29 @@ public interface Schedule extends DataItem<Integer> {
 
     Channel getChannel();
 
-    Date getDate();
+    LocalDate getDate();
 
-    String getEndTime();
+    LocalTime getEndTime();
 
     Episode getEpisode();
 
     Program getProgram();
 
-    String getStartTime();
+    LocalTime getStartTime();
 
     TimeSlot getTimeslot();
 
     void setChannel(Channel channel);
 
-    void setDate(Date date);
+    void setDate(LocalDate date);
 
-    void setEndTime(String endTime);
+    void setEndTime(LocalTime endTime);
 
     void setEpisode(Episode episode);
 
     void setProgram(Program program);
 
-    void setStartTime(String startTime);
+    void setStartTime(LocalTime startTime);
 
     void setTimeslot(TimeSlot timeslot);
     
