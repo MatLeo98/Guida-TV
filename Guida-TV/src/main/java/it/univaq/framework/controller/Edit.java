@@ -434,9 +434,11 @@ public class Edit extends BaseController {
         if(request.getParameter("schedule") != null){
             int key = (int)request.getAttribute("key");
             Schedule schedule = ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getSchedule(key);
-            int ep = Integer.parseInt(request.getParameter("ep"));
-            Episode episode = ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getEpisode(ep);
-            schedule.setEpisode(episode);
+            if(schedule.getProgram().IsSerie()){
+                int ep = Integer.parseInt(request.getParameter("ep"));
+                Episode episode = ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getEpisode(ep);
+                schedule.setEpisode(episode);
+            }
             schedule.setDate(LocalDate.parse(request.getParameter("d")));            
             schedule.setStartTime(LocalTime.parse(request.getParameter("st")));
             schedule.setEndTime(LocalTime.parse(request.getParameter("et")));

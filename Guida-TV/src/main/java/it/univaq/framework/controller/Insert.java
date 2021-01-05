@@ -187,7 +187,7 @@ public class Insert extends BaseController {
         List<Program> programs = (List<Program>) request.getAttribute("programs");
         List<Channel> channels = (List<Channel>) request.getAttribute("channels");
         Program programSelected = (Program) request.getAttribute("programSelected");
-        List<Episode> episodes = (List<Episode>) request.getAttribute("episodes");
+        
         try (PrintWriter out = response.getWriter()) {  
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -208,10 +208,11 @@ public class Insert extends BaseController {
             out.println("<form method='post' action='insert?schedule=1'>");
             if(programSelected != null){
             if(programSelected.IsSerie()){
+                List<Episode> episodes = ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getProgramEpisodes(programSelected);
                 out.println("Episodio:");
                 out.println("<select name='ep' id='ep'>");
                 for(Episode e : episodes){
-                out.println("<option value = '" + e.getKey() + "'>" + e.getName() + "</option>");
+                    out.println("<option value = '" + e.getKey() + "'>" + e.getName() + "</option>");
                 }
                 out.println("</select>");
             }
@@ -294,7 +295,7 @@ public class Insert extends BaseController {
                 out.println("</head>");
                 out.println("<body>");
                 out.println("<h1> Inserimento effettuato </h1>");
-                out.println("<a href='javascript:history.back()'> Inserisci un nuovo canale </a>");
+                out.println("<a href='javascript:history.back()'> Inserisci di nuovo </a>");
                 out.println("</body>");
                 out.println("</html>");
             } catch (DataException ex) {
