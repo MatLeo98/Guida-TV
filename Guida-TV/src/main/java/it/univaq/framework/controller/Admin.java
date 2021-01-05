@@ -113,32 +113,42 @@ public class Admin extends BaseController {
             List<User> users = null;
             users = (List<User>) ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().getSubUsers();
             for(User u : users){
-                FileWriter fw=new FileWriter("S:\\Programmi\\xampp\\htdocs\\univaq-Guida-TV\\Guida-TV\\Guida-TV\\src\\main\\java\\it\\univaq\\guida\\tv\\data\\files\\emailto"+u.getKey()+".txt");
+                FileWriter fw=new FileWriter("S:\\Programmi\\xampp\\htdocs\\univaq-Guida-TV\\Guida-TV\\Guida-TV\\src\\main\\java\\it\\univaq\\guida\\tv\\data\\files\\emailto"+u.getKey()+LocalDate.now()+".txt");
                 fw.write("Ciao "+u.getKey()+"\r\n\r\n");
                 
                 //schedules di oggi per canali preferiti
                 List<FavouriteChannel> channels = ((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteChannelDAO().getFavouriteChannels(u);
-                fw.write("Ecco i programmi che andranno in onda oggi in base ai tuoi canali preferiti: \r\n");
-                for(FavouriteChannel fc : channels){
-                    List<Schedule> todayByC = ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getScheduleByFavChannel(fc.getChannel(),LocalDate.now(),fc.getTimeSlot());
-                    for(Schedule s : todayByC){
-                      
-         
-                          fw.write(s.getChannel().getName() + " alle "+ s.getStartTime() +" - "+ s.getProgram().getName()+ "\r\n\r\n");    
-      
-                    }    
+                if(!channels.isEmpty()){
+                    fw.write("Ecco i programmi che andranno in onda oggi in base ai tuoi canali preferiti: \r\n");
+                    for(FavouriteChannel fc : channels){
+                        List<Schedule> todayByC = ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getScheduleByFavChannel(fc.getChannel(),LocalDate.now(),fc.getTimeSlot());
+                        for(Schedule s : todayByC){
+
+
+                              fw.write(s.getChannel().getName() + " alle "+ s.getStartTime() +" - "+ s.getProgram().getName()+ "\r\n");  
+                               if(s.getProgram().IsSerie())
+                                    fw.write("Episodio numero: "+s.getEpisode().getNumber()+" "+s.getEpisode().getName()+"\r\n");
+
+                        }    
+                    }
                 }
-                
-                fw.write("Ecco i programmi che andranno in onda oggi in base alle tue ricerche salvate: \r\n");
                 //schedules di oggi per programmi preferiti che hanno la newsletter per la ricerca salvata
                 List<FavouriteProgram> programs = ((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteProgramDAO().getFavouritePrograms(u);
-                for(FavouriteProgram fp : programs){
-                    if(fp.getSavedSearch().getSendEmail()){
-                        List<Schedule> todayByP = ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getScheduleByProgram(fp.getProgram(),LocalDate.now());
-                        for(Schedule s : todayByP){
-                           
-                            fw.write(s.getChannel().getName() + " alle "+ s.getStartTime() +" - "+ s.getProgram().getName()+"\r\n"); 
-                             
+                
+                if(!programs.isEmpty()){
+                    fw.write("\r\nEcco i programmi che andranno in onda oggi in base alle tue ricerche salvate: \r\n");
+                
+                
+                    for(FavouriteProgram fp : programs){
+                        if(fp.getSavedSearch().getSendEmail()){
+                            List<Schedule> todayByP = ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getScheduleByProgram(fp.getProgram(),LocalDate.now());
+                            for(Schedule s : todayByP){
+
+                                fw.write(s.getChannel().getName() + " alle "+ s.getStartTime() +" - "+ s.getProgram().getName()+"\r\n"); 
+                                if(s.getProgram().IsSerie())
+                                    fw.write("Episodio numero: "+s.getEpisode().getNumber()+" "+s.getEpisode().getName()+"\r\n");
+
+                            }
                         }
                     }
                 }
