@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Home</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+            <body>
+            <form action='searchresults'>
+            <input type='text' placeholder='Titolo' name='title'>
+           <select name='genre' id='genre'>
+            <option value = ''> Scegli il genere </option>
+            <#list genres as g>
+            <option value = "${g}" </option>
+            </#list>
+            </select>
+            <select name='channel' id='channel'>
+            <option value = ''> Scegli i canali </option>
+            <#list channels as c>
+            <option value ="${g.key}"> ${c.name} </option>
+            </#list>
+            </select>
+            Ora Min:
+            <input type='time' id='min' name='min'>
+            Ora Max:
+            <input type='time' id='max' name='max'>
+            Da:
+            <input type='date' id='date1' name='date1'>
+            A: 
+            <input type='date' id='date2' name='date2'>
+            <button type='submit'>Search</button>
+            </form>
+            <h1>Programmi in onda </h1>
+            <#list onAirPrograms as s>
+           <h3> Ora in onda: <a href = 'program?id= ${s.program.key}'>   ${s.program.name} </a></h3>
+           <h1> <a href = 'channel?id=${s.channel.key}'> ${s.channel.name} </a></h1>
+            <#list>
+
+    </body>
+</html>

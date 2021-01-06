@@ -6,6 +6,9 @@
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
+import it.univaq.framework.result.SplitSlashesFmkExt;
+import it.univaq.framework.result.TemplateManagerException;
+import it.univaq.framework.result.TemplateResult;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import it.univaq.guida.tv.data.impl.ProgramImpl.Genre;
 import it.univaq.guida.tv.data.model.Channel;
@@ -38,14 +41,21 @@ public class Home extends BaseController {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException{       
         
-        try {    
+        try {   
+           TemplateResult res = new TemplateResult(getServletContext());
+            //aggiungiamo al template un wrapper che ci permette di chiamare la funzione stripSlashes
+            //add to the template a wrapper object that allows to call the stripslashes function
+            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
             request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
             request.setAttribute("onAirPrograms", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getOnAirPrograms());
-            action_home(request, response);                 
+            res.activate("home.ftl.html", request, response);
+            //action_home(request, response);                 
             
         } catch (NumberFormatException ex) {
             request.setAttribute("message", "Home key not specified");           
         } catch (DataException ex) { 
+            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TemplateManagerException ex) {
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
         }
       
