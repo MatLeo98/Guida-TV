@@ -16,13 +16,13 @@ and open the template in the editor.
            <select name='genre' id='genre'>
             <option value = ''> Scegli il genere </option>
             <#list genres as g>
-            <option value = "${g}" </option>
+            <option value = "${g}"> ${g} </option>
             </#list>
             </select>
             <select name='channel' id='channel'>
             <option value = ''> Scegli i canali </option>
             <#list channels as c>
-            <option value ="${g.key}"> ${c.name} </option>
+            <option value ="${c.key}"> ${c.name} </option>
             </#list>
             </select>
             Ora Min:
@@ -39,7 +39,7 @@ and open the template in the editor.
             <#list onAirPrograms as s>
            <h3> Ora in onda: <a href = 'program?id= ${s.program.key}'>   ${s.program.name} </a></h3>
            <h1> <a href = 'channel?id=${s.channel.key}'> ${s.channel.name} </a></h1>
-            <#list>
+            </#list>
 
     </body>
 </html>

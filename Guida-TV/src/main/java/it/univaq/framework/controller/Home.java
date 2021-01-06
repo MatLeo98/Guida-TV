@@ -45,7 +45,9 @@ public class Home extends BaseController {
            TemplateResult res = new TemplateResult(getServletContext());
             //aggiungiamo al template un wrapper che ci permette di chiamare la funzione stripSlashes
             //add to the template a wrapper object that allows to call the stripslashes function
+
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+            request.setAttribute("genres", Genre.values());
             request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
             request.setAttribute("onAirPrograms", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getOnAirPrograms());
             res.activate("home.ftl.html", request, response);
