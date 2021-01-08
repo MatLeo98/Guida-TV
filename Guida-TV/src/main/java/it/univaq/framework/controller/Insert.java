@@ -134,7 +134,14 @@ public class Insert extends BaseController {
     private void program_insert(HttpServletRequest request, HttpServletResponse response){
         response.setContentType("text/html;charset=UTF-8");      
         ProgramImpl.Genre[] genres = ProgramImpl.Genre.values();
-        try (PrintWriter out = response.getWriter()) {  
+       
+        try {
+            TemplateResult res = new TemplateResult(getServletContext());
+            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+            res.activate("inseriscicanale.ftl.html", request, response);
+            
+            /*
+            try (PrintWriter out = response.getWriter()) {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -161,7 +168,11 @@ public class Insert extends BaseController {
             out.println("</form>");
             out.println("</body>");
             out.println("</html>");
-        } catch (IOException ex) {
+            } catch (IOException ex) {
+            Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            */
+        } catch (TemplateManagerException ex) {
             Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -169,7 +180,12 @@ public class Insert extends BaseController {
     private void episode_insert(HttpServletRequest request, HttpServletResponse response){
         response.setContentType("text/html;charset=UTF-8");
         List<Program> programs = (List<Program>) request.getAttribute("programs");
-        try (PrintWriter out = response.getWriter()) {  
+        try {
+            TemplateResult res = new TemplateResult(getServletContext());
+            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+            res.activate("inserisciepisodio.ftl.html", request, response);
+            /*
+            try (PrintWriter out = response.getWriter()) {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -183,7 +199,7 @@ public class Insert extends BaseController {
             out.println("<input type='text' placeholder='Numero episodio' name='episodeNumber'>");
             out.println("<select name='p' id='p'>");
             for(Program p : programs){
-                if(p.IsSerie())
+            if(p.IsSerie())
             out.println("<option value = '" + p.getKey() + "'>" + p.getName() + "</option>");
             }
             out.println("</select>");
@@ -191,7 +207,12 @@ public class Insert extends BaseController {
             out.println("</form>");
             out.println("</body>");
             out.println("</html>");
-        } catch (IOException ex) {
+            } catch (IOException ex) {
+            Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            */
+        } catch (TemplateManagerException ex) {
             Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
