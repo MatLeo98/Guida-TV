@@ -223,7 +223,14 @@ public class Insert extends BaseController {
         List<Channel> channels = (List<Channel>) request.getAttribute("channels");
         Program programSelected = (Program) request.getAttribute("programSelected");
         
-        try (PrintWriter out = response.getWriter()) {  
+
+        try {
+            TemplateResult res = new TemplateResult(getServletContext());
+            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+            res.activate("inseriscipalinsesto.ftl.html", request, response);
+            
+            /*
+            try (PrintWriter out = response.getWriter()) {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -237,19 +244,19 @@ public class Insert extends BaseController {
             for(Program p : programs){
             out.println("<option value = '" + p.getKey() + "'>" + p.getName() + "</option>");       
             }
-              out.println("</select>");
-              out.println("<input type='submit' name='select' value='SELEZIONA'/>");
+            out.println("</select>");
+            out.println("<input type='submit' name='select' value='SELEZIONA'/>");
             out.println("</form>");
             out.println("<form method='post' action='insert?schedule=1'>");
             if(programSelected != null){
             if(programSelected.IsSerie()){
-                List<Episode> episodes = ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getProgramEpisodes(programSelected);
-                out.println("Episodio:");
-                out.println("<select name='ep' id='ep'>");
-                for(Episode e : episodes){
-                    out.println("<option value = '" + e.getKey() + "'>" + e.getName() + "</option>");
-                }
-                out.println("</select>");
+            List<Episode> episodes = ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getProgramEpisodes(programSelected);
+            out.println("Episodio:");
+            out.println("<select name='ep' id='ep'>");
+            for(Episode e : episodes){
+            out.println("<option value = '" + e.getKey() + "'>" + e.getName() + "</option>");
+            }
+            out.println("</select>");
             }
             out.println("Canale:");
             out.println("<select name='ch' id='ch'>");
@@ -268,7 +275,11 @@ public class Insert extends BaseController {
             }
             out.println("</body>");
             out.println("</html>");
-        } catch (IOException ex) {
+            } catch (IOException ex) {
+            Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            */
+        } catch (TemplateManagerException ex) {
             Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -323,16 +334,26 @@ public class Insert extends BaseController {
                     }
                    ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().storeSchedule(schedule); 
                 }
-                out.println("<!DOCTYPE html>");
-                out.println("<html>");
-                out.println("<head>");
-                out.println("<title>Servlet Insert</title>"); 
-                out.println("</head>");
-                out.println("<body>");
-                out.println("<h1> Inserimento effettuato </h1>");
-                out.println("<a href='javascript:history.back()'> Inserisci di nuovo </a>");
-                out.println("</body>");
-                out.println("</html>");
+                 
+                try {
+                    TemplateResult res = new TemplateResult(getServletContext());
+                    request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+                    res.activate("inserimentoriuscito.ftl.html", request, response);
+                    /*
+                    out.println("<!DOCTYPE html>");
+                    out.println("<html>");
+                    out.println("<head>");
+                    out.println("<title>Servlet Insert</title>");
+                    out.println("</head>");
+                    out.println("<body>");
+                    out.println("<h1> Inserimento effettuato </h1>");
+                    out.println("<a href='javascript:history.back()'> Inserisci di nuovo </a>");
+                    out.println("</body>");
+                    out.println("</html>");
+                    */
+                } catch (TemplateManagerException ex) {
+                    Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } catch (DataException ex) {
                 Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
