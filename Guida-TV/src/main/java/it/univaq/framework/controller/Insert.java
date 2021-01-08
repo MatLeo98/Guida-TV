@@ -6,6 +6,9 @@
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
+import it.univaq.framework.result.SplitSlashesFmkExt;
+import it.univaq.framework.result.TemplateManagerException;
+import it.univaq.framework.result.TemplateResult;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import it.univaq.guida.tv.data.impl.ProgramImpl;
 import it.univaq.guida.tv.data.model.Channel;
@@ -92,8 +95,15 @@ public class Insert extends BaseController {
     }
     
     private void channel_insert(HttpServletRequest request, HttpServletResponse response){
-        response.setContentType("text/html;charset=UTF-8");        
-        try (PrintWriter out = response.getWriter()) {  
+        response.setContentType("text/html;charset=UTF-8"); 
+
+        try {        
+            TemplateResult res = new TemplateResult(getServletContext());
+            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+            res.activate("inseriscicanale.ftl.html", request, response);
+            
+            /*
+            try (PrintWriter out = response.getWriter()) {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -112,10 +122,14 @@ public class Insert extends BaseController {
             out.println("</form>");
             out.println("</body>");
             out.println("</html>");
-        } catch (IOException ex) {
+            } catch (IOException ex) {
+            Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            */
+        } catch (TemplateManagerException ex) {
             Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    } 
     
     private void program_insert(HttpServletRequest request, HttpServletResponse response){
         response.setContentType("text/html;charset=UTF-8");      
