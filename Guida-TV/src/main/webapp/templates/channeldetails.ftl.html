@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Servlet ChannelDetail</title>            
+</head>
+<body>
+<h1> ${channel.name} </h1>
+<h2>Palinsesto del ${date} </h2>
+ <#list schedule as s>
+<h3> <a href = 'program?id=${s.program.key}'> ${s.program.name} </a>  </h3>
+<h3>Ora di inizio: ${s.startTime}            </h3>
+<h3>Ora di fine:   ${s.endTime}                 </h3>
+<h3>Genere:        ${s.program.genre}           </h3>
+</#list>    
+</body>
+</html>

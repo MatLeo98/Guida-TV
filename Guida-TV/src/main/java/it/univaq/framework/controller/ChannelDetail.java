@@ -6,6 +6,9 @@
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
+import it.univaq.framework.result.SplitSlashesFmkExt;
+import it.univaq.framework.result.TemplateManagerException;
+import it.univaq.framework.result.TemplateResult;
 import it.univaq.framework.security.SecurityLayer;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import it.univaq.guida.tv.data.model.Channel;
@@ -57,10 +60,16 @@ public class ChannelDetail extends BaseController {
         Channel channel = (Channel) request.getAttribute("channel");
         List<Schedule> schedule = (List<Schedule>) request.getAttribute("schedule");
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+       
+        try {
+            TemplateResult res = new TemplateResult(getServletContext());
+            request.setAttribute("date", date);
+            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+            res.activate("channeldetails.ftl.html", request, response);
+            //try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
+            //  out.println("<!DOCTYPE html>");
+            /*  out.println("<html>");
             out.println("<head>");
             out.println("<title>Servlet ChannelDetail</title>");            
             out.println("</head>");
@@ -75,8 +84,11 @@ public class ChannelDetail extends BaseController {
             }
             out.println("</body>");
             out.println("</html>");
-        } catch (IOException ex) {
+            } catch (IOException ex) {
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+            } */
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(ChannelDetail.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
