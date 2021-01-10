@@ -48,6 +48,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     private PreparedStatement todayScheduleByProgram;
     private PreparedStatement scheduleByChannel;
     private PreparedStatement updateSchedule;
+    private PreparedStatement deleteSchedule;
 
     public ScheduleDAO_MySQL(DataLayer d) {
         super(d);
@@ -73,7 +74,8 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             insertSchedule = connection.prepareStatement("INSERT INTO schedule (startTime, endTime, date, timeSlot, channelId, programId, episodeId) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             scheduleByChannel = connection.prepareStatement("SELECT * FROM schedule WHERE date >= ? AND channelId = ? ORDER BY date");
             updateSchedule = connection.prepareStatement("UPDATE schedule SET startTime = ?, endTime = ?, date = ?, timeSlot = ?, episodeId = ?, version = ? WHERE idSchedule = ? AND version = ?");
-
+            deleteSchedule = connection.prepareStatement("DELETE FROM schedule WHERE idSchedule = ?");
+            
         } catch (SQLException ex) {
             throw new DataException("Error initializing newspaper data layer", ex);
         }
@@ -96,7 +98,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             todayScheduleByProgram.close();
             scheduleByChannel.close();
             updateSchedule.close();
-
+            deleteSchedule.close();
 
         } catch (SQLException ex) {
             //
@@ -281,14 +283,15 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
 
     @Override
     public void storeSchedule(Schedule schedule) throws DataException {
+        String start = schedule.getStartTime().toString();
+        String end = schedule.getEndTime().toString();
         try {
-            String start = schedule.getStartTime().toString();
-            String end = schedule.getEndTime().toString(); 
+             
             if (schedule.getKey() != null && schedule.getKey() > 0) {//update
                 
                 updateSchedule.setString(1, start);
                 updateSchedule.setString(2, end);
-                updateSchedule.setString(3, schedule.getDate().toString());       
+                updateSchedule.setString(3, schedule.getDate().toString()); 
                 updateSchedule.setString(4, generateTS(start, end).toString());           
                 
                 if(schedule.getProgram().IsSerie()){
@@ -314,7 +317,8 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             }else{//insert            
             insertSchedule.setString(1, start);
             insertSchedule.setString(2, end);
-            insertSchedule.setString(3, schedule.getDate().toString());       
+            insertSchedule.setString(3, schedule.getDate().toString()); 
+            System.out.println(generateTS(start, end).toString());
             insertSchedule.setString(4, generateTS(start, end).toString());           
             insertSchedule.setInt(5, schedule.getChannel().getKey());
             insertSchedule.setInt(6, schedule.getProgram().getKey());
@@ -352,7 +356,14 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
 
     @Override
     public void deleteSchedule(Schedule schedule) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            
+            deleteSchedule.setInt(1,schedule.getKey());
+            deleteSchedule.executeUpdate();
+                
+        } catch (SQLException ex) {
+            Logger.getLogger(EpisodeDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

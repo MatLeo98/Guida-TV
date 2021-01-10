@@ -10,8 +10,6 @@ import it.univaq.framework.security.SecurityLayer;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import it.univaq.guida.tv.data.impl.ProgramImpl;
 import it.univaq.guida.tv.data.impl.ProgramImpl.Genre;
-import it.univaq.guida.tv.data.impl.ScheduleImpl;
-import it.univaq.guida.tv.data.impl.ScheduleImpl.TimeSlot;
 import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.Program;
@@ -35,125 +33,104 @@ import javax.servlet.http.HttpServletResponse;
 public class Edit extends BaseController {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        //channel
-        if(request.getParameter("channel") != null){
-            if(request.getParameter("channelNumber") == null){
-                if(request.getParameter("ch") != null){ 
-                    try { 
+        try{
+            //channel
+            if(request.getParameter("channel") != null){
+                if(request.getParameter("channelNumber") == null){
+                    if(request.getParameter("ch") != null){ //verifico se ho scelto un elemento dal selettore 
+
                         Integer id = Integer.parseInt(request.getParameter("ch"));
                         request.setAttribute("channelSelected", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(id));
-                        } catch (DataException ex) {
-                        Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
+
                     }
-                    }
-                        try {
-                            request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
-                            channel_edit(request, response);
-                        } catch (DataException ex) {
-                            Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    
-                
-            }else{
-                edit_done(request, response);
-            }
-        }  
-        //program
-        if(request.getParameter("program") != null){
-            int program_key;           
-                if(request.getParameter("prog") == null){
-                                  
-                    if(request.getParameter("pr") != null){ 
-                        try { 
+
+                        request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
+                        channel_edit(request, response);
+
+                }else{
+                    edit_done(request, response);
+                }
+            }  
+            //program
+            if(request.getParameter("program") != null){
+                int program_key;           
+                    if(request.getParameter("prog") == null){
+
+                        if(request.getParameter("pr") != null){ //verifico se ho scelto un elemento dal selettore 
+
                             Integer id = Integer.parseInt(request.getParameter("pr"));
                             request.setAttribute("programSelected", ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getProgram(id));
-                            } catch (DataException ex) {
-                            Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
-                            }      
+
+                        }
+
+                            request.setAttribute("programs", ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getPrograms());
+                            program_edit(request, response);
+
+                    }else{
+                        program_key = SecurityLayer.checkNumeric(request.getParameter("prog"));
+                        request.setAttribute("key", program_key);
+                        edit_done(request, response);
                     }
-                            try {
-                                request.setAttribute("programs", ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getPrograms());
-                                program_edit(request, response);
-                            } catch (DataException ex) {
-                                Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
+
+            }
+            //episode
+            if(request.getParameter("episode") != null){
+                int episode_key;          
+                    if(request.getParameter("sn") == null){
+
+                        if(request.getParameter("pr") != null){ //verifico se ho scelto un elemento dal selettore 
+
+                            Integer id = Integer.parseInt(request.getParameter("pr"));
+                            Program pro = ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getProgram(id);
+
+                            request.setAttribute("programSelected", pro);
+                            request.setAttribute("episodes", ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getProgramEpisodes(pro));
+   
+                        }
+                        
+                            if(request.getParameter("delEp") != null){
+                                delete_done(request, response);
                             }
 
+                            request.setAttribute("programs", ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getPrograms());
+                            episode_edit(request, response);            
+                        
+                    }else{
+                        episode_key = SecurityLayer.checkNumeric(request.getParameter("ek"));
+                        request.setAttribute("key", episode_key);
+                        edit_done(request, response);
+                    }       
+            }
+            //schedule
+            if(request.getParameter("schedule") != null){
+                int schedule_key;
+                LocalDate today = LocalDate.now();
+                if(request.getParameter("pName") == null){
+                    if(request.getParameter("ch") != null){ //verifico se ho scelto un elemento dal selettore 
+
+                        Integer id = Integer.parseInt(request.getParameter("ch"));
+                        Channel channel = ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(id);
+                        request.setAttribute("channelSelected", channel);
+                        request.setAttribute("schedules", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getScheduleByChannelAdmin(channel, today));
+
+                    }
+
+                        if(request.getParameter("delSched") != null){                            
+                            delete_done(request, response);
+                        }
+
+                        request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
+                        schedule_edit(request, response);
 
                 }else{
-                    program_key = SecurityLayer.checkNumeric(request.getParameter("prog"));
-                    request.setAttribute("key", program_key);
-                    edit_done(request, response);
+                        schedule_key = SecurityLayer.checkNumeric(request.getParameter("sk"));
+                        request.setAttribute("key", schedule_key);
+                        edit_done(request, response); 
                 }
-            
-        }
-        //episode
-        if(request.getParameter("episode") != null){
-            int episode_key;    
-            System.out.println(request.getParameter("sn"));
-                if(request.getParameter("sn") == null){
-                            try {
-     
-                                if(request.getParameter("pr") != null){
-                                    try {
-                                    Integer id = Integer.parseInt(request.getParameter("pr"));
-                                    Program pro = ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getProgram(id);
-                                    
-                                    request.setAttribute("programSelected", pro);
-                                    request.setAttribute("episodes", ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getProgramEpisodes(pro));
-                                    } catch (DataException ex) {
-                                    Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
-                                }
-                                //try {
-                                
-                                    request.setAttribute("programs", ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getPrograms());
-                                    
-                                    episode_edit(request, response);
-                                /*} catch (DataException ex) {
-                                    Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
-                                }*/
-                                
-                                
-                            } catch (DataException ex) {
-                                Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-
-
-                }else{
-                    episode_key = SecurityLayer.checkNumeric(request.getParameter("ek"));
-                    request.setAttribute("key", episode_key);
-                    edit_done(request, response);
-                }       
-        }
-        //schedule
-        if(request.getParameter("schedule") != null){
-            int schedule_key;
-            LocalDate today = LocalDate.now();
-            if(request.getParameter("pName") == null){
-            if(request.getParameter("ch") != null){ 
-                        try { 
-                            Integer id = Integer.parseInt(request.getParameter("ch"));
-                            Channel channel = ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(id);
-                            request.setAttribute("channelSelected", channel);
-                            
-                            request.setAttribute("schedules", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getScheduleByChannelAdmin(channel, today));
-                        } catch (DataException ex) {
-                            Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
-                            }      
             }
-                try {
-
-                    request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
-
-                    schedule_edit(request, response);
-                } catch (DataException ex) {
-                    Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
-                }
-        }else{
-               schedule_key = SecurityLayer.checkNumeric(request.getParameter("sk"));
-               request.setAttribute("key", schedule_key);
-               edit_done(request, response); 
-            }
+        
+        }catch (DataException ex) {
+            Logger.getLogger(Delete.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }
@@ -173,8 +150,16 @@ public class Edit extends BaseController {
             out.println("<form method='post' action='edit?channel=1'>");
             out.println("Canale da modificare:");
             out.println("<select name='ch' id='ch'>");
-            for(Channel c : channels){
-            out.println("<option value = '" + c.getKey() + "'>" + c.getName() + "</option>");
+            if(channelSelected != null){
+            out.println("<option value = '" + channelSelected.getKey() + "'>" + channelSelected.getName() + "</option>");          
+                for(Channel c : channels){
+                    if(!(c.getName().equals(channelSelected.getName())))
+                out.println("<option value = '" + c.getKey() + "'>" + c.getName() + "</option>");
+                }
+            }else{
+                for(Channel c : channels){
+                out.println("<option value = '" + c.getKey() + "'>" + c.getName() + "</option>");
+                }
             }
             out.println("</select>");
             out.println("<input type='submit' name='select' value='SELEZIONA'/>");
@@ -194,6 +179,8 @@ public class Edit extends BaseController {
             out.println("</html>");
         } catch (IOException ex) {
             Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
+        } catch(NullPointerException n){
+            System.out.println("Canale ancora non selezionato");
         }
     }
     
@@ -213,14 +200,21 @@ public class Edit extends BaseController {
             out.println("<form method='post' action='edit?program=1'>");
             out.println("Programma da modificare:");           
             out.println("<select name='pr' id='pr'>");
-            for(Program p : programs){
-            out.println("<option value = '" + p.getKey() + "'>" + p.getName() + "</option>");
+            if(programSelected != null){ //Da rivedere se è possibile mettere un solo if (ce n'è un altro uguale a riga 217)
+                out.println("<option value = '" + programSelected.getKey() + "'>" + programSelected.getName() + "</option>");
+                for(Program p : programs){
+                    if(!(p.getName().equals(programSelected.getName())))
+                out.println("<option value = '" + p.getKey() + "'>" + p.getName() + "</option>");
+                }
+            }else{
+                for(Program p : programs){
+                out.println("<option value = '" + p.getKey() + "'>" + p.getName() + "</option>");       
+                }
             }
             out.println("</select>");
             out.println("<input type='submit' name='select' value='SELEZIONA'/>");
             out.println("</form>");
             out.println("<form method='post' action='edit?program=1'>");
-            if(programSelected != null){
             out.println("<input type='text' name='prog' value='" + programSelected.getKey() + "' hidden/>");
             out.println("<input type='text' placeholder='Nome canale' name='programName' value='" + programSelected.getName() + "'>");
             out.println("<input type='text' placeholder='Descrizione' name='programDescription' value='" + programSelected.getDescription() + "'>");
@@ -243,12 +237,13 @@ public class Edit extends BaseController {
                 out.println("<input type='radio' name='serie' value='1'> Sì");  
             }
             out.println("<button type='submit'>Modifica</button>");
-            }
             out.println("</form>");
             out.println("</body>");
             out.println("</html>");
         } catch (IOException ex) {
             Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
+        } catch(NullPointerException n){
+            System.out.println("Programma ancora non selezionato");
         }
     }
     
@@ -256,6 +251,7 @@ public class Edit extends BaseController {
         response.setContentType("text/html;charset=UTF-8");
         List<Program> programs = (List<Program>) request.getAttribute("programs");
         List<Episode> episodes = (List<Episode>) request.getAttribute("episodes");
+        Program programSelected = (Program) request.getAttribute("programSelected");
         try (PrintWriter out = response.getWriter()) {  
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -263,13 +259,21 @@ public class Edit extends BaseController {
             out.println("<title>Servlet Edit</title>"); 
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1> Modifica un episodio: </h1>");
-            out.println("<form method='post' action='edit?episode=1'>");
+            out.println("<h1> Modifica o elimina un episodio: </h1>");
+            out.println("<form method='post' action='edit?episode=0'>");
             out.println("Scegli la serie:");           
             out.println("<select name='pr' id='pr'>");
-            for(Program p : programs){
+            if(programSelected != null){
+                out.println("<option value = '" + programSelected.getKey() + "'>" + programSelected.getName() + "</option>");    
+                for(Program p : programs){
+                  if(!(p.getName().equals(programSelected.getName())) && p.IsSerie())
+                    out.println("<option value = '" + p.getKey() + "'>" + p.getName() + "</option>");     
+                }
+            }else{
+                for(Program p : programs){
                 if(p.IsSerie())
-            out.println("<option value = '" + p.getKey() + "'>" + p.getName() + "</option>");     
+                    out.println("<option value = '" + p.getKey() + "'>" + p.getName() + "</option>");     
+                }
             }
             out.println("</select>");
             out.println("<input type='submit' name='select' value='SELEZIONA'/>");
@@ -286,7 +290,7 @@ public class Edit extends BaseController {
                     for(Episode e : episodes){
                         out.println("<tr>");
                         
-                            out.println("<form method='post' action='edit?episode=1'>");
+                            out.println("<form method='post' action='edit?episode=0'>");
                              out.println("<input type='text' name='ek' value='" + e.getKey() + "' hidden/>"); 
                              out.println("<td style='text-align:center'> <input type='text' name='sn' value='" + e.getSeasonNumber() + "'/> </td>");
                              out.println("<td style='text-align:center'> <input type='text' name='en' value='" + e.getNumber() + "'/> </td>"); 
@@ -298,7 +302,7 @@ public class Edit extends BaseController {
                             out.println("</td>");
                              
                            out.println("<td style='text-align:center'>");  
-                            out.println("<form method='post' action='edit?delEp=" +e.getKey()+"'>");
+                            out.println("<form method='post' action='edit?episode=0&delEp=" +e.getKey()+"'>");
                             out.println("<input type='submit' name='delete' value='ELIMINA'/>");
                             out.println("</form>");
                            out.println("</td>");
@@ -327,13 +331,13 @@ public class Edit extends BaseController {
             out.println("</head>");
             out.println("<body>");
             out.println("<h1> Modifica o elimina un palinsesto: </h1>");
-            out.println("<form method='post' action='edit?schedule=1'>");
+            out.println("<form method='post' action='edit?schedule=0'>");
             out.println("Scegli il canale:");
             out.println("<select name='ch' id='ch'>");
             if(channelSelected != null){
             out.println("<option value = '" + channelSelected.getKey() + "'>" + channelSelected.getName() + "</option>");          
                 for(Channel c : channels){
-                    if(!(c.equals(channelSelected.getName())))
+                    if(!(c.getName().equals(channelSelected.getName())))
                 out.println("<option value = '" + c.getKey() + "'>" + c.getName() + "</option>");
                 }
             }else{
@@ -387,7 +391,7 @@ public class Edit extends BaseController {
                             out.println("</td>");
                              
                            out.println("<td style='text-align:center'>");  
-                            out.println("<form method='post' action='edit?delEp=" +s.getKey()+"'>");
+                            out.println("<form method='post' action='edit?schedule=0&delSched=" +s.getKey()+"'>");
                             out.println("<input type='submit' name='delete' value='ELIMINA'/>");
                             out.println("</form>");
                            out.println("</td>");
@@ -420,7 +424,7 @@ public class Edit extends BaseController {
             program.setIsSerie(Boolean.valueOf(request.getParameter("serie")));
             if(program.IsSerie()){
             program.setSeasonsNumber(Integer.parseInt(request.getParameter("nSeasons")));
-            }
+            }            
             ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().storeProgram(program);
         }
         if(request.getParameter("episode") != null){
@@ -454,6 +458,32 @@ public class Edit extends BaseController {
         } catch (IOException ex) {
             Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DataException ex) {
+            Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void delete_done(HttpServletRequest request, HttpServletResponse response){
+        try(PrintWriter out = response.getWriter()) {
+        if(request.getParameter("delEp") != null){
+            Integer id = Integer.parseInt(request.getParameter("delEp"));
+            Episode episode = ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getEpisode(id);
+            ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().deleteEpisode(episode);
+        }
+        if(request.getParameter("delSched") != null){
+            Integer id = Integer.parseInt(request.getParameter("delSched"));
+            Schedule schedule = ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getSchedule(id);
+            ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().deleteSchedule(schedule);
+        }
+        out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet Insert</title>"); 
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1> Eliminazione effettuata </h1>");
+        } catch (DataException ex) {
+            Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

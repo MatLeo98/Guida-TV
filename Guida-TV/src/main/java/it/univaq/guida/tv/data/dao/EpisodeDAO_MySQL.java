@@ -33,6 +33,7 @@ public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
     private PreparedStatement insertEpisode;
     private PreparedStatement programEpisodes;
     private PreparedStatement updateEpisode;
+    private PreparedStatement deleteEpisode;
 
     public EpisodeDAO_MySQL(DataLayer d) {
         super(d);
@@ -50,6 +51,7 @@ public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
             insertEpisode = connection.prepareStatement("INSERT INTO episode (name, seasonNumber, number, programId) VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             programEpisodes = connection.prepareStatement("SELECT * FROM episode WHERE programId = ?");
             updateEpisode = connection.prepareStatement("UPDATE episode SET name = ?, seasonNumber = ?, number = ?, version = ? WHERE idEpisode = ? AND version = ?");
+            deleteEpisode = connection.prepareStatement("DELETE FROM episode WHERE idEpisode = ?");
 
         } catch (SQLException ex) {
             throw new DataException("Error initializing data layer", ex);
@@ -67,6 +69,7 @@ public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
             insertEpisode.close();
             programEpisodes.close();
             updateEpisode.close();
+            deleteEpisode.close();
 
 
         } catch (SQLException ex) {
@@ -201,7 +204,14 @@ public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
 
     @Override
     public void deleteEpisode(Episode episode) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            
+            deleteEpisode.setInt(1,episode.getKey());
+            deleteEpisode.executeUpdate();
+                
+        } catch (SQLException ex) {
+            Logger.getLogger(EpisodeDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

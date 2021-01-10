@@ -5,7 +5,6 @@
  */
 package it.univaq.guida.tv.data.dao;
 
-import it.univaq.framework.controller.ProfileController;
 import it.univaq.framework.data.DAO;
 import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItemProxy;
@@ -13,7 +12,6 @@ import it.univaq.framework.data.DataLayer;
 import it.univaq.framework.data.OptimisticLockException;
 import it.univaq.framework.data.proxy.ChannelProxy;
 import it.univaq.guida.tv.data.model.Channel;
-import it.univaq.guida.tv.data.model.FavouriteChannel;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,6 +30,7 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
     private PreparedStatement channelByID;
     private PreparedStatement insertChannel;
     private PreparedStatement updateChannel;
+    private PreparedStatement deleteChannel;
 
     public ChannelDAO_MySQL(DataLayer d) {
         super(d);
@@ -48,6 +47,7 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
             channelByID = connection.prepareStatement("SELECT * FROM channel WHERE idChannel = ?");
             insertChannel = connection.prepareStatement("INSERT INTO channel (idChannel,name) VALUES(?,?)");
             updateChannel = connection.prepareStatement("UPDATE channel SET name = ?, version = ? WHERE idChannel = ? AND version = ?");
+            deleteChannel = connection.prepareStatement("DELETE FROM channel WHERE idChannel = ?");
 
         } catch (SQLException ex) {
             throw new DataException("Error initializing newspaper data layer", ex);
@@ -64,6 +64,7 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
             allChannels.close();
             insertChannel.close();
             updateChannel.close();
+            deleteChannel.close();
 
 
         } catch (SQLException ex) {
@@ -179,10 +180,12 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
     }
 
     @Override
-    public void deleteChannel() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    
-    
+    public void deleteChannel(Channel channel) {
+        try {
+            deleteChannel.setInt(1, channel.getKey());
+            deleteChannel.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ChannelDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    } 
 }

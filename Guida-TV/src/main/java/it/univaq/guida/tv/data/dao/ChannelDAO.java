@@ -26,7 +26,7 @@ public interface ChannelDAO {
     
     void storeChannel (Integer num, String channel) throws DataException;
     
-    void deleteChannel();
+    void deleteChannel(Channel channel);
 
    
     

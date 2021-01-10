@@ -36,6 +36,7 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
     private PreparedStatement allPrograms;
     private PreparedStatement insertProgram;
     private PreparedStatement updateProgram;
+    private PreparedStatement deleteProgram;
 
     public ProgramDAO_MySQL(DataLayer d) {
         super(d);
@@ -50,7 +51,8 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
             allPrograms = connection.prepareStatement("SELECT idProgram FROM program");
             insertProgram = connection.prepareStatement("INSERT INTO program (name, description, genre, link, isSerie, seasonsNumber) VALUES(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             updateProgram = connection.prepareStatement("UPDATE program SET name = ?, description = ?, genre = ?, link = ?, isSerie = ?, seasonsNumber = ?, version = ? WHERE idProgram = ? AND version = ?");
-
+            deleteProgram = connection.prepareStatement("DELETE FROM program WHERE idProgram = ?");
+            
         } catch (SQLException ex) {
             throw new DataException("Error initializing data layer", ex);
         }
@@ -64,6 +66,7 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
             allPrograms.close();
             insertProgram.close();
             updateProgram.close();
+            deleteProgram.close();
 
 
         } catch (SQLException ex) {
@@ -221,7 +224,12 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
 
     @Override
     public void deleteProgram(Program program) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            deleteProgram.setInt(1, program.getKey());
+            deleteProgram.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProgramDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     

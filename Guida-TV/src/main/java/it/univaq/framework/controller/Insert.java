@@ -64,7 +64,7 @@ public class Insert extends BaseController {
         }
         
         if(request.getParameter("schedule") != null){
-            if(request.getParameter("ch") == null){
+            if(s.getAttribute("programSelected") == null){
                 try{
                     if(request.getParameter("pr") != null){
                             try {
@@ -196,45 +196,64 @@ public class Insert extends BaseController {
             out.println("</head>");
             out.println("<body>");
             out.println("<h1> Inserisci un nuovo palinsesto: </h1>");
+            out.println("<a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina di gestione </a>");
+            out.println("<br>");
             out.println("<form method='post' action='insert?schedule=1'>");
             out.println("Scegli il programma:");
             out.println("<select name='pr' id='pr'>");
-            for(Program p : programs){
-            out.println("<option value = '" + p.getKey() + "'>" + p.getName() + "</option>");       
+            if(programSelected != null){
+               out.println("<option value = '" + programSelected.getKey() + "'>" + programSelected.getName() + "</option>");          
+                for(Program p : programs){
+                    if(!(p.getName().equals(programSelected.getName())))
+                out.println("<option value = '" + p.getKey() + "'>" + p.getName() + "</option>");       
+                }
+            }else{
+                for(Program p : programs){
+                out.println("<option value = '" + p.getKey() + "'>" + p.getName() + "</option>");       
+                }
             }
               out.println("</select>");
+              out.println("Quanti elementi vuoi inserire?");
+              out.println("<input type='text' id='ln' name='ln'>");
               out.println("<input type='submit' name='select' value='SELEZIONA'/>");
             out.println("</form>");
             out.println("<form method='post' action='insert?schedule=1'>");
-            if(programSelected != null){
+            int ln = Integer.parseInt(request.getParameter("ln"));
+            for(int i = 1; i <= ln; i++){
             if(programSelected.IsSerie()){
                 List<Episode> episodes = ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getProgramEpisodes(programSelected);
                 out.println("Episodio:");
-                out.println("<select name='ep' id='ep'>");
+                out.println("<select name='ep " + i + "' id='ep'>");
                 for(Episode e : episodes){
                     out.println("<option value = '" + e.getKey() + "'>" + e.getName() + "</option>");
                 }
                 out.println("</select>");
             }
+            out.println("<input type='text' id='nElem' name='nElem' value='" + ln + "' hidden >");
             out.println("Canale:");
-            out.println("<select name='ch' id='ch'>");
+            out.println("<select name='ch" + i + "' id='ch'>");
             for(Channel c : channels){
             out.println("<option value = '" + c.getKey() + "'>" + c.getName() + "</option>");
             }
             out.println("</select>");
             out.println("Ora inizio:");
-            out.println("<input type='time' id='start' name='start'>");
+            out.println("<input type='time' id='start' name='start" + i + "'>");
             out.println("Ora fine:");
-            out.println("<input type='time' id='end' name='end'>");
+            out.println("<input type='time' id='end' name='end" + i + "'>");
             out.println("Data:");
-            out.println("<input type='date' id='date' name='date'>");
+            out.println("<input type='date' id='date' name='date" + i + "'>");
+            out.println("<br>");
+            }
             out.println("<button type='submit'>Crea</button>");
             out.println("</form>");
-            }
             out.println("</body>");
             out.println("</html>");
         } catch (IOException ex) {
             Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
+        } catch(NullPointerException n){
+            System.out.println("Programma ancora non selezionato");
+        } catch(NumberFormatException nf){
+            System.out.println("Numero elementi ancora non selezionato");
         }
     }
     
@@ -269,24 +288,28 @@ public class Insert extends BaseController {
                     episode.setProgram(program);
                    ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().storeEpisode(episode); 
                 }
+                System.out.println(request.getParameter("schedule"));
                 if(request.getParameter("schedule") != null){ 
-                    Integer c = Integer.parseInt(request.getParameter("ch"));
+                    HttpSession s = request.getSession(false);
+                    int ln = Integer.parseInt(request.getParameter("nElem"));
+                    for(int i = 1; i <= ln; i++){
+                    Integer c = Integer.parseInt(request.getParameter("ch" + i));
                     Channel channel = ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(c);            
                     Schedule schedule = ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().createSchedule();
-                    HttpSession s = request.getSession(false);
                     Program program = (Program) s.getAttribute("programSelected");
                     schedule.setProgram(program);
                     schedule.setChannel(channel);
-                    schedule.setStartTime(LocalTime.parse(request.getParameter("start")));
-                    schedule.setEndTime(LocalTime.parse(request.getParameter("end")));
-                    schedule.setDate(LocalDate.parse(request.getParameter("date")));
+                    schedule.setStartTime(LocalTime.parse(request.getParameter("start" + i)));
+                    schedule.setEndTime(LocalTime.parse(request.getParameter("end" + i)));
+                    schedule.setDate(LocalDate.parse(request.getParameter("date" + i)));
                     if(program.IsSerie()){
-                       System.out.println(request.getParameter("ep"));
-                      Integer e = Integer.parseInt(request.getParameter("ep"));
+                      Integer e = Integer.parseInt(request.getParameter("ep" + i));
                       Episode episode = ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getEpisode(e);
                       schedule.setEpisode(episode);
                     }
-                   ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().storeSchedule(schedule); 
+                   ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().storeSchedule(schedule);
+                    }
+                    s.setAttribute("programSelected", null);
                 }
                 out.println("<!DOCTYPE html>");
                 out.println("<html>");
