@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Servlet Insert</title>
+</head>
+<body>
+<h1> Inserisci un nuovo programma: </h1>
+<form method='post' action='insert?program=1'>        
+<input type='text' placeholder='Nome programma' name='programName'>
+<input type='text' placeholder='Descrizione' name='programDescription'>
+<select name='genre' id='genre'>
+     <#list genres as g>
+     <option value = "${g}"> ${g} </option>
+     </#list>
+</select>
+<input type='text' placeholder='Link' name='link'>
+<select name='serie' id='serie'>
+<option value = ''> È una serie? </option>
+<option value = '0'> No </option>
+<option value = '1'> Si </option>
+</select>
+<input type='text' placeholder='Numero stagioni' name='nSeasons'>
+<button type='submit'>Crea</button>
+</form>
+</body>
+</html>
+    

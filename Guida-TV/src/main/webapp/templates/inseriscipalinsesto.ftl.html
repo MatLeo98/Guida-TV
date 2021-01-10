@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Servlet Insert</title> 
+</head>
+<body>
+<h1> Inserisci un nuovo palinsesto: </h1>
+<form method='post' action='insert?schedule=1'>
+Scegli il programma:
+<select name='pr' id='pr'>
+            <#list programs as p>
+            <option value = "${p.key}"> ${p.name}</option>
+            </#list>
+           </select>
+           <input type='submit' name='select' value='SELEZIONA'/>
+           </form>
+           <form method='post' action='insert?schedule=1'>
+            if(programSelected != null){
+            if(programSelected.IsSerie()){
+            <Episode> episodes = ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getProgramEpisodes(programSelected);
+            Episodio:
+            <select name='ep' id='ep'>
+            <#list episodes as e>
+            <option value = "${e.key}"> ${e.name}</option>
+            </#list>
+            </select>
+            Canale:
+            <select name='ch' id='ch'>
+            <#list channels as c>
+            <option value = "${c.key}"> ${c.name}</option>
+            </#list>
+            </select>
+            Ora inizio:
+            <input type='time' id='start' name='start'>
+            Ora fine:
+            <input type='time' id='end' name='end'>  
+            Data:
+           <input type='date' id='date' name='date'>
+           <button type='submit'>Crea</button>
+           </form>
+           </body>
+           </html>
+           

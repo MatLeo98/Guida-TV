@@ -6,6 +6,9 @@
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
+import it.univaq.framework.result.SplitSlashesFmkExt;
+import it.univaq.framework.result.TemplateManagerException;
+import it.univaq.framework.result.TemplateResult;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import it.univaq.guida.tv.data.model.User;
 import java.io.IOException;
@@ -49,19 +52,28 @@ public class ConfirmController extends BaseController {
             }
         }else{
                 
+            try {
+                TemplateResult res = new TemplateResult(getServletContext());
+                res.activate("confirmcontroller.ftl.html", request, response);
+                /*
                 try (PrintWriter out = response.getWriter()) {
-                    response.setContentType("text/html;charset=UTF-8");
-                     out.println("<!DOCTYPE html>");
-                     out.println("<html>");
-                     out.println("<body>");
-                    out.println("<h3> Devi essere loggato per confermare l'email");
-                    out.println("<br><br>");
-                    out.println("<a href=\"login\">GO TO LOGIN</a>"); //DA CAMBIARE CHE VA DIRETTAMENTE ALLA PAGINA LOGIN
-                    out.println("</body>");
-                    out.println("</html>");
+                response.setContentType("text/html;charset=UTF-8");
+                out.println("<!DOCTYPE html>");
+                out.println("<html>");
+                out.println("<body>");
+                out.println("<h3> Devi essere loggato per confermare l'email");
+                out.println("<br><br>");
+                out.println("<a href=\"login\">GO TO LOGIN</a>"); //DA CAMBIARE CHE VA DIRETTAMENTE ALLA PAGINA LOGIN
+                out.println("</body>");
+                out.println("</html>");
                 } catch (IOException ex) {
-                    Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
                 }
+
+                */
+            } catch (TemplateManagerException ex) {
+                Logger.getLogger(ConfirmController.class.getName()).log(Level.SEVERE, null, ex);
+            }
             }
     }
 
