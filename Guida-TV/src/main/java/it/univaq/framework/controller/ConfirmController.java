@@ -39,6 +39,8 @@ public class ConfirmController extends BaseController {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException {
+        
+        
         HttpSession s = request.getSession(false);
         if (s != null && s.getAttribute("email") != null && !((String) s.getAttribute("email")).isEmpty() && request.getParameter("URI") != null){
             try {

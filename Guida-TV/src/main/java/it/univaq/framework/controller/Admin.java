@@ -19,14 +19,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import static java.util.concurrent.TimeUnit.*;
 
 /**
  *
@@ -133,7 +135,9 @@ public class Admin extends BaseController {
     }
 
     private void sendEmail(HttpServletRequest request, HttpServletResponse response) {
-         
+        
+        
+        
           
         try {
             List<User> users = null;
@@ -178,9 +182,10 @@ public class Admin extends BaseController {
                         }
                     }
                 }
+                
                 fw.close();
             }
-            
+            System.out.println("fatto");
         } catch (DataException ex) {
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

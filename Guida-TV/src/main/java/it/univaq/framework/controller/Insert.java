@@ -13,8 +13,11 @@ import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import it.univaq.guida.tv.data.impl.ProgramImpl;
 import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Episode;
+import it.univaq.guida.tv.data.model.FavouriteProgram;
 import it.univaq.guida.tv.data.model.Program;
 import it.univaq.guida.tv.data.model.Schedule;
+import it.univaq.guida.tv.data.model.User;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
@@ -346,9 +349,8 @@ public class Insert extends BaseController {
                     program.setLink(request.getParameter("link"));
                     program.setIsSerie(Boolean.valueOf(request.getParameter("serie")));
                     if(program.IsSerie()){
-                    program.setSeasonsNumber(Integer.parseInt(request.getParameter("nSeasons")));
+                        program.setSeasonsNumber(Integer.parseInt(request.getParameter("nSeasons")));
                     }
-                   
                     ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().storeProgram(program);
                 }
                 if(request.getParameter("episode") != null){

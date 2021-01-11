@@ -33,6 +33,7 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
     private PreparedStatement setNewsletter;
     private PreparedStatement setConfirmed;
     private PreparedStatement getSubUsers;
+    private PreparedStatement allUsers;
 
     public UserDAO_MySQL(DataLayer d) {
         super(d);
@@ -50,6 +51,7 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
             setNewsletter = connection.prepareStatement("UPDATE user SET newsletter = ? WHERE email = ?");
             setConfirmed = connection.prepareStatement("UPDATE user SET confirmed = 1 WHERE email = ?");
             getSubUsers = connection.prepareStatement("SELECT * FROM user WHERE newsletter = 1"); 
+            allUsers = connection.prepareStatement("SELECT email FROM user");
 
         } catch (SQLException ex) {
             throw new DataException("Error initializing data layer", ex);
@@ -67,6 +69,7 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
             setNewsletter.close();
             setConfirmed.close();
             getSubUsers.close();
+            allUsers.close();
 
         } catch (SQLException ex) {
             //
@@ -119,6 +122,20 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
             }
         }
         return user;  
+    }
+    
+    @Override
+    public List<User> getUsers() throws DataException {
+        List<User> users = new ArrayList();
+        
+            try (ResultSet rs = allUsers.executeQuery()) {
+            while (rs.next()) {
+                users.add((User) getUser(rs.getString("email")));
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load users", ex);
+        }
+        return users;
     }
 
     @Override
@@ -265,6 +282,8 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
         }
         return users;
     }
+
+    
     
     
     
