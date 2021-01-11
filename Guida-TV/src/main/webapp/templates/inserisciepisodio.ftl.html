@@ -9,10 +9,10 @@
 <input type='text' placeholder='Nome episodio' name='episodeName'>
 <input type='text' placeholder='Numero stagione' name='seasonNumber'>
 <input type='text' placeholder='Numero episodio' name='episodeNumber'>
-<select name='p' id='p'>
+<select name='pr' id='pr'>
     
             <#list programs as p>
-            <#if p.isSerie?? >
+            <#if (p.seasonsNumber >= 1) >
             <option value = "${p.key}"> ${p.name}</option>
             </#if>
             </#list>

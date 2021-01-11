@@ -36,11 +36,11 @@ import javax.servlet.http.HttpSession;
 public class Admin extends BaseController {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        HttpSession s = request.getSession(false);
-            s.setAttribute("programSelected", null);
-            if (s != null && s.getAttribute("email") != null && !((String) s.getAttribute("email")).isEmpty()){  
+        HttpSession s = request.getSession(false);           
+            if (s != null && s.getAttribute("email") != null && !((String) s.getAttribute("email")).isEmpty()){               
                 if(s.getAttribute("email").equals("admin@email.it")){
-                   
+                   //s.setAttribute("programSelected", null);
+                   s.setAttribute("channelSelected", null);
                     if(request.getParameter("sendemail") != null)
                         sendEmail(request,response);
                     action_admin(request, response);

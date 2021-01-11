@@ -23,6 +23,8 @@ public interface EpisodeDAO {
 
     List<Episode> getProgramEpisodes(Program program) throws DataException;
     
+    List<Episode> getAllEpisodes() throws DataException;
+    
     List<Episode> getLastMonthEpisodes(Program program) throws DataException;
     
     void storeEpisode(Episode episode) throws DataException;

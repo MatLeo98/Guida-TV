@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,22 +68,31 @@ public class Insert extends BaseController {
         }
         
         if(request.getParameter("schedule") != null){
-            if(s.getAttribute("programSelected") == null){
+            //if(s.getAttribute("programSelected") == null){
+            if(s.getAttribute("channelSelected") == null){
                 try{
-                    if(request.getParameter("pr") != null){
+                    //if(request.getParameter("pr") != null){
+                        if(request.getParameter("ch") != null){
                             try {
-                                Integer id = Integer.parseInt(request.getParameter("pr"));
+                                /*Integer id = Integer.parseInt(request.getParameter("pr"));
                                 Program pro = ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getProgram(id);
                                 request.setAttribute("programSelected", pro);
-                                s.setAttribute("programSelected", pro);
-                                request.setAttribute("episodes", ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getProgramEpisodes(pro));
-                                request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
+                                s.setAttribute("programSelected", pro);*/
+                                Integer id = Integer.parseInt(request.getParameter("ch"));
+                                Channel cha = ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(id);
+                                request.setAttribute("channelSelected", cha);
+                                s.setAttribute("channelSelected", cha);
+                                request.setAttribute("episodes", ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getAllEpisodes());
+                                //request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
+                                request.setAttribute("programs", ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getPrograms());
                                 
                             } catch (DataException ex) {
                             Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
                             }        
                     }
-                    request.setAttribute("programs", ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getPrograms());
+                    
+                    request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
+                   
                     schedule_insert(request, response);
                 }catch (DataException ex) {
                                 Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
@@ -221,13 +231,30 @@ public class Insert extends BaseController {
         response.setContentType("text/html;charset=UTF-8");   
         List<Program> programs = (List<Program>) request.getAttribute("programs");
         List<Channel> channels = (List<Channel>) request.getAttribute("channels");
-        Program programSelected = (Program) request.getAttribute("programSelected");
+        //Program programSelected = (Program) request.getAttribute("programSelected");
+         Channel channelSelected = (Channel) request.getAttribute("channelSelected");
         
 
-        try {
+        try {       
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("inseriscipalinsesto.ftl.html", request, response);
+            //if(programSelected != null){
+                if(channelSelected != null){
+                //List<Episode> episodes = ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getProgramEpisodes(programSelected);
+                //request.setAttribute("episodes", episodes);                    
+                if(request.getParameter("ln") != null){
+                    int ln = Integer.parseInt(request.getParameter("ln"));
+                    request.setAttribute("lNum", ln);
+                    List<Integer> rows = new ArrayList();
+                    for(int i = 1; i <= ln; i++){
+                        rows.add(i);
+                    }
+                    request.setAttribute("rows", rows);                   
+                }
+                res.activate("inseriscipalinsesto.ftl.html", request, response);
+            }else{
+                res.activate("inseriscipalinsestoparz.ftl.html", request, response); 
+            }
             
             /*
             try (PrintWriter out = response.getWriter()) {
@@ -339,23 +366,39 @@ public class Insert extends BaseController {
                     HttpSession s = request.getSession(false);
                     int ln = Integer.parseInt(request.getParameter("nElem"));
                     for(int i = 1; i <= ln; i++){
-                    Integer c = Integer.parseInt(request.getParameter("ch" + i));
-                    Channel channel = ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(c);            
+                    /*Integer c = Integer.parseInt(request.getParameter("ch" + i));
+                    Channel channel = ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(c);*/            
                     Schedule schedule = ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().createSchedule();
-                    Program program = (Program) s.getAttribute("programSelected");
+                    /*Program program = (Program) s.getAttribute("programSelected");
+                    schedule.setProgram(program);
+                    schedule.setChannel(channel);*/
+                    Program program = null;
+                    if(request.getParameter("pr" + i).substring(0,1).equals("e")){
+                      Integer e = Integer.parseInt(request.getParameter("pr" + i).substring(1,2));
+                      Episode episode = ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getEpisode(e);  
+                      schedule.setEpisode(episode);
+                      program = episode.getProgram();
+                    }else{
+                    Integer p = Integer.parseInt(request.getParameter("pr" + i));
+                    program = ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getProgram(p);
+                    }
+                    Channel channel = (Channel) s.getAttribute("channelSelected");
                     schedule.setProgram(program);
                     schedule.setChannel(channel);
+                    
+                    
                     schedule.setStartTime(LocalTime.parse(request.getParameter("start" + i)));
                     schedule.setEndTime(LocalTime.parse(request.getParameter("end" + i)));
                     schedule.setDate(LocalDate.parse(request.getParameter("date" + i)));
-                    if(program.IsSerie()){
+                    /*if(program.IsSerie()){
                       Integer e = Integer.parseInt(request.getParameter("ep" + i));
                       Episode episode = ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getEpisode(e);
                       schedule.setEpisode(episode);
-                    }
+                    }*/
                    ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().storeSchedule(schedule);
                     }
-                    s.setAttribute("programSelected", null);
+                    //s.setAttribute("programSelected", null);
+                    s.setAttribute("channelSelected", null);
                 }
                  
                 try {

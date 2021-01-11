@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  */
 public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
     
-    private PreparedStatement s;
+    private PreparedStatement allEpisodes;
     private PreparedStatement episodeByID;
     private PreparedStatement insertEpisode;
     private PreparedStatement programEpisodes;
@@ -46,7 +46,7 @@ public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
 
             //precompiliamo tutte le query utilizzate nella classe
             //precompile all the queries uses in this class
-            s = connection.prepareStatement("SELECT * FROM episode");
+            allEpisodes = connection.prepareStatement("SELECT * FROM episode");
             episodeByID = connection.prepareStatement("SELECT * FROM episode WHERE idEpisode = ?");
             insertEpisode = connection.prepareStatement("INSERT INTO episode (name, seasonNumber, number, programId) VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             programEpisodes = connection.prepareStatement("SELECT * FROM episode WHERE programId = ?");
@@ -64,7 +64,7 @@ public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
         //also closing PreparedStamenents is a good practice...
         try {
 
-            s.close();
+            allEpisodes.close();
             episodeByID.close();
             insertEpisode.close();
             programEpisodes.close();
@@ -139,6 +139,20 @@ public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
         }
         catch (SQLException ex) {
             throw new DataException("Unable to load program's episodes", ex);
+        }
+        return result; 
+    }
+    @Override
+    public List<Episode> getAllEpisodes() throws DataException {
+        List<Episode> result = new ArrayList();
+         try(ResultSet rs = allEpisodes.executeQuery()) {
+                while (rs.next()) {
+                   
+                    result.add((Episode) getEpisode(rs.getInt("idEpisode")));
+                }
+            }
+        catch (SQLException ex) {
+            throw new DataException("Unable to load episodes", ex);
         }
         return result; 
     }

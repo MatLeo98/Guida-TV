@@ -5,39 +5,48 @@
 </head>
 <body>
 <h1> Inserisci un nuovo palinsesto: </h1>
+<a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina di gestione </a>
 <form method='post' action='insert?schedule=1'>
-Scegli il programma:
-<select name='pr' id='pr'>
-            <#list programs as p>
-            <option value = "${p.key}"> ${p.name}</option>
-            </#list>
-           </select>
-           <input type='submit' name='select' value='SELEZIONA'/>
-           </form>
-           <form method='post' action='insert?schedule=1'>
-            if(programSelected != null){
-            if(programSelected.IsSerie()){
-            <Episode> episodes = ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getProgramEpisodes(programSelected);
-            Episodio:
-            <select name='ep' id='ep'>
-            <#list episodes as e>
-            <option value = "${e.key}"> ${e.name}</option>
-            </#list>
-            </select>
-            Canale:
-            <select name='ch' id='ch'>
-            <#list channels as c>
-            <option value = "${c.key}"> ${c.name}</option>
-            </#list>
-            </select>
-            Ora inizio:
-            <input type='time' id='start' name='start'>
-            Ora fine:
-            <input type='time' id='end' name='end'>  
-            Data:
-           <input type='date' id='date' name='date'>
-           <button type='submit'>Crea</button>
-           </form>
-           </body>
-           </html>
+    Scegli il canale:
+    <select name='ch' id='ch'>
+        <#list channels as c>
+        <option value = "${c.key}"> ${c.name}</option>
+        </#list>
+    </select>
+    Quanti elementi vuoi inserire?
+    <input type='text' id='ln' name='ln'>
+    <input type='submit' name='select' value='SELEZIONA'/>
+</form>
+<form method='post' action='insert?schedule=1'> 
+    <#list rows as r>
+
+     <input type='text' id='nElem' name='nElem' value='${lNum}' hidden >
+     Programma:
+     <select name='pr${r}' id='pr'>
+     <#list programs as p>
+     <#if (p.seasonsNumber >= 1)>
+         <optgroup label ='${p.name}'>
+             <#list episodes as e>
+             <#if (e.program == p)>
+              <option value = "e${e.key}"> ${e.name}</option>
+              </#if>
+             </#list>
+         </optgroup>
+     <#else>
+     <option value = "${p.key}"> ${p.name}</option>
+     </#if>
+     </#list>
+     </select>
+     Ora inizio:
+     <input type='time' id='start' name='start${r}'>
+     Ora fine:
+     <input type='time' id='end' name='end${r}'>  
+     Data:
+    <input type='date' id='date' name='date${r}'>
+    <br>
+    </#list>
+    <button type='submit'>Crea</button>
+</form>
+</body>
+</html>
            

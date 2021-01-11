@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Servlet Insert</title> 
+</head>
+<body>
+<h1> Inserisci un nuovo palinsesto: </h1>
+<a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina di gestione </a>
+<form method='post' action='insert?schedule=1'>
+Scegli il canale:
+<select name='ch' id='ch'>
+            <#list channels as c>
+            <option value = "${c.key}"> ${c.name}</option>
+            </#list>
+           </select>
+           Quanti elementi vuoi inserire?
+           <input type='text' id='ln' name='ln'>
+           <input type='submit' name='select' value='SELEZIONA'/>
+           </form>
+           </body>
+           </html>
+           
