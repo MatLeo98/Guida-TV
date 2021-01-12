@@ -22,6 +22,7 @@ public class ChannelProxy extends ChannelImpl implements DataItemProxy{
     
     protected boolean modified;
     protected DataLayer dataLayer;
+    protected int image_key;
     protected int k;
     
     public ChannelProxy(DataLayer d) {
@@ -44,13 +45,15 @@ public class ChannelProxy extends ChannelImpl implements DataItemProxy{
 
     @Override
     public Image getImage() {
-        if (super.getImage() == null) {
+       
+        if (super.getImage() == null && image_key > 0) {
             try {
-                super.setImage(((ImageDAO) dataLayer.getDAO(Image.class)).getChannelImage(this));
+                super.setImage(((ImageDAO) dataLayer.getDAO(Image.class)).getImage(image_key));
             } catch (DataException ex) {
-                Logger.getLogger(ChannelProxy.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ProgramProxy.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+       
         return super.getImage();
     }
 

@@ -387,8 +387,17 @@ public class Home extends BaseController {
         } catch (IOException ex) {
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
         }*/
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    private Runnable sendEmail(final HttpServletRequest request, HttpServletResponse response) throws DataException {
+    /*private Runnable sendEmail(final HttpServletRequest request, HttpServletResponse response) throws DataException {
         
         HttpSession s = request.getSession(false);
         final GuidatvDataLayer datalayer = (GuidatvDataLayer) s.getAttribute("datalayer");
@@ -456,7 +465,7 @@ public class Home extends BaseController {
                 
             
         return helloRunnable;
-    }
+    }*/
       
     
 

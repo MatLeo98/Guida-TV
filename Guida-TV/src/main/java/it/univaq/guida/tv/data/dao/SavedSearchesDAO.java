@@ -26,7 +26,7 @@ public interface SavedSearchesDAO {
     
     void deleteSavedSearch(int key);
 
-    public SavedSearches getLast(String email) throws DataException;
+    //public SavedSearches getLast(String email) throws DataException;
     
     public void setDayMail(int key, boolean email) throws DataException;
 }

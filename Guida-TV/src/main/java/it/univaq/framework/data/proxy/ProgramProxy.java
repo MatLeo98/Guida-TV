@@ -64,16 +64,18 @@ public class ProgramProxy  extends ProgramImpl implements DataItemProxy{
         super.setImage(image); 
         this.modified = true;
     }
-
+    
     @Override
     public Image getImage() {
-        if (super.getImage() == null) {
+       
+        if (super.getImage() == null && image_key > 0) {
             try {
-                super.setImage(((ImageDAO) dataLayer.getDAO(Image.class)).getProgramImage(this));
+                super.setImage(((ImageDAO) dataLayer.getDAO(Image.class)).getImage(image_key));
             } catch (DataException ex) {
                 Logger.getLogger(ProgramProxy.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+       
         return super.getImage();
     }
 

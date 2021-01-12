@@ -218,7 +218,7 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
         
     }
 
-    @Override
+    /*@Override
     public SavedSearches getLast(String email) throws DataException{
         SavedSearches ss = null;
         try {
@@ -233,7 +233,7 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
                 throw new DataException("Unable to load SavedSearch by ID", ex);
             }
         return ss;
-    }
+    }*/
 
     @Override
     public void setDayMail(int key, boolean email) throws DataException{

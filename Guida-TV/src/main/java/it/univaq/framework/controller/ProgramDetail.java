@@ -10,6 +10,7 @@ import it.univaq.framework.security.SecurityLayer;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Episode;
+import it.univaq.guida.tv.data.model.Image;
 import it.univaq.guida.tv.data.model.Program;
 import it.univaq.guida.tv.data.model.Schedule;
 import java.io.IOException;
@@ -72,6 +73,12 @@ public class ProgramDetail extends BaseController {
             out.println("<title>Servlet ProgramDetail</title>");            
             out.println("</head>");
             out.println("<body>");
+            //out.println("<p><img src='image?imgid=2' alt='image1'/></p>");
+            
+            Image image = program.getImage();
+            if(image != null){
+             out.println("<p><img style='height:10%; width:10%;' src='"+program.getImage().getImageFilename()+"' alt='image1'/></p>");
+            }
             out.println("<h1> " + program.getName() + "</h1>");
             out.println("<p>" + program.getDescription() + "</p>");
             out.println("<p> Genere: " + program.getGenre() + "</p>");
@@ -98,6 +105,10 @@ public class ProgramDetail extends BaseController {
             out.println("<title>Servlet ProgramDetail</title>");            
             out.println("</head>");
             out.println("<body>");
+            Image image = program.getImage();
+            if(image != null){
+             out.println("<p><img style='height:10%; width:10%;' src='"+program.getImage().getImageFilename()+"' alt='image1'/></p>");
+            }
             out.println("<h1> " + program.getName() + "</h1>");
             out.println("<p>" + program.getDescription() + "</p>");
             out.println("<p> Genere: " + program.getGenre() + "</p>");
