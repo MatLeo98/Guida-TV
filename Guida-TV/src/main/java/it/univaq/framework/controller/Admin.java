@@ -41,7 +41,7 @@ public class Admin extends BaseController {
         HttpSession s = request.getSession(false);           
             if (s != null && s.getAttribute("email") != null && !((String) s.getAttribute("email")).isEmpty()){               
                 if(s.getAttribute("email").equals("admin@email.it")){
-                   //s.setAttribute("programSelected", null);
+                   s.setAttribute("programSelected", null);
                    s.setAttribute("channelSelected", null);
                     if(request.getParameter("sendemail") != null)
                         sendEmail(request,response);

@@ -6,6 +6,9 @@
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
+import it.univaq.framework.result.SplitSlashesFmkExt;
+import it.univaq.framework.result.TemplateManagerException;
+import it.univaq.framework.result.TemplateResult;
 import it.univaq.framework.security.SecurityLayer;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import it.univaq.guida.tv.data.impl.ProgramImpl;
@@ -138,8 +141,20 @@ public class Edit extends BaseController {
     private void channel_edit(HttpServletRequest request, HttpServletResponse response){       
         response.setContentType("text/html;charset=UTF-8");
         List<Channel> channels = (List<Channel>) request.getAttribute("channels");
+        System.out.println(channels.get(0).getName());
         Channel channelSelected = (Channel) request.getAttribute("channelSelected");
-        try (PrintWriter out = response.getWriter()) {
+        
+
+        try {   
+            TemplateResult res = new TemplateResult(getServletContext());
+            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+            if(channelSelected != null)
+            res.activate("modificanale.ftl.html", request, response);           
+            else
+            res.activate("modificanaleparz.ftl.html", request, response);   
+            
+            /*
+            try (PrintWriter out = response.getWriter()) {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -151,15 +166,15 @@ public class Edit extends BaseController {
             out.println("Canale da modificare:");
             out.println("<select name='ch' id='ch'>");
             if(channelSelected != null){
-            out.println("<option value = '" + channelSelected.getKey() + "'>" + channelSelected.getName() + "</option>");          
-                for(Channel c : channels){
-                    if(!(c.getName().equals(channelSelected.getName())))
-                out.println("<option value = '" + c.getKey() + "'>" + c.getName() + "</option>");
-                }
+            out.println("<option value = '" + channelSelected.getKey() + "'>" + channelSelected.getName() + "</option>");
+            for(Channel c : channels){
+            if(!(c.getName().equals(channelSelected.getName())))
+            out.println("<option value = '" + c.getKey() + "'>" + c.getName() + "</option>");
+            }
             }else{
-                for(Channel c : channels){
-                out.println("<option value = '" + c.getKey() + "'>" + c.getName() + "</option>");
-                }
+            for(Channel c : channels){
+            out.println("<option value = '" + c.getKey() + "'>" + c.getName() + "</option>");
+            }
             }
             out.println("</select>");
             out.println("<input type='submit' name='select' value='SELEZIONA'/>");
@@ -177,10 +192,8 @@ public class Edit extends BaseController {
             out.println("</form>");
             out.println("</body>");
             out.println("</html>");
-        } catch (IOException ex) {
+        */      } catch (TemplateManagerException ex) {
             Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
-        } catch(NullPointerException n){
-            System.out.println("Canale ancora non selezionato");
         }
     }
     
@@ -188,7 +201,24 @@ public class Edit extends BaseController {
         response.setContentType("text/html;charset=UTF-8");      
         ProgramImpl.Genre[] genres = ProgramImpl.Genre.values();
         List<Program> programs = (List<Program>) request.getAttribute("programs");
+        request.setAttribute("genres",genres);
         Program programSelected = (Program) request.getAttribute("programSelected");
+        
+            
+            try {     
+            TemplateResult res = new TemplateResult(getServletContext());
+            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+            if(programSelected != null)     
+             res.activate("modificaprogramma.ftl.html", request, response);
+             else
+            res.activate("modificaprogrammaparz.ftl.html", request, response);   
+        }
+        catch (TemplateManagerException ex) {
+        Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
+        }           
+          
+        
+        /*
         try (PrintWriter out = response.getWriter()) {  
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -242,9 +272,9 @@ public class Edit extends BaseController {
             out.println("</html>");
         } catch (IOException ex) {
             Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
-        } catch(NullPointerException n){
-            System.out.println("Programma ancora non selezionato");
-        }
+
+        } 
+*/  
     }
     
     private void episode_edit(HttpServletRequest request, HttpServletResponse response){

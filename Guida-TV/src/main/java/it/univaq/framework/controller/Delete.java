@@ -6,6 +6,9 @@
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
+import it.univaq.framework.result.SplitSlashesFmkExt;
+import it.univaq.framework.result.TemplateManagerException;
+import it.univaq.framework.result.TemplateResult;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import it.univaq.guida.tv.data.impl.ProgramImpl.Genre;
 import it.univaq.guida.tv.data.model.Channel;
@@ -55,7 +58,17 @@ public class Delete extends BaseController {
     private void channel_delete(HttpServletRequest request, HttpServletResponse response){
         response.setContentType("text/html;charset=UTF-8");
         List<Channel> channels = (List<Channel>) request.getAttribute("channels");
-        try (PrintWriter out = response.getWriter()) {
+        //try (PrintWriter out = response.getWriter()) {
+
+            try {
+                
+                TemplateResult res = new TemplateResult(getServletContext());
+                request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+                res.activate("cancellacanale.ftl.html", request, response);
+            
+            
+            /*
+       
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -68,7 +81,7 @@ public class Delete extends BaseController {
                   out.println("<th>Numero canale</th>");
                   out.println("<th>Nome canale</th>");
                   out.println("<th>Elimina</th>");
-                out.println("</tr>");
+                out.println("if(channels != null){</tr>");
                 if(channels != null){
                     for(Channel c : channels){
                         out.println("<tr>");
@@ -88,10 +101,13 @@ public class Delete extends BaseController {
             out.println("</table>");
             out.println("</body>");
             out.println("</html>");
-        } catch (IOException ex) {
-            Logger.getLogger(Delete.class.getName()).log(Level.SEVERE, null, ex);
+             */
+        } 
+        catch (TemplateManagerException ex) {
+                Logger.getLogger(Delete.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    
         }
-    }
     
     private void program_delete(HttpServletRequest request, HttpServletResponse response){
         response.setContentType("text/html;charset=UTF-8");
