@@ -52,7 +52,7 @@ public class UserImpl extends DataItemImpl<String> implements User {
     }
 
     @Override
-    public Boolean getConfirmed() {
+    public Boolean isConfirmed() {
         return confirmed;
     }
 

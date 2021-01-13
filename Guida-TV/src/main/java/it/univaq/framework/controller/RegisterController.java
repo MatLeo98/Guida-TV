@@ -18,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -74,13 +75,20 @@ public class RegisterController extends BaseController{
     }
 
     private void register_action(HttpServletRequest request, HttpServletResponse response) {
-        User user;
+        
         
         if (request.getParameter("email") != null && request.getParameter("password") != null && request.getParameter("confermapw") != null) {
             if(request.getParameter("password").equals(request.getParameter("confermapw"))){
                 try (PrintWriter out = response.getWriter()){
+                    
+                    User user = ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().createUser();
+                    user.setKey(request.getParameter("email"));
+                    String hashPass = BCrypt.hashpw(request.getParameter("password"), BCrypt.gensalt());
+                    user.setPassword(hashPass);
                     String URI = UUID.randomUUID().toString();
-                    ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().storeUser(request.getParameter("email"),request.getParameter("password"), URI);
+                    user.setUri(URI);
+                    
+                    ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().storeUser(user);
                     user = ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().getUser(request.getParameter("email"));
                       out.println("<h1> ciao " + user.getKey() + "</h1>");
                       out.println("<a href=\"login\"> LOGIN </a>");

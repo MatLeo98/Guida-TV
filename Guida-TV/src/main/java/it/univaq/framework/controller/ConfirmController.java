@@ -40,23 +40,20 @@ public class ConfirmController extends BaseController {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException {
         
-        
+        try {
+         TemplateResult res = new TemplateResult(getServletContext());
         HttpSession s = request.getSession(false);
-        if (s != null && s.getAttribute("email") != null && !((String) s.getAttribute("email")).isEmpty() && request.getParameter("URI") != null){
-            try {
-                User user = ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().getUser((String)s.getAttribute("email"));
-                if(user.getUri().equals(request.getParameter("URI")))
-                    ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().setConfirmed((String)s.getAttribute("email"));
-                   
-                    
-            } catch (DataException ex) {
-                Logger.getLogger(ConfirmController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        User user = (User) s.getAttribute("user");
+        if (s != null && user.getKey() != null && !(user.getKey().isEmpty()) && request.getParameter("URI") != null){
+            if(user.getUri().equals(request.getParameter("URI")))
+                ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().setConfirmed(user.getKey());
+            res.activate("confirmcontroller.ftl.html", request, response);
+            
         }else{
                 
-            try {
-                TemplateResult res = new TemplateResult(getServletContext());
-                res.activate("confirmcontroller.ftl.html", request, response);
+            
+                
+                res.activate("devilogin.ftl.html", request, response);
                 /*
                 try (PrintWriter out = response.getWriter()) {
                 response.setContentType("text/html;charset=UTF-8");
@@ -73,10 +70,11 @@ public class ConfirmController extends BaseController {
                 }
 
                 */
+                }
             } catch (TemplateManagerException ex) {
                 Logger.getLogger(ConfirmController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            }
+            
     }
 
     

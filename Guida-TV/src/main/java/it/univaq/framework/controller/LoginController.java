@@ -16,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -36,11 +37,11 @@ public class LoginController extends BaseController {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         
         HttpSession s = request.getSession(true);
-        
+        User loggeduser = (User) s.getAttribute("user");
          
         if (request.getParameter("logout") == null) {
             
-            if (s.getAttribute("email") != null && !((String) s.getAttribute("email")).isEmpty()){
+            if (loggeduser != null && !(loggeduser.getKey()).isEmpty()){
            
                     logged(request, response);
               
@@ -51,9 +52,10 @@ public class LoginController extends BaseController {
                     login_action(request, response);
                 }else{
                     try {
+                        
                         User user = ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().getUser(email);
-                        if(user != null && user.getPassword().equals(request.getParameter("password"))){
-                            s.setAttribute("email", email);
+                        if(user != null && BCrypt.checkpw(request.getParameter("password"), user.getPassword())){
+                            s.setAttribute("user", user);
                             
                                 logged(request, response);
                                                    
@@ -128,12 +130,14 @@ public class LoginController extends BaseController {
         try (PrintWriter out = response.getWriter()){
             
             HttpSession s = request.getSession(false);
-            String email = (String) s.getAttribute("email");
+            User user = (User) s.getAttribute("user");
+           
+           
 
 
-            out.println("<h1> ciao " + email + "</h1>");
+            out.println("<h1> ciao " + user.getKey() + "</h1>");
             out.println("<h2> login succesfull! </h2>");
-                if(email.equalsIgnoreCase("admin@email.it")){
+                if(user.getKey().equalsIgnoreCase("admin@email.it")){
                     out.println("<a href=\"admin\"> Gestione pagina (admin) </a>"); 
                 }else{
                     out.println("<a href=\"home\"> Home </a>");
@@ -150,10 +154,10 @@ public class LoginController extends BaseController {
         try (PrintWriter out = response.getWriter()){
             
             HttpSession s = request.getSession(false);
-            String email = (String) s.getAttribute("email");
+           User user = (User) s.getAttribute("user");
 
 
-            out.println("<h1> ciao " + email + "</h1>");
+            out.println("<h1> ciao " + user.getKey() + "</h1>");
             out.println("<h2> login succesfull! </h2>");
             out.println("<a href=\"admin\"> Gestione pagina (admin) </a>");
             out.println("<p><a href=\"login?logout=1\">LOGOUT</a></p>");
