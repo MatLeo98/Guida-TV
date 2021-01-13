@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Servlet Edit</title>          
+</head>
+<body>
+<h1> Modifica un canale: </h1>
+<form method='post' action='edit?channel=1'>
+"Canale da modificare:"
+<select name='ch' id='ch'>
+
+    
+           
+
+           <#list channels as c>
+           
+           <option value = "${c.key}"> ${c.name} </option>
+           
+           
+           </#list>
+ </select>
+<input type='submit' name='select' value='SELEZIONA'/>
+</form>
+</body>
+</html>

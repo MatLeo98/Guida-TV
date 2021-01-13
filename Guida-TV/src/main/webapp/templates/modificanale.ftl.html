@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Servlet Edit</title>          
+</head>
+<body>
+<h1> Modifica un canale: </h1>
+<form method='post' action='edit?channel=1'>
+"Canale da modificare:"
+<select name='ch' id='ch'>
+
+    
+          
+<option value = "${channelSelected.key}">${channelSelected.name}</option>
+           <#list channels as c>
+           <#if (c == channelSelected)>
+          
+           <#else>
+            <option value = "${c.key}"> ${c.name} </option>
+           </#if>
+           </#list>
+            
+            
+            
+</select>
+<input type='submit' name='select' value='SELEZIONA'/>
+</form>
+<br>
+<br>
+<form method='post' action='edit?channel=1'>
+<input type='text' id='channelNumber' name='channelNumber' placeholder='Numero Canale' value ="${channelSelected.key}" readonly />
+<br>
+<br>
+<input type='text' id='channelName' name='channelName' placeholder='Nome Canale' value ="${channelSelected.name}"/>
+<br>
+<br>
+<input type='submit' name='edit' value='MODIFICA'/>
+<br>
+<br>
+<a href='admin'> Torna a admin </a>
+</form>
+</body>
+</html>
