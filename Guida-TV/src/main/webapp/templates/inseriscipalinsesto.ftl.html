@@ -9,8 +9,11 @@
 <form method='post' action='insert?schedule=1'>
     Scegli il canale:
     <select name='ch' id='ch'>
+        <option value = "${channelSelected.key}"> ${channelSelected.name}</option>
         <#list channels as c>
-        <option value = "${c.key}"> ${c.name}</option>
+            <#if (c != channelSelected)>
+            <option value = "${c.key}"> ${c.name}</option>
+            </#if>
         </#list>
     </select>
     Quanti elementi vuoi inserire?
@@ -23,18 +26,19 @@
      <input type='text' id='nElem' name='nElem' value='${lNum}' hidden >
      Programma:
      <select name='pr${r}' id='pr'>
-     <#list programs as p>
-     <#if (p.seasonsNumber >= 1)>
-         <optgroup label ='${p.name}'>
-             <#list episodes as e>
-             <#if (e.program == p)>
-              <option value = "e${e.key}"> ${e.name}</option>
-              </#if>
-             </#list>
-         </optgroup>
-     <#else>
-     <option value = "${p.key}"> ${p.name}</option>
-     </#if>
+         
+     <#list programs as p>    
+        <#if (p.seasonsNumber >= 1)>
+            <optgroup label ='${p.name}'>
+                <#list episodes as e>
+                <#if (e.program == p)>
+                 <option value = "e${e.key}"> ${e.name}</option>
+                 </#if>
+                </#list>
+            </optgroup>
+        <#else>
+        <option value = "${p.key}"> ${p.name}</option>
+        </#if>
      </#list>
      </select>
      Ora inizio:
