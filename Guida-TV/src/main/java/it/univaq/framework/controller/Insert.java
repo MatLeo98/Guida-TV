@@ -58,8 +58,19 @@ public class Insert extends BaseController {
         }
                 
         if(request.getParameter("episode") != null){
-            if(request.getParameter("episodeName") == null){
-                try {
+            if(s.getAttribute("programSelected") == null){
+            //if(request.getParameter("episodeName") == null){
+                try{
+                    if(request.getParameter("pr") != null){
+                            try {
+                                Integer id = Integer.parseInt(request.getParameter("pr"));
+                                Program pro = ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getProgram(id);
+                                request.setAttribute("programSelected", pro);
+                                s.setAttribute("programSelected", pro);                                
+                            } catch (DataException ex) {
+                            Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
+                            }        
+                    }
                     request.setAttribute("programs", ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getPrograms());
                     episode_insert(request, response);
                 } catch (DataException ex) {
@@ -147,11 +158,12 @@ public class Insert extends BaseController {
     private void program_insert(HttpServletRequest request, HttpServletResponse response){
         response.setContentType("text/html;charset=UTF-8");      
         ProgramImpl.Genre[] genres = ProgramImpl.Genre.values();
+        request.setAttribute("genres", genres);
        
         try {
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("inseriscicanale.ftl.html", request, response);
+            res.activate("inserisciprogramma.ftl.html", request, response);
             
             /*
             try (PrintWriter out = response.getWriter()) {
@@ -193,10 +205,25 @@ public class Insert extends BaseController {
     private void episode_insert(HttpServletRequest request, HttpServletResponse response){
         response.setContentType("text/html;charset=UTF-8");
         List<Program> programs = (List<Program>) request.getAttribute("programs");
+        Program programSelected = (Program) request.getAttribute("programSelected");
         try {
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("inserisciepisodio.ftl.html", request, response);
+            
+            if(programSelected != null){                    
+                if(request.getParameter("ln") != null){
+                    int ln = Integer.parseInt(request.getParameter("ln"));
+                    request.setAttribute("lNum", ln);
+                    List<Integer> rows = new ArrayList();
+                    for(int i = 1; i <= ln; i++){
+                        rows.add(i);
+                    }
+                    request.setAttribute("rows", rows);                   
+                }
+                res.activate("inserisciepisodio.ftl.html", request, response);
+            }else{
+                res.activate("inserisciepisodioparz.ftl.html", request, response); 
+            }
             /*
             try (PrintWriter out = response.getWriter()) {
             out.println("<!DOCTYPE html>");
@@ -333,15 +360,14 @@ public class Insert extends BaseController {
         }
     }
     
-    private void insert_done(HttpServletRequest request, HttpServletResponse response){
-            
-
+    private void insert_done(HttpServletRequest request, HttpServletResponse response){            
+        
             try (PrintWriter out = response.getWriter()){
-                if(request.getParameter("channel") != null){
+                if(request.getParameter("channel") != null){//CHANNEL
                     Integer n = Integer.parseInt(request.getParameter("channelNumber"));
                     ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().storeChannel(n, request.getParameter("channelName"));
                 }
-                if(request.getParameter("program") != null){
+                if(request.getParameter("program") != null){//PROGRAM
                     Program program = ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().createProgram();
                     program.setName(request.getParameter("programName"));
                     program.setDescription(request.getParameter("programDescription"));
@@ -353,18 +379,21 @@ public class Insert extends BaseController {
                     }
                     ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().storeProgram(program);
                 }
-                if(request.getParameter("episode") != null){
+                if(request.getParameter("episode") != null){//EPISODE
+                    HttpSession s = request.getSession(false);
+                    int ln = Integer.parseInt(request.getParameter("nElem"));
+                    for(int i = 1; i <= ln; i++){
                     Episode episode = ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().createEpisode();
-                    episode.setName(request.getParameter("episodeName"));
-                    episode.setSeasonNumber(Integer.parseInt(request.getParameter("seasonNumber")));
-                    episode.setNumber(Integer.parseInt(request.getParameter("episodeNumber")));
-                    Integer id = Integer.parseInt(request.getParameter("p"));
-                    Program program = ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getProgram(id);
+                    episode.setName(request.getParameter("episodeName" + i));
+                    episode.setSeasonNumber(Integer.parseInt(request.getParameter("seasonNumber" + i)));
+                    episode.setNumber(Integer.parseInt(request.getParameter("episodeNumber" + i)));
+                    Program program = (Program) s.getAttribute("programSelected");
                     episode.setProgram(program);
                    ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().storeEpisode(episode); 
+                   }
+                   s.setAttribute("programSelected", null);
                 }
-                System.out.println(request.getParameter("schedule"));
-                if(request.getParameter("schedule") != null){ 
+                if(request.getParameter("schedule") != null){//SCHEDULE 
                     HttpSession s = request.getSession(false);
                     int ln = Integer.parseInt(request.getParameter("nElem"));
                     for(int i = 1; i <= ln; i++){
