@@ -118,6 +118,7 @@ public class Edit extends BaseController {
                         Channel channel = ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(id);
                         request.setAttribute("channelSelected", channel);
                         request.setAttribute("schedules", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getScheduleByChannelAdmin(channel, today));
+                        request.setAttribute("episodes", ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getAllEpisodes());
 
                     }
 
@@ -372,19 +373,19 @@ public class Edit extends BaseController {
         
         
        
-        try { TemplateResult res = new TemplateResult(getServletContext());
+       try { TemplateResult res = new TemplateResult(getServletContext());
         request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
         if(channelSelected != null)
             res.activate("modificaschedule.ftl.html", request, response);
         else
-        res.activate("modificascheduleparz.ftl.html", request, response);  
+            res.activate("modificascheduleparz.ftl.html", request, response);  
         } catch (TemplateManagerException ex) {
             Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         
-        /*
-        try (PrintWriter out = response.getWriter()) {  
+        
+       /* try (PrintWriter out = response.getWriter()) {  
             
             
             out.println("<!DOCTYPE html>");
@@ -471,10 +472,13 @@ public class Edit extends BaseController {
             out.println("</body>");
             out.println("</html>");
 
-*/
+
       
+    }   catch (IOException ex) {
+            Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
     }
-    
+        
     private void edit_done(HttpServletRequest request, HttpServletResponse response){
         try (PrintWriter out = response.getWriter()){
         if(request.getParameter("channel") != null){
