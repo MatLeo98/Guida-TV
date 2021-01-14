@@ -38,19 +38,7 @@
             
            </select>
             <input type='text' placeholder='Link' name='link' value="${programSelected.link}">
-            E' una serie?
-            
-            <#if (p.seasonsNumber >= 1) >
-            <input type='radio' name='serie' value='0'> No
-            <input type='radio' name='serie' value='1' checked> Sì
-            <input type='text' placeholder='Numero stagioni' name='nSeasons' value="${programSelected.seasonNumber}">
-
-            
-                
-            <#else>
-            <input type='radio' name='serie' value='0' checked> No
-            <input type='radio' name='serie' value='1'> Sì
-</#if>
+           
 <button type='submit'>Modifica</button>
 </form>
 </body>

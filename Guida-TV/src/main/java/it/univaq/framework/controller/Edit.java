@@ -282,6 +282,20 @@ public class Edit extends BaseController {
         List<Program> programs = (List<Program>) request.getAttribute("programs");
         List<Episode> episodes = (List<Episode>) request.getAttribute("episodes");
         Program programSelected = (Program) request.getAttribute("programSelected");
+        
+         
+             try {
+                 TemplateResult res = new TemplateResult(getServletContext());
+                 request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+                 if(programSelected != null)
+                 res.activate("modificaepisodio.ftl.html", request, response);
+                  else
+            res.activate("modificaepisodioparz.ftl.html", request, response);  
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+        /*
         try (PrintWriter out = response.getWriter()) {  
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -343,9 +357,8 @@ public class Edit extends BaseController {
             out.println("</table>");
             out.println("</body>");
             out.println("</html>");
-        } catch (IOException ex) {
-            Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
-        }
+*/
+         
     }
     
     private void schedule_edit(HttpServletRequest request, HttpServletResponse response) throws DataException{
@@ -353,7 +366,24 @@ public class Edit extends BaseController {
         Channel channelSelected = (Channel) request.getAttribute("channelSelected");
         List<Channel> channels = (List<Channel>) request.getAttribute("channels");
         List<Schedule> schedules = (List<Schedule>) request.getAttribute("schedules");
+        
+        
+       
+        try { TemplateResult res = new TemplateResult(getServletContext());
+        request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+        if(channelSelected != null)
+            res.activate("modificaschedule.ftl.html", request, response);
+        else
+        res.activate("modificascheduleparz.ftl.html", request, response);  
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        /*
         try (PrintWriter out = response.getWriter()) {  
+            
+            
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -433,9 +463,9 @@ public class Edit extends BaseController {
             out.println("</table>");
             out.println("</body>");
             out.println("</html>");
-        } catch (IOException ex) {
-            Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+*/
+      
     }
     
     private void edit_done(HttpServletRequest request, HttpServletResponse response){
