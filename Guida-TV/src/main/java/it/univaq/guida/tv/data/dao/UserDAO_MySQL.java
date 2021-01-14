@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -139,45 +140,12 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
     }
 
     @Override
-    public void storeUser(String email, String password, String URI) throws DataException {
+    public void storeUser(User user) throws DataException {
        try {
-            /*if (user.getKey() != null && !user.getKey().isEmpty()) { //update
-                //non facciamo nulla se l'oggetto è un proxy e indica di non aver subito modifiche
-                //do not store the object if it is a proxy and does not indicate any modification
-                if (user instanceof DataItemProxy && !((DataItemProxy) user).isModified()) {
-                    return;
-                }
-                uArticle.setString(1, article.getTitle());
-                uArticle.setString(2, article.getText());
-                if (article.getAuthor() != null) {
-                    uArticle.setInt(3, article.getAuthor().getKey());
-                } else {
-                    uArticle.setNull(3, java.sql.Types.INTEGER);
-                }
-                if (article.getIssue() != null) {
-                    uArticle.setInt(4, article.getIssue().getKey());
-                    uArticle.setInt(5, article.getPage());
-                } else {
-                    uArticle.setNull(4, java.sql.Types.INTEGER);
-                    uArticle.setNull(5, java.sql.Types.INTEGER);
-                }
-
-                long current_version = article.getVersion();
-                long next_version = current_version + 1;
-                
-
-                uArticle.setLong(6, next_version);
-                uArticle.setInt(7, article.getKey());
-                uArticle.setLong(8, current_version);
-
-                if (uArticle.executeUpdate() == 0) {
-                    throw new OptimisticLockException(article);
-                }
-                article.setVersion(next_version);
-            } else {*/ //insert
-                register.setString(1, email);
-                register.setString(2, password);
-                register.setString(3, URI);
+           
+                register.setString(1, user.getKey());
+                register.setString(2, user.getPassword());
+                register.setString(3, user.getUri());
                 
                 if (register.executeUpdate() == 1) {
                     //per leggere la chiave generata dal database
@@ -198,7 +166,6 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
                             String key = keys.getString(1);
                             //aggiornaimo la chiave in caso di inserimento
                             //after an insert, uopdate the object key
-                            User user = getUser(email);
                             user.setKey(key);
                             //inseriamo il nuovo oggetto nella cache
                             //add the new object to the cache
@@ -221,7 +188,7 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
 //            }
             //se abbiamo un proxy, resettiamo il suo attributo dirty
             //if we have a proxy, reset its dirty attribute
-            User user = getUser(email);
+            
             if (user instanceof DataItemProxy) {
                 ((DataItemProxy) user).setModified(false);
             }
@@ -282,6 +249,9 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
         }
         return users;
     }
+    
+    
+   
 
     
     

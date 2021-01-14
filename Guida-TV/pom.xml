@@ -15,6 +15,12 @@
     </properties>
     
     <dependencies>
+        <!--cript password-->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+	    <version>0.3m</version>
+        </dependency>
         
         <dependency>
         <groupId>org.quartz-scheduler</groupId>

@@ -60,10 +60,6 @@
         <servlet-name>ConfirmController</servlet-name>
         <servlet-class>it.univaq.framework.controller.ConfirmController</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>GetImage</servlet-name>
-        <servlet-class>it.univaq.framework.controller.GetImage</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>BaseController</servlet-name>
         <url-pattern>/base</url-pattern>
@@ -123,10 +119,6 @@
     <servlet-mapping>
         <servlet-name>ConfirmController</servlet-name>
         <url-pattern>/confirm</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>GetImage</servlet-name>
-        <url-pattern>/image</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

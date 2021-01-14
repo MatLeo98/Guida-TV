@@ -46,8 +46,10 @@ public class ProfileController extends BaseController {
             throws ServletException {
         try {
             HttpSession s = request.getSession(false);
-            
-            if (s != null && s.getAttribute("email") != null && !((String) s.getAttribute("email")).isEmpty()){  
+            User user = (User) s.getAttribute("user");
+                      
+                      
+            if (s != null && user != null && !(user.getKey().isEmpty())){  
                 request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
                 if (!(request.getParameter("emailgiornaliera") == null)){
                     setEmail(request,response);
@@ -65,7 +67,7 @@ public class ProfileController extends BaseController {
                 if(request.getParameter("delSS") != null){
                     delSS(request,response);
                 }
-                User user = ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().getUser((String)s.getAttribute("email"));
+                
                 request.setAttribute("savedS",((GuidatvDataLayer)request.getAttribute("datalayer")).getSavedSearchesDAO().getSavedSearches(user));
                 request.setAttribute("favPrograms",((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteProgramDAO().getFavouritePrograms(user));
                 request.setAttribute("favChannels",((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteChannelDAO().getFavouriteChannels(user));
@@ -99,11 +101,19 @@ public class ProfileController extends BaseController {
     }
 
     private void actions(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession(false);
+        User user = (User) session.getAttribute("user");
+        try {
+            user = ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().getUser(user.getKey());
+        } catch (DataException ex) {
+            Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
+        }
          List<Channel> channels = (List<Channel>) request.getAttribute("channels");
          ScheduleImpl.TimeSlot[] timeslots = ScheduleImpl.TimeSlot.class.getEnumConstants();
          List<SavedSearches> savedS = (List<SavedSearches>) request.getAttribute("savedS");
          List<FavouriteProgram> programs = (List<FavouriteProgram>) request.getAttribute("favPrograms");
          List<FavouriteChannel> favCh = (List<FavouriteChannel>) request.getAttribute("favChannels");
+         String URI = user.getUri();
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
         out.println("<!DOCTYPE html>");
@@ -112,7 +122,8 @@ public class ProfileController extends BaseController {
             out.println("<title>Profile</title>");            
             out.println("</head>");
             out.println("<body>");
-            
+            if(!user.isConfirmed())
+                out.println("<a href=\"confirm?URI="+URI+"\"> CONFERMA EMAIL </a>");
             out.println("<h1> PROFILO </h1>");
             out.println("<br><br>");
             out.println("<h3> Email Giornaliera: </h3>");

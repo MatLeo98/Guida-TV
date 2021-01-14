@@ -5,6 +5,20 @@
 </head>
 <body>
 <h1> Inserimento effettuato </h1>
-<a href='javascript:history.back()'> Inserisci di nuovo </a>
+<#if channel == 1>
+    <a href='http://localhost:8080/Guida-tivu/admin/insert?channel=1'> Inserisci di nuovo </a>
+</#if>
+<#if program == 1>
+    <a href='http://localhost:8080/Guida-tivu/admin/insert?program=1'> Inserisci di nuovo </a>
+</#if>
+<#if episode == 1>
+    <a href='http://localhost:8080/Guida-tivu/admin/insert?episode=1'> Inserisci di nuovo </a>
+</#if>
+<#if schedule == 1>
+    <a href='http://localhost:8080/Guida-tivu/admin/insert?schedule=1'> Inserisci di nuovo </a>
+</#if>
+<br>
+<br>
+<a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina admin </a>
 </body>
 </html>

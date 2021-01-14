@@ -35,32 +35,8 @@ public class ImageProxy extends ImageImpl implements DataItemProxy {
     }
 
     @Override
-    public void setCaption(String caption) {
-        super.setCaption(caption);
-        this.modified = true;
-    }
-
-    @Override
-    public void setImageData(InputStream is) throws DataException {
-        super.setImageData(is);
-        this.modified = true;
-    }
-
-    @Override
-    public void setImageType(String type) {
-        super.setImageType(type);
-        this.modified = true;
-    }
-
-    @Override
-    public void setImageSize(long size) {
-        super.setImageSize(size);
-        this.modified = true;
-    }
-
-    @Override
-    public void setImageFilename(String imageFilename) {
-        super.setImageFilename(imageFilename);
+    public void setLink(String link) {
+        super.setLink(link);
         this.modified = true;
     }
 

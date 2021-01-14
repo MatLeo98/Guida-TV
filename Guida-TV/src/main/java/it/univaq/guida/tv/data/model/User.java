@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface User extends DataItem<String>{
 
-    Boolean getConfirmed();
+    Boolean isConfirmed();
 
     //String getEmail();
 
