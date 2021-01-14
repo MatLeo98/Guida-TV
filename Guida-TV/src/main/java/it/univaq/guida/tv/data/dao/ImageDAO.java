@@ -25,4 +25,6 @@ public interface ImageDAO {
 
     Image getChannelImage(Channel channel) throws DataException;
     
+    Image storeImage (Image image) throws DataException;
+    
 }

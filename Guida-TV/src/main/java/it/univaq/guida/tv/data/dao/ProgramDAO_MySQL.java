@@ -49,7 +49,7 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
 
             programByID = connection.prepareStatement("SELECT * FROM program WHERE idProgram = ?");
             allPrograms = connection.prepareStatement("SELECT idProgram FROM program");
-            insertProgram = connection.prepareStatement("INSERT INTO program (name, description, genre, link, isSerie, seasonsNumber) VALUES(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            insertProgram = connection.prepareStatement("INSERT INTO program (name, description, genre, link, isSerie, seasonsNumber, imageId) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             updateProgram = connection.prepareStatement("UPDATE program SET name = ?, description = ?, genre = ?, link = ?, isSerie = ?, seasonsNumber = ?, version = ? WHERE idProgram = ? AND version = ?");
             deleteProgram = connection.prepareStatement("DELETE FROM program WHERE idProgram = ?");
             
@@ -172,8 +172,7 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
                 updateProgram.setInt(6, program.getSeasonsNumber());
                 
                 long current_version = program.getVersion();
-                long next_version = current_version + 1;
-                
+                long next_version = current_version + 1;                
 
                 updateProgram.setLong(7, next_version);
                 updateProgram.setInt(8, program.getKey());
@@ -194,6 +193,7 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
                  insertProgram.setString(4, program.getLink());
                  insertProgram.setBoolean(5, program.IsSerie());
                  insertProgram.setInt(6, program.getSeasonsNumber());
+                 insertProgram.setInt(7, program.getImage().getKey());
                  Program p = null;
                  if (insertProgram.executeUpdate() == 1) {
 

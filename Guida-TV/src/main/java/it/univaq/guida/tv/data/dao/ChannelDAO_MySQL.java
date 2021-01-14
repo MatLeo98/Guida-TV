@@ -45,7 +45,7 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
             //precompile all the queries uses in this class
             allChannels = connection.prepareStatement("SELECT idChannel FROM channel");
             channelByID = connection.prepareStatement("SELECT * FROM channel WHERE idChannel = ?");
-            insertChannel = connection.prepareStatement("INSERT INTO channel (idChannel,name) VALUES(?,?)");
+            insertChannel = connection.prepareStatement("INSERT INTO channel (idChannel,name, imageId) VALUES(?,?,?)");
             updateChannel = connection.prepareStatement("UPDATE channel SET name = ?, version = ? WHERE idChannel = ? AND version = ?");
             deleteChannel = connection.prepareStatement("DELETE FROM channel WHERE idChannel = ?");
 
@@ -133,32 +133,27 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
     }
 
     @Override
-    public void storeChannel(Integer num, String channel) throws DataException {
+    public void storeChannel(Channel channel) throws DataException {
+        int num = channel.getKey();
         Channel c = getChannel(num);
         try {        
             channelByID.setInt(1, num);
             ResultSet rs = channelByID.executeQuery();
             if(!(rs.next())){
-                //try {
                     insertChannel.setInt(1, num);
-                    insertChannel.setString(2, channel);
+                    insertChannel.setString(2, channel.getName());
+                    insertChannel.setInt(3, channel.getImage().getKey());
                     if (insertChannel.executeUpdate() == 1) {                        
                         
-                    }
-                    
+                    }                   
                     
                     if (c instanceof DataItemProxy) {
                         ((DataItemProxy) c).setModified(false);
                     }
-                /*} catch (SQLException ex) {
-                    Logger.getLogger(ChannelDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
-                }*/
-            }else{             
-                /*if (user instanceof DataItemProxy && !((DataItemProxy) user).isModified()) {
-                    return;
-                }*/
                 
-                updateChannel.setString(1,channel);                
+            }else{             
+                
+                updateChannel.setString(1,channel.getName());                
             
                 long current_version = c.getVersion();
                 long next_version = current_version + 1;

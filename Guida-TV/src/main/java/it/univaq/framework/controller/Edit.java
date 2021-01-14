@@ -39,6 +39,7 @@ public class Edit extends BaseController {
         try{
             //channel
             if(request.getParameter("channel") != null){
+                int channel_key;
                 if(request.getParameter("channelNumber") == null){
                     if(request.getParameter("ch") != null){ //verifico se ho scelto un elemento dal selettore 
 
@@ -51,6 +52,8 @@ public class Edit extends BaseController {
                         channel_edit(request, response);
 
                 }else{
+                    channel_key = SecurityLayer.checkNumeric(request.getParameter("channelNumber"));
+                    request.setAttribute("key", channel_key);
                     edit_done(request, response);
                 }
             }  
@@ -370,6 +373,9 @@ public class Edit extends BaseController {
                     if(!(c.getName().equals(channelSelected.getName())))
                 out.println("<option value = '" + c.getKey() + "'>" + c.getName() + "</option>");
                 }
+                
+                
+                
             }else{
                 for(Channel c : channels){
                 out.println("<option value = '" + c.getKey() + "'>" + c.getName() + "</option>");
@@ -379,17 +385,18 @@ public class Edit extends BaseController {
               out.println("<input type='submit' name='select' value='SELEZIONA'/>");
               
             out.println("</form>");
-            out.println("<table style='width:100%'>");
-                out.println("<tr>");
-                  out.println("<th>Programma</th>");
-                  out.println("<th>Episodio</th>");
-                  out.println("<th>Data</th>");                   
-                  out.println("<th>Ora inizio</th>");
-                  out.println("<th>Ora fine</th>");
-                  out.println("<th>Modifica</th>");
-                  out.println("<th>Elimina</th>");
-                out.println("</tr>");
+            
                 if(schedules != null){
+                    out.println("<table style='width:100%'>");
+                    out.println("<tr>");
+                    out.println("<th>Programma</th>");
+                    out.println("<th>Episodio</th>");
+                    out.println("<th>Data</th>");                   
+                    out.println("<th>Ora inizio</th>");
+                    out.println("<th>Ora fine</th>");
+                    out.println("<th>Modifica</th>");
+                    out.println("<th>Elimina</th>");
+                    out.println("</tr>");
                     for(Schedule s : schedules){
                         out.println("<tr>");
                         
@@ -442,7 +449,9 @@ public class Edit extends BaseController {
         try (PrintWriter out = response.getWriter()){
         if(request.getParameter("channel") != null){
             Integer n = Integer.parseInt(request.getParameter("channelNumber"));
-            ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().storeChannel(n, request.getParameter("channelName"));
+            Channel channel = ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(n);
+            channel.setName(request.getParameter("channelName"));
+            ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().storeChannel(channel);
         }
         if(request.getParameter("program") != null){
             int key = (int)request.getAttribute("key");
