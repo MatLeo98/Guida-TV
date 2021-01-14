@@ -175,6 +175,10 @@ public class Delete extends BaseController {
         out.println("</head>");
         out.println("<body>");
         out.println("<h1> Eliminazione effettuata </h1>");
+        out.println("<a href='javascript:history.back()'> Elimina di nuovo </a>");
+        out.println("<br>");
+        out.println("<br>");
+        out.println("<a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina admin </a>");
         } catch (IOException ex) {
             Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DataException ex) {

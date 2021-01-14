@@ -14,6 +14,7 @@ import it.univaq.guida.tv.data.impl.ProgramImpl;
 import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Episode;
 import it.univaq.guida.tv.data.model.FavouriteProgram;
+import it.univaq.guida.tv.data.model.Image;
 import it.univaq.guida.tv.data.model.Program;
 import it.univaq.guida.tv.data.model.Schedule;
 import it.univaq.guida.tv.data.model.User;
@@ -365,7 +366,15 @@ public class Insert extends BaseController {
             try (PrintWriter out = response.getWriter()){
                 if(request.getParameter("channel") != null){//CHANNEL
                     Integer n = Integer.parseInt(request.getParameter("channelNumber"));
-                    ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().storeChannel(n, request.getParameter("channelName"));
+                    Channel channel = ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().createChannel();
+                    channel.setKey(n);
+                    channel.setName(request.getParameter("channelName"));
+                    Image image = ((GuidatvDataLayer)request.getAttribute("datalayer")).getImageDAO().createImage();
+                    image.setLink(request.getParameter("image"));
+                    image = ((GuidatvDataLayer)request.getAttribute("datalayer")).getImageDAO().storeImage(image);
+                    channel.setImage(image);
+                    ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().storeChannel(channel);
+                    request.setAttribute("channel", 1);
                 }
                 if(request.getParameter("program") != null){//PROGRAM
                     Program program = ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().createProgram();
@@ -373,11 +382,16 @@ public class Insert extends BaseController {
                     program.setDescription(request.getParameter("programDescription"));
                     program.setGenre(ProgramImpl.Genre.valueOf(request.getParameter("genre")));
                     program.setLink(request.getParameter("link"));
+                    Image image = ((GuidatvDataLayer)request.getAttribute("datalayer")).getImageDAO().createImage();
+                    image.setLink(request.getParameter("image"));
+                    image = ((GuidatvDataLayer)request.getAttribute("datalayer")).getImageDAO().storeImage(image);
+                    program.setImage(image);
                     program.setIsSerie(Boolean.valueOf(request.getParameter("serie")));
                     if(program.IsSerie()){
                         program.setSeasonsNumber(Integer.parseInt(request.getParameter("nSeasons")));
                     }
                     ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().storeProgram(program);
+                    request.setAttribute("program", 1);
                 }
                 if(request.getParameter("episode") != null){//EPISODE
                     HttpSession s = request.getSession(false);
@@ -392,6 +406,7 @@ public class Insert extends BaseController {
                    ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().storeEpisode(episode); 
                    }
                    s.setAttribute("programSelected", null);
+                   request.setAttribute("episode", 1);
                 }
                 if(request.getParameter("schedule") != null){//SCHEDULE 
                     HttpSession s = request.getSession(false);
@@ -430,6 +445,7 @@ public class Insert extends BaseController {
                     }
                     //s.setAttribute("programSelected", null);
                     s.setAttribute("channelSelected", null);
+                    request.setAttribute("schedule", 1);
                 }
                  
                 try {

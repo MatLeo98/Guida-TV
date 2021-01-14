@@ -39,6 +39,7 @@ public class Edit extends BaseController {
         try{
             //channel
             if(request.getParameter("channel") != null){
+                int channel_key;
                 if(request.getParameter("channelNumber") == null){
                     if(request.getParameter("ch") != null){ //verifico se ho scelto un elemento dal selettore 
 
@@ -51,6 +52,8 @@ public class Edit extends BaseController {
                         channel_edit(request, response);
 
                 }else{
+                    channel_key = SecurityLayer.checkNumeric(request.getParameter("channelNumber"));
+                    request.setAttribute("key", channel_key);
                     edit_done(request, response);
                 }
             }  
@@ -282,6 +285,20 @@ public class Edit extends BaseController {
         List<Program> programs = (List<Program>) request.getAttribute("programs");
         List<Episode> episodes = (List<Episode>) request.getAttribute("episodes");
         Program programSelected = (Program) request.getAttribute("programSelected");
+        
+         
+             try {
+                 TemplateResult res = new TemplateResult(getServletContext());
+                 request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+                 if(programSelected != null)
+                 res.activate("modificaepisodio.ftl.html", request, response);
+                  else
+            res.activate("modificaepisodioparz.ftl.html", request, response);  
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+        /*
         try (PrintWriter out = response.getWriter()) {  
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -343,9 +360,8 @@ public class Edit extends BaseController {
             out.println("</table>");
             out.println("</body>");
             out.println("</html>");
-        } catch (IOException ex) {
-            Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
-        }
+*/
+         
     }
     
     private void schedule_edit(HttpServletRequest request, HttpServletResponse response) throws DataException{
@@ -353,7 +369,24 @@ public class Edit extends BaseController {
         Channel channelSelected = (Channel) request.getAttribute("channelSelected");
         List<Channel> channels = (List<Channel>) request.getAttribute("channels");
         List<Schedule> schedules = (List<Schedule>) request.getAttribute("schedules");
+        
+        
+       
+        try { TemplateResult res = new TemplateResult(getServletContext());
+        request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+        if(channelSelected != null)
+            res.activate("modificaschedule.ftl.html", request, response);
+        else
+        res.activate("modificascheduleparz.ftl.html", request, response);  
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        /*
         try (PrintWriter out = response.getWriter()) {  
+            
+            
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -370,6 +403,9 @@ public class Edit extends BaseController {
                     if(!(c.getName().equals(channelSelected.getName())))
                 out.println("<option value = '" + c.getKey() + "'>" + c.getName() + "</option>");
                 }
+                
+                
+                
             }else{
                 for(Channel c : channels){
                 out.println("<option value = '" + c.getKey() + "'>" + c.getName() + "</option>");
@@ -379,17 +415,18 @@ public class Edit extends BaseController {
               out.println("<input type='submit' name='select' value='SELEZIONA'/>");
               
             out.println("</form>");
-            out.println("<table style='width:100%'>");
-                out.println("<tr>");
-                  out.println("<th>Programma</th>");
-                  out.println("<th>Episodio</th>");
-                  out.println("<th>Data</th>");                   
-                  out.println("<th>Ora inizio</th>");
-                  out.println("<th>Ora fine</th>");
-                  out.println("<th>Modifica</th>");
-                  out.println("<th>Elimina</th>");
-                out.println("</tr>");
+            
                 if(schedules != null){
+                    out.println("<table style='width:100%'>");
+                    out.println("<tr>");
+                    out.println("<th>Programma</th>");
+                    out.println("<th>Episodio</th>");
+                    out.println("<th>Data</th>");                   
+                    out.println("<th>Ora inizio</th>");
+                    out.println("<th>Ora fine</th>");
+                    out.println("<th>Modifica</th>");
+                    out.println("<th>Elimina</th>");
+                    out.println("</tr>");
                     for(Schedule s : schedules){
                         out.println("<tr>");
                         
@@ -433,16 +470,18 @@ public class Edit extends BaseController {
             out.println("</table>");
             out.println("</body>");
             out.println("</html>");
-        } catch (IOException ex) {
-            Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+*/
+      
     }
     
     private void edit_done(HttpServletRequest request, HttpServletResponse response){
         try (PrintWriter out = response.getWriter()){
         if(request.getParameter("channel") != null){
             Integer n = Integer.parseInt(request.getParameter("channelNumber"));
-            ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().storeChannel(n, request.getParameter("channelName"));
+            Channel channel = ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(n);
+            channel.setName(request.getParameter("channelName"));
+            ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().storeChannel(channel);
         }
         if(request.getParameter("program") != null){
             int key = (int)request.getAttribute("key");

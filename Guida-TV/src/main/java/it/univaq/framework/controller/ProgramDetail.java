@@ -77,7 +77,7 @@ public class ProgramDetail extends BaseController {
             
             Image image = program.getImage();
             if(image != null){
-             out.println("<p><img style='height:10%; width:10%;' src='"+program.getImage().getImageFilename()+"' alt='image1'/></p>");
+             out.println("<p><img style='width:10%; height:5%;' src='"+program.getImage().getLink()+"' alt='image1'/></p>");
             }
             out.println("<h1> " + program.getName() + "</h1>");
             out.println("<p>" + program.getDescription() + "</p>");
@@ -107,7 +107,7 @@ public class ProgramDetail extends BaseController {
             out.println("<body>");
             Image image = program.getImage();
             if(image != null){
-             out.println("<p><img style='height:10%; width:10%;' src='"+program.getImage().getImageFilename()+"' alt='image1'/></p>");
+             out.println("<p><img style='height:10%; width:10%;' src='"+program.getImage().getLink()+"' alt='image1'/></p>");
             }
             out.println("<h1> " + program.getName() + "</h1>");
             out.println("<p>" + program.getDescription() + "</p>");

@@ -12,6 +12,7 @@ import it.univaq.framework.result.TemplateResult;
 import it.univaq.framework.security.SecurityLayer;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import it.univaq.guida.tv.data.model.Channel;
+import it.univaq.guida.tv.data.model.Image;
 import it.univaq.guida.tv.data.model.Schedule;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -60,6 +61,7 @@ public class ChannelDetail extends BaseController {
         Channel channel = (Channel) request.getAttribute("channel");
         List<Schedule> schedule = (List<Schedule>) request.getAttribute("schedule");
         response.setContentType("text/html;charset=UTF-8");
+        //request.setAttribute("image", channel.getImage());
        
         try {
             TemplateResult res = new TemplateResult(getServletContext());

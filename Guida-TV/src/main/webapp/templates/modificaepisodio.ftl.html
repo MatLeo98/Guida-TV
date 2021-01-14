@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Servlet Edit</title> 
+</head>
+<body>
+<h1> Modifica o elimina un episodio: </h1>
+<form method='post' action='edit?episode=0'>
+Scegli la serie:       
+<select name='pr' id='pr'>
+<option value = "${programSelected.key}">${programSelected.name}</option>   
+                <#list programs as p>
+ <!-- da mettere nel caso non funge se p e serie-->
+                <#if (p == programSelected)>
+                  
+                <#else>
+                <#if (p.seasonsNumber >= 1)>
+<option value = "${p.key}">${p.name}</option>  
+                </#if>
+                </#if>
+                </#list>
+            
+<option value = "${p.key}"> ${p.name} </option>   
+                
+            
+</select>
+<input type='submit' name='select' value='SELEZIONA'/>
+</form>
+<table style='width:100%'>
+<tr>
+<th>Numero stagione</th>
+<th>Numero episodio</th>
+<th>Nome episodio</th>                
+<th>Modifica</th>
+<th>Elimina</th>
+</tr>
+                
+                
+                    <#list episodes as e>
+                    
+<tr>
+                        
+<form method='post' action='edit?episode=0'>
+<input type='text' name='ek' value= "${e.key}" hidden/>
+<td style='text-align:center'> <input type='text' name='sn' value="${e.seasonNumber}"/> </td>
+<td style='text-align:center'> <input type='text' name='en' value="${e.number}"/> </td>
+<td style='text-align:center'> <input type='text' name='nm' value="${e.name}"/> </td>
+                             
+<td style='text-align:center'>
+<input type='submit' name='edit' value='MODIFICA'/>
+</form>
+</td>
+                             
+<td style='text-align:center'>
+<form method='post' action='edit?episode=0&delEp=${e.key}'>
+<input type='submit' name='delete' value='ELIMINA'/>
+</form>
+</td>                 
+</tr>
+                    </#list>
+                
+</table>
+</body>
+</html>
