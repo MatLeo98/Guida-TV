@@ -12,7 +12,7 @@ Scegli il canale:
 <#list channels as c>
     <#if (c == channelSelected)>
     <#else>
-        <option value = ' ${c.key} '> ${c.name} </option>
+        <option value = '${c.key}'> ${c.name} </option>
     </#if>
 </#list>
 
@@ -41,12 +41,15 @@ Scegli il canale:
 <td style='text-align:center'> 
  <select name='ep' id='ep'>
 
-<!--<option value='${s.episode.key}'> ${s.episode.name} </option>-->
+<option value='${s.episode.key}'> S${s.episode.seasonNumber}E${s.episode.number} ${s.episode.name} </option>
 
 <#list episodes as e>
     <#if (e.program == s.program)>
     <!--if(!(e.getName().equals(s.getEpisode().getName()))){​​​​-->
-        <option value='${e.key}'> ${e.name} </option>
+    <#if (s.episode == e)>
+    <#else>
+        <option value='${e.key}'> S${e.seasonNumber}E${e.number} ${e.name} </option>
+    </#if>
     </#if>
 </#list>
 
