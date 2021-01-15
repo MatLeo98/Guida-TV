@@ -94,7 +94,22 @@ public class ProfileController extends BaseController {
                         Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-            }   
+            }else{
+                try (PrintWriter out = response.getWriter()) {
+                        response.setContentType("text/html;charset=UTF-8");
+                         out.println("<!DOCTYPE html>");
+                         out.println("<html>");
+                         out.println("<body>");
+                        out.println("<h3> Devi essere loggato per visualizzare il profilo");
+                        out.println("<br><br>");
+                        out.println("<a href=\"login\">GO TO LOGIN</a>"); //DA CAMBIARE CHE VA DIRETTAMENTE ALLA PAGINA LOGIN
+                        out.println("</body>");
+                        out.println("</html>");
+                    } catch (IOException ex) {
+                        Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                
+            } 
             
         } catch (DataException ex) {
             Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
