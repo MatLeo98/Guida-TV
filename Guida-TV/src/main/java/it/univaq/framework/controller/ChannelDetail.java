@@ -11,6 +11,7 @@ import it.univaq.framework.result.TemplateManagerException;
 import it.univaq.framework.result.TemplateResult;
 import it.univaq.framework.security.SecurityLayer;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
+import it.univaq.guida.tv.data.impl.ProgramImpl;
 import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Image;
 import it.univaq.guida.tv.data.model.Schedule;
@@ -50,6 +51,8 @@ public class ChannelDetail extends BaseController {
             Channel channel = ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(id);
             request.setAttribute("channel", channel);           
             request.setAttribute("schedule", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getScheduleByChannel(channel, date));
+            request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
+            request.setAttribute("genres", ProgramImpl.Genre.values());
         } catch (DataException ex) {
             Logger.getLogger(ChannelDetail.class.getName()).log(Level.SEVERE, null, ex);
         }

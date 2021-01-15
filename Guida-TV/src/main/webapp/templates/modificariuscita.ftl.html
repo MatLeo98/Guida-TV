@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Servlet Insert</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1> Modifica effettuata </h1>
+        <#if var == 1>
+        <a href='http://localhost:8080/Guida-tivu/admin/edit?channel=1'> Modifica di nuovo </a>
+        <#elseif var == 2>
+            <a href='http://localhost:8080/Guida-tivu/admin/edit?program=1'> Modifica di nuovo </a>
+        <#elseif var == 3>
+            <a href='http://localhost:8080/Guida-tivu/admin/edit?episode=0'> Modifica di nuovo </a>
+        <#elseif var == 4>
+            <a href='http://localhost:8080/Guida-tivu/admin/edit?schedule=0'> Modifica di nuovo </a>
+        </#if>
+        <br>
+        <br>
+        <a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina admin </a>
+    </body>
+</html>

@@ -5,6 +5,7 @@
             </head>
             <body>
             <h1> Modifica un programma: </h1>
+            <#if programSelected??>
             <form method='post' action='edit?program=1'>
             Programma da modificare:           
             <select name='pr' id='pr'>
@@ -38,8 +39,23 @@
             
            </select>
             <input type='text' placeholder='Link' name='link' value="${programSelected.link}">
-           
+            
+            <#if (programSelected.seasonsNumber >= 1)>
+            <input type='text' placeholder='Numero stagioni' name ='nSeasons' value='${programSelected.seasonsNumber}'>
+            </#if>
+            
 <button type='submit'>Modifica</button>
 </form>
+<#else>
+    <form method='post' action='edit?program=1'>
+        Programma da modificare:           
+        <select name='pr' id='pr'>
+            <#list programs as p>
+                <option value = "${p.key}">${p.name}</option>     
+            </#list>
+        </select>
+        <input type='submit' name='select' value='SELEZIONA'/>
+    </form>
+</#if>
 </body>
 </html>

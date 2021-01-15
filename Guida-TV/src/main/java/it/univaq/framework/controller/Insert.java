@@ -43,7 +43,6 @@ public class Insert extends BaseController {
         HttpSession s = request.getSession(false);
         if(request.getParameter("channel") != null){
             if(request.getParameter("channelNumber") == null){
-                System.out.println(request.getParameter("channelNumber"));
                 channel_insert(request, response);
             }else{
                 insert_done(request, response);
@@ -210,8 +209,7 @@ public class Insert extends BaseController {
         try {
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            
-            if(programSelected != null){                    
+                               
                 if(request.getParameter("ln") != null){
                     int ln = Integer.parseInt(request.getParameter("ln"));
                     request.setAttribute("lNum", ln);
@@ -222,11 +220,8 @@ public class Insert extends BaseController {
                     request.setAttribute("rows", rows);                   
                 }
                 res.activate("inserisciepisodio.ftl.html", request, response);
-            }else{
-                res.activate("inserisciepisodioparz.ftl.html", request, response); 
-            }
-            /*
-            try (PrintWriter out = response.getWriter()) {
+            
+            /*try (PrintWriter out = response.getWriter()) {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -270,7 +265,7 @@ public class Insert extends BaseController {
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
             //if(programSelected != null){
-                if(channelSelected != null){
+                
                 //List<Episode> episodes = ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getProgramEpisodes(programSelected);
                 //request.setAttribute("episodes", episodes);                    
                 if(request.getParameter("ln") != null){
@@ -283,9 +278,7 @@ public class Insert extends BaseController {
                     request.setAttribute("rows", rows);                   
                 }
                 res.activate("inseriscipalinsesto.ftl.html", request, response);
-            }else{
-                res.activate("inseriscipalinsestoparz.ftl.html", request, response); 
-            }
+            
             
             /*
             try (PrintWriter out = response.getWriter()) {
@@ -374,7 +367,7 @@ public class Insert extends BaseController {
                     image = ((GuidatvDataLayer)request.getAttribute("datalayer")).getImageDAO().storeImage(image);
                     channel.setImage(image);
                     ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().storeChannel(channel);
-                    request.setAttribute("channel", 1);
+                    request.setAttribute("var", 1);
                 }
                 if(request.getParameter("program") != null){//PROGRAM
                     Program program = ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().createProgram();
@@ -391,7 +384,7 @@ public class Insert extends BaseController {
                         program.setSeasonsNumber(Integer.parseInt(request.getParameter("nSeasons")));
                     }
                     ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().storeProgram(program);
-                    request.setAttribute("program", 1);
+                    request.setAttribute("var", 2);
                 }
                 if(request.getParameter("episode") != null){//EPISODE
                     HttpSession s = request.getSession(false);
@@ -406,7 +399,7 @@ public class Insert extends BaseController {
                    ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().storeEpisode(episode); 
                    }
                    s.setAttribute("programSelected", null);
-                   request.setAttribute("episode", 1);
+                   request.setAttribute("var", 3);
                 }
                 if(request.getParameter("schedule") != null){//SCHEDULE 
                     HttpSession s = request.getSession(false);
@@ -445,7 +438,7 @@ public class Insert extends BaseController {
                     }
                     //s.setAttribute("programSelected", null);
                     s.setAttribute("channelSelected", null);
-                    request.setAttribute("schedule", 1);
+                    request.setAttribute("var", 4);
                 }
                  
                 try {

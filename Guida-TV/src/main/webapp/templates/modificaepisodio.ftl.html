@@ -5,26 +5,24 @@
 </head>
 <body>
 <h1> Modifica o elimina un episodio: </h1>
+<#if programSelected??>
 <form method='post' action='edit?episode=0'>
-Scegli la serie:       
-<select name='pr' id='pr'>
-<option value = "${programSelected.key}">${programSelected.name}</option>   
-                <#list programs as p>
- <!-- da mettere nel caso non funge se p e serie-->
+    Scegli la serie:       
+    <select name='pr' id='pr'>
+        <option value = "${programSelected.key}">${programSelected.name}</option>   
+            <#list programs as p>
+         <!-- da mettere nel caso non funge se p e serie-->
                 <#if (p == programSelected)>
-                  
+
                 <#else>
-                <#if (p.seasonsNumber >= 1)>
-<option value = "${p.key}">${p.name}</option>  
+                    <#if (p.seasonsNumber >= 1)>
+                        <option value = "${p.key}">${p.name}</option>  
+                    </#if>
                 </#if>
-                </#if>
-                </#list>
-            
-<option value = "${p.key}"> ${p.name} </option>   
-                
-            
-</select>
-<input type='submit' name='select' value='SELEZIONA'/>
+            </#list>                
+
+    </select>
+    <input type='submit' name='select' value='SELEZIONA'/>
 </form>
 <table style='width:100%'>
 <tr>
@@ -33,32 +31,41 @@ Scegli la serie:
 <th>Nome episodio</th>                
 <th>Modifica</th>
 <th>Elimina</th>
-</tr>
-                
-                
-                    <#list episodes as e>
+</tr>                      
+
+<#list episodes as e>
                     
-<tr>
-                        
-<form method='post' action='edit?episode=0'>
-<input type='text' name='ek' value= "${e.key}" hidden/>
-<td style='text-align:center'> <input type='text' name='sn' value="${e.seasonNumber}"/> </td>
-<td style='text-align:center'> <input type='text' name='en' value="${e.number}"/> </td>
-<td style='text-align:center'> <input type='text' name='nm' value="${e.name}"/> </td>
-                             
-<td style='text-align:center'>
-<input type='submit' name='edit' value='MODIFICA'/>
-</form>
-</td>
-                             
-<td style='text-align:center'>
-<form method='post' action='edit?episode=0&delEp=${e.key}'>
-<input type='submit' name='delete' value='ELIMINA'/>
-</form>
-</td>                 
-</tr>
-                    </#list>
+    <tr>
+        <form method='post' action='edit?episode=0'>
+        <input type='text' name='ek' value= "${e.key}" hidden/>
+        <td style='text-align:center'> <input type='text' name='sn' value="${e.seasonNumber}"/> </td>
+        <td style='text-align:center'> <input type='text' name='en' value="${e.number}"/> </td>
+        <td style='text-align:center'> <input type='text' name='nm' value="${e.name}"/> </td>
+        <td style='text-align:center'> <input type='submit' name='edit' value='MODIFICA'/> </td>
+        </form>
+
+        <td style='text-align:center'>
+            <form method='post' action='edit?episode=0&delEp=${e.key}'>
+                <input type='submit' name='delete' value='ELIMINA'/>
+            </form>
+        </td>                 
+    </tr>
+    
+</#list>
                 
 </table>
+<#else>
+    <form method='post' action='edit?episode=0'>
+        Episodio da modificare          
+        <select name='pr' id='pr'>
+            <#list programs as p>
+                <#if (p.seasonsNumber>=1)>
+                    <option value = "${p.key}">${p.name}</option>  
+                </#if>
+            </#list>
+        </select>
+        <input type='submit' name='select' value='SELEZIONA'/>
+    </form>
+</#if>
 </body>
 </html>

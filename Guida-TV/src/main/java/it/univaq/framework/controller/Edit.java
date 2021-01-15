@@ -145,17 +145,13 @@ public class Edit extends BaseController {
     private void channel_edit(HttpServletRequest request, HttpServletResponse response){       
         response.setContentType("text/html;charset=UTF-8");
         List<Channel> channels = (List<Channel>) request.getAttribute("channels");
-        System.out.println(channels.get(0).getName());
         Channel channelSelected = (Channel) request.getAttribute("channelSelected");
         
 
         try {   
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            if(channelSelected != null)
-            res.activate("modificanale.ftl.html", request, response);           
-            else
-            res.activate("modificanaleparz.ftl.html", request, response);   
+            res.activate("modificanale.ftl.html", request, response);               
             
             /*
             try (PrintWriter out = response.getWriter()) {
@@ -211,11 +207,8 @@ public class Edit extends BaseController {
             
             try {     
             TemplateResult res = new TemplateResult(getServletContext());
-            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            if(programSelected != null)     
-             res.activate("modificaprogramma.ftl.html", request, response);
-             else
-            res.activate("modificaprogrammaparz.ftl.html", request, response);   
+            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());   
+             res.activate("modificaprogramma.ftl.html", request, response);  
         }
         catch (TemplateManagerException ex) {
         Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
@@ -290,11 +283,8 @@ public class Edit extends BaseController {
          
              try {
                  TemplateResult res = new TemplateResult(getServletContext());
-                 request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-                 if(programSelected != null)
-                 res.activate("modificaepisodio.ftl.html", request, response);
-                  else
-            res.activate("modificaepisodioparz.ftl.html", request, response);  
+                 request.setAttribute("strip_slashes", new SplitSlashesFmkExt());                 
+                 res.activate("modificaepisodio.ftl.html", request, response); 
         } catch (TemplateManagerException ex) {
             Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -369,16 +359,11 @@ public class Edit extends BaseController {
         response.setContentType("text/html;charset=UTF-8");
         Channel channelSelected = (Channel) request.getAttribute("channelSelected");
         List<Channel> channels = (List<Channel>) request.getAttribute("channels");
-        List<Schedule> schedules = (List<Schedule>) request.getAttribute("schedules");
-        
-        
+        List<Schedule> schedules = (List<Schedule>) request.getAttribute("schedules");            
        
        try { TemplateResult res = new TemplateResult(getServletContext());
         request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-        if(channelSelected != null)
-            res.activate("modificaschedule.ftl.html", request, response);
-        else
-            res.activate("modificascheduleparz.ftl.html", request, response);  
+            res.activate("modificaschedule.ftl.html", request, response);  
         } catch (TemplateManagerException ex) {
             Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -486,6 +471,7 @@ public class Edit extends BaseController {
             Channel channel = ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(n);
             channel.setName(request.getParameter("channelName"));
             ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().storeChannel(channel);
+            request.setAttribute("var", 1);
         }
         if(request.getParameter("program") != null){
             int key = (int)request.getAttribute("key");
@@ -499,6 +485,7 @@ public class Edit extends BaseController {
             program.setSeasonsNumber(Integer.parseInt(request.getParameter("nSeasons")));
             }            
             ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().storeProgram(program);
+            request.setAttribute("var", 2);
         }
         if(request.getParameter("episode") != null){
             int key = (int)request.getAttribute("key");
@@ -507,6 +494,7 @@ public class Edit extends BaseController {
             episode.setSeasonNumber(Integer.parseInt(request.getParameter("sn")));
             episode.setNumber(Integer.parseInt(request.getParameter("en")));
             ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().storeEpisode(episode);
+            request.setAttribute("var", 3);
         }
         if(request.getParameter("schedule") != null){
             int key = (int)request.getAttribute("key");
@@ -520,14 +508,25 @@ public class Edit extends BaseController {
             schedule.setStartTime(LocalTime.parse(request.getParameter("st")));
             schedule.setEndTime(LocalTime.parse(request.getParameter("et")));
             ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().storeSchedule(schedule);
+            request.setAttribute("var", 4);
         }
-        out.println("<!DOCTYPE html>");
-        out.println("<html>");
-        out.println("<head>");
-        out.println("<title>Servlet Insert</title>"); 
-        out.println("</head>");
-        out.println("<body>");
-        out.println("<h1> Modifica effettuata </h1>");
+        
+        TemplateResult res = new TemplateResult(getServletContext());
+        request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+            try {
+                res.activate("modificariuscita.ftl.html", request, response);
+                /*out.println("<!DOCTYPE html>");
+                out.println("<html>");
+                out.println("<head>");
+                out.println("<title>Servlet Insert</title>");
+                out.println("</head>");
+                out.println("<body>");
+                out.println("<h1> Modifica effettuata </h1>");
+                out.println("</body>");
+                out.println("</html>"); */
+            } catch (TemplateManagerException ex) {
+                Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (IOException ex) {
             Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DataException ex) {

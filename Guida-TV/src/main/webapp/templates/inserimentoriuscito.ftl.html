@@ -5,16 +5,13 @@
 </head>
 <body>
 <h1> Inserimento effettuato </h1>
-<#if channel == 1>
+<#if var == 1>
     <a href='http://localhost:8080/Guida-tivu/admin/insert?channel=1'> Inserisci di nuovo </a>
-</#if>
-<#if program == 1>
+<#elseif var == 2>
     <a href='http://localhost:8080/Guida-tivu/admin/insert?program=1'> Inserisci di nuovo </a>
-</#if>
-<#if episode == 1>
+<#elseif var == 3>
     <a href='http://localhost:8080/Guida-tivu/admin/insert?episode=1'> Inserisci di nuovo </a>
-</#if>
-<#if schedule == 1>
+<#elseif var == 4>
     <a href='http://localhost:8080/Guida-tivu/admin/insert?schedule=1'> Inserisci di nuovo </a>
 </#if>
 <br>

@@ -5,11 +5,10 @@
 </head>
 <body>
 <h1> Modifica un canale: </h1>
+<#if channelSelected??>
 <form method='post' action='edit?channel=1'>
-"Canale da modificare:"
+Canale da modificare:
 <select name='ch' id='ch'>
-
-    
           
 <option value = "${channelSelected.key}">${channelSelected.name}</option>
            <#list channels as c>
@@ -18,9 +17,7 @@
            <#else>
             <option value = "${c.key}"> ${c.name} </option>
            </#if>
-           </#list>
-            
-            
+           </#list>           
             
 </select>
 <input type='submit' name='select' value='SELEZIONA'/>
@@ -37,7 +34,18 @@
 <input type='submit' name='edit' value='MODIFICA'/>
 <br>
 <br>
-<a href='admin'> Torna a admin </a>
+<a href='http://localhost:8080/Guida-tivu/admin'> Torna a admin </a>
 </form>
+<#else>
+    <form method='post' action='edit?channel=1'>
+    Canale da modificare:
+        <select name='ch' id='ch'>
+           <#list channels as c>           
+                <option value = "${c.key}"> ${c.name} </option>           
+           </#list>
+        </select>
+        <input type='submit' name='select' value='SELEZIONA'/>
+    </form>
+</#if>
 </body>
 </html>

@@ -6,6 +6,7 @@
 <body>
 <h1> Inserisci un nuovo palinsesto: </h1>
 <a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina di gestione </a>
+<#if channelSelected??>
 <form method='post' action='insert?schedule=1'>
     Scegli il canale:
     <select name='ch' id='ch'>
@@ -32,7 +33,7 @@
             <optgroup label ='${p.name}'>
                 <#list episodes as e>
                 <#if (e.program == p)>
-                 <option value = "e${e.key}"> ${e.name}</option>
+                 <option value = "e${e.key}"> S${e.seasonNumber}E${e.number} ${e.name}</option>
                  </#if>
                 </#list>
             </optgroup>
@@ -51,6 +52,19 @@
     </#list>
     <button type='submit'>Crea</button>
 </form>
+<#else>
+    <form method='post' action='insert?schedule=1'>
+        Scegli il canale:
+        <select name='ch' id='ch'>
+            <#list channels as c>
+                <option value = "${c.key}"> ${c.name}</option>
+            </#list>
+        </select>
+        Quanti elementi vuoi inserire?
+        <input type='text' id='ln' name='ln'>
+        <input type='submit' name='select' value='SELEZIONA'/>
+    </form>
+</#if>
 </body>
 </html>
            

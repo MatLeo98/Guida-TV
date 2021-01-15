@@ -52,9 +52,9 @@ public class ProgramDetail extends BaseController {
             if(program.IsSerie()){
                 request.setAttribute("episodes", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getLastMonthEpisodes(program));
                 serie_detail(request, response);
-            }else
+            }else{
                 program_detail(request, response);
-            
+            }
         } catch (DataException ex) {
             Logger.getLogger(ProgramDetail.class.getName()).log(Level.SEVERE, null, ex);
         }

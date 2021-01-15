@@ -7,7 +7,7 @@
 <h1> Inserisci un nuovo programma: </h1>
 <form method='post' action='insert?program=1'>        
 <input type='text' placeholder='Nome programma' name='programName'>
-<input type='text' placeholder='Descrizione' name='programDescription'>
+<textarea id='programDescription' placeholder='Descrizione' name='programDescription'></textarea>
 <select name='genre' id='genre'>
      <#list genres as g>
      <option value = "${g}"> ${g} </option>

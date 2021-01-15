@@ -249,12 +249,4 @@ public class UserDAO_MySQL extends DAO implements UserDAO{
         }
         return users;
     }
-    
-    
-   
-
-    
-    
-    
-    
 }

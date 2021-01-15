@@ -6,17 +6,20 @@
 <body>
 <h1> Inserisci nuovi episodi: </h1>
 <a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina di gestione </a>
+<#if programSelected??>
 <form method='post' action='insert?episode=1'>
     Scegli il programma:
     <select name='pr' id='pr'>
+        
         <option value = "${programSelected.key}"> ${programSelected.name}</option>
-    <#list programs as p>
-        <#if (p != programSelected)>
-            <#if (p.seasonsNumber >= 1) >
-        <option value = "${p.key}"> ${p.name}</option>
+        <#list programs as p>
+            <#if (p != programSelected)>
+                <#if (p.seasonsNumber >= 1) >
+                    <option value = "${p.key}"> ${p.name}</option>
+                </#if>
             </#if>
-        </#if>
-    </#list>
+        </#list>
+        
     </select>
     Quanti elementi vuoi inserire?
     <input type='text' id='ln' name='ln'>
@@ -37,6 +40,22 @@
     </#list>
     <button type='submit'>Crea</button>
 </form>
+
+<#else>
+    <form method='post' action='insert?episode=1'>
+        Scegli il programma:
+        <select name='pr' id='pr'>
+        <#list programs as p>
+            <#if (p.seasonsNumber >= 1) >
+                <option value = "${p.key}"> ${p.name}</option>
+            </#if>
+        </#list>
+        </select>
+        Quanti elementi vuoi inserire?
+        <input type='text' id='ln' name='ln'>
+        <input type='submit' name='select' value='SELEZIONA'/>
+    </form>
+</#if>
 
 </body>
 </html>

@@ -5,6 +5,7 @@
 </head>
 <body>
 <h1> Modifica o elimina un palinsesto: </h1>
+<#if channelSelected??>
 <form method='post' action='edit?schedule=0'>
 Scegli il canale:
 <select name='ch' id='ch'>
@@ -76,5 +77,16 @@ Scegli il canale:
 
 
 </table>
+<#else>
+    <form method='post' action='edit?schedule=0'>
+        Scegli un canale
+        <select name='ch' id='ch'>
+            <#list channels as c>
+                <option value = "${c.key}"> ${c.name} </option>
+            </#list>
+         </select>
+        <input type='submit' name='select' value='SELEZIONA'/>
+    </form>
+</#if>
 </body>
 </html>
