@@ -50,9 +50,7 @@ public class ConfirmController extends BaseController {
             res.activate("confirmcontroller.ftl.html", request, response);
             
         }else{
-                
-            
-                
+
                 res.activate("devilogin.ftl.html", request, response);
                 /*
                 try (PrintWriter out = response.getWriter()) {

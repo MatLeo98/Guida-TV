@@ -38,9 +38,13 @@ import static java.util.concurrent.TimeUnit.*;
 public class Admin extends BaseController {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        HttpSession s = request.getSession(false);   
-        User user = (User) s.getAttribute("user");
-            if (s != null && user != null && !(user.getKey().isEmpty())){               
+         TemplateResult res = new TemplateResult(getServletContext());
+    
+        HttpSession s = request.getSession(false); 
+        try {
+        if(s != null){
+            User user = (User) s.getAttribute("user");
+            if (user != null && !(user.getKey().isEmpty())){               
                 if(user.getKey().equals("admin@email.it")){
                    s.setAttribute("programSelected", null);
                    s.setAttribute("channelSelected", null);
@@ -48,8 +52,8 @@ public class Admin extends BaseController {
                         sendEmail(request,response);
                     action_admin(request, response);
                 }else{
-                    try {
-                        TemplateResult res = new TemplateResult(getServletContext());
+                    
+                        
                         request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
                         res.activate("sonoin.ftl.html", request, response);
                         //try (PrintWriter out = response.getWriter()) {
@@ -65,14 +69,12 @@ public class Admin extends BaseController {
                         /*  } catch (IOException ex) {
                         Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    */                  } catch (TemplateManagerException ex) {
-                        Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    */                
                 }
             }else{
                        
-            try {
-                TemplateResult res = new TemplateResult(getServletContext());
+            
+               
                 request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
                 res.activate("devilogin.ftl.html", request, response);
                 /* try (PrintWriter out = response.getWriter()) {
@@ -88,11 +90,14 @@ public class Admin extends BaseController {
                 } catch (IOException ex) {
                 Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            */          } catch (TemplateManagerException ex) {
+            */          
+            }
+        }else{request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+                res.activate("devilogin.ftl.html", request, response);
+        }
+        } catch (TemplateManagerException ex) {
                 Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
             }
-            }
-        
     }
     
     private void action_admin(HttpServletRequest request, HttpServletResponse response) {      
