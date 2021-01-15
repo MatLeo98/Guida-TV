@@ -92,7 +92,10 @@ public class RegisterController extends BaseController{
                     user = ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().getUser(request.getParameter("email"));
                       out.println("<h1> ciao " + user.getKey() + "</h1>");
                       out.println("<a href=\"login\"> LOGIN </a>");
-                      out.println("<a href=\"confirm?URI="+URI+"\"> CONFERMA EMAIL </a>");
+                      out.println("<br>");
+                      out.println("<br>");
+                      //out.println("<a href=\"confirm?URI="+URI+"\"> CONFERMA EMAIL </a>");
+                      out.println("<a href=\"profile\"> Vai al profilo per confermare l'email </a>");
                       HttpSession s = request.getSession(true);
                       s.setAttribute("URI",URI);
                       

@@ -46,53 +46,55 @@ public class ProfileController extends BaseController {
             throws ServletException {
         try {
             HttpSession s = request.getSession(false);
-            User user = (User) s.getAttribute("user");
-                      
-                      
-            if (s != null && user != null && !(user.getKey().isEmpty())){  
-                request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
-                if (!(request.getParameter("emailgiornaliera") == null)){
-                    setEmail(request,response);
-                }  
-                if(request.getParameter("daymail") != null){
-                    setEmailSS(request,response);
-                }
-                System.out.println(request.getParameter("delch"));
-                if(request.getParameter("delch") != null){
-                    delFavChannel(request,response);
-                }
-                if(request.getParameter("delprog") != null){
-                    delFavProgram(request,response);
-                }
-                if(request.getParameter("delSS") != null){
-                    delSS(request,response);
-                }
-                
-                request.setAttribute("savedS",((GuidatvDataLayer)request.getAttribute("datalayer")).getSavedSearchesDAO().getSavedSearches(user));
-                request.setAttribute("favPrograms",((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteProgramDAO().getFavouritePrograms(user));
-                request.setAttribute("favChannels",((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteChannelDAO().getFavouriteChannels(user));
-                
-                
-                actions(request,response);
-                
-                
-            }else{
-                
-                try (PrintWriter out = response.getWriter()) {
-                    response.setContentType("text/html;charset=UTF-8");
-                     out.println("<!DOCTYPE html>");
-                     out.println("<html>");
-                     out.println("<body>");
-                    out.println("<h3> Devi essere loggato per visualizzare il profilo");
-                    out.println("<br><br>");
-                    out.println("<a href=\"login\">GO TO LOGIN</a>"); //DA CAMBIARE CHE VA DIRETTAMENTE ALLA PAGINA LOGIN
-                    out.println("</body>");
-                    out.println("</html>");
-                } catch (IOException ex) {
-                    Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
             
+            if(s != null){
+                User user = (User) s.getAttribute("user");
+                      
+                      
+                if (user != null && !(user.getKey().isEmpty())){  
+                    request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
+                    if (!(request.getParameter("emailgiornaliera") == null)){
+                        setEmail(request,response);
+                    }  
+                    if(request.getParameter("daymail") != null){
+                        setEmailSS(request,response);
+                    }
+                    System.out.println(request.getParameter("delch"));
+                    if(request.getParameter("delch") != null){
+                        delFavChannel(request,response);
+                    }
+                    if(request.getParameter("delprog") != null){
+                        delFavProgram(request,response);
+                    }
+                    if(request.getParameter("delSS") != null){
+                        delSS(request,response);
+                    }
+
+                    request.setAttribute("savedS",((GuidatvDataLayer)request.getAttribute("datalayer")).getSavedSearchesDAO().getSavedSearches(user));
+                    request.setAttribute("favPrograms",((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteProgramDAO().getFavouritePrograms(user));
+                    request.setAttribute("favChannels",((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteChannelDAO().getFavouriteChannels(user));
+
+
+                    actions(request,response);
+
+
+                }else{
+
+                    try (PrintWriter out = response.getWriter()) {
+                        response.setContentType("text/html;charset=UTF-8");
+                         out.println("<!DOCTYPE html>");
+                         out.println("<html>");
+                         out.println("<body>");
+                        out.println("<h3> Devi essere loggato per visualizzare il profilo");
+                        out.println("<br><br>");
+                        out.println("<a href=\"login\">GO TO LOGIN</a>"); //DA CAMBIARE CHE VA DIRETTAMENTE ALLA PAGINA LOGIN
+                        out.println("</body>");
+                        out.println("</html>");
+                    } catch (IOException ex) {
+                        Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }   
             
         } catch (DataException ex) {
             Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
