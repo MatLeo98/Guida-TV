@@ -4,58 +4,53 @@
 <title>Servlet Insert</title>
 </head>
 <body>
-<h1> Inserisci nuovi episodi: </h1>
-<a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina di gestione </a>
-<#if programSelected??>
-<form method='post' action='insert?episode=1'>
-    Scegli il programma:
-    <select name='pr' id='pr'>
-        
-        <option value = "${programSelected.key}"> ${programSelected.name}</option>
-        <#list programs as p>
-            <#if (p != programSelected)>
+    <h1> Inserisci nuovi episodi: </h1>
+    <a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina di gestione </a>
+    <#if programSelected??>
+        <form method='post' action='insert?episode=1'>
+            Scegli il programma:
+            <select name='pr' id='pr'>
+                <option value = "${programSelected.key}"> ${programSelected.name}</option>
+                <#list programs as p>
+                    <#if (p != programSelected)>
+                        <#if (p.seasonsNumber >= 1) >
+                            <option value = "${p.key}"> ${p.name}</option>
+                        </#if>
+                    </#if>
+                </#list>
+
+            </select>
+            Quanti elementi vuoi inserire?
+            <input type='text' id='ln' name='ln'>
+            <input type='submit' name='select' value='SELEZIONA'/>
+        </form>
+        <form method='post' action='insert?episode=1'> 
+            <#list rows as r>
+                <input type='text' id='nElem' name='nElem' value='${lNum}' hidden >
+                Nome episodio:
+                <input type='text' name='episodeName${r}'>
+                Numero stagione:
+                <input type='text' name='seasonNumber${r}'>
+                Numero episodio:
+                <input type='text' name='episodeNumber${r}'> 
+                <br>
+            </#list>
+            <button type='submit'>Crea</button>
+        </form>
+    <#else>
+        <form method='post' action='insert?episode=1'>
+            Scegli il programma:
+            <select name='pr' id='pr'>
+            <#list programs as p>
                 <#if (p.seasonsNumber >= 1) >
                     <option value = "${p.key}"> ${p.name}</option>
                 </#if>
-            </#if>
-        </#list>
-        
-    </select>
-    Quanti elementi vuoi inserire?
-    <input type='text' id='ln' name='ln'>
-    <input type='submit' name='select' value='SELEZIONA'/>
-</form>
-
-<form method='post' action='insert?episode=1'> 
-    <#list rows as r>
-
-     <input type='text' id='nElem' name='nElem' value='${lNum}' hidden >
-     Nome episodio:
-     <input type='text' name='episodeName${r}'>
-     Numero stagione:
-     <input type='text' name='seasonNumber${r}'>
-     Numero episodio:
-     <input type='text' name='episodeNumber${r}'> 
-    <br>
-    </#list>
-    <button type='submit'>Crea</button>
-</form>
-
-<#else>
-    <form method='post' action='insert?episode=1'>
-        Scegli il programma:
-        <select name='pr' id='pr'>
-        <#list programs as p>
-            <#if (p.seasonsNumber >= 1) >
-                <option value = "${p.key}"> ${p.name}</option>
-            </#if>
-        </#list>
-        </select>
-        Quanti elementi vuoi inserire?
-        <input type='text' id='ln' name='ln'>
-        <input type='submit' name='select' value='SELEZIONA'/>
-    </form>
-</#if>
-
+            </#list>
+            </select>
+            Quanti elementi vuoi inserire?
+            <input type='text' id='ln' name='ln'>
+            <input type='submit' name='select' value='SELEZIONA'/>
+        </form>
+    </#if>
 </body>
 </html>

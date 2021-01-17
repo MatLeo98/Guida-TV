@@ -30,7 +30,7 @@ public interface Program extends DataItem<Integer> {
 
     String getName();
 
-    int getSeasonsNumber();
+    Integer getSeasonsNumber();
     
     public List<Episode> getEpisodes();
     
@@ -47,7 +47,7 @@ public interface Program extends DataItem<Integer> {
 
     void setName(String name);
 
-    void setSeasonsNumber(int seasonsNumber);
+    void setSeasonsNumber(Integer seasonsNumber);
     
     void addEpisode(Episode episode);
     

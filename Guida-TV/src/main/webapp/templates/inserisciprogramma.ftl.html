@@ -4,25 +4,25 @@
 <title>Servlet Insert</title>
 </head>
 <body>
-<h1> Inserisci un nuovo programma: </h1>
-<form method='post' action='insert?program=1'>        
-<input type='text' placeholder='Nome programma' name='programName'>
-<textarea id='programDescription' placeholder='Descrizione' name='programDescription'></textarea>
-<select name='genre' id='genre'>
-     <#list genres as g>
-     <option value = "${g}"> ${g} </option>
-     </#list>
-</select>
-<input type='text' placeholder='Link approfondimento' name='link'>
-<input type='text' placeholder='Link immagine' name='image'>
-<select name='serie' id='serie'>
-<option value = ''> Serie? </option>
-<option value = 'false'> No </option>
-<option value = 'true'> Si </option>
-</select>
-<input type='text' placeholder='Numero stagioni' name='nSeasons'>
-<button type='submit'>Crea</button>
-</form>
+    <h1> Inserisci un nuovo programma: </h1>
+    <form method='post' action='insert?program=1'>        
+        <input type='text' placeholder='Nome programma' name='programName'>
+        <textarea id='programDescription' placeholder='Descrizione' name='programDescription'></textarea>
+        <select name='genre' id='genre'>
+             <#list genres as g>
+                <option value = "${g}"> ${g} </option>
+             </#list>
+        </select>
+        <input type='text' placeholder='Link approfondimento' name='link'>
+        <input type='text' placeholder='Link immagine' name='image'>
+        <select name='serie' id='serie'>
+            <option value = ''> Serie? </option>
+            <option value = 'false'> No </option>
+            <option value = 'true'> Si </option>
+        </select>
+        <input type='text' placeholder='Numero stagioni' name='nSeasons'>
+        <button type='submit'>Crea</button>
+    </form>
 </body>
 </html>
     

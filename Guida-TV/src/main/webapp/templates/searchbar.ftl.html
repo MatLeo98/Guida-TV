@@ -13,17 +13,17 @@ and open the template in the editor.
     <body>
         <form action='searchresults'>
             <input type='text' placeholder='Titolo' name='title'>
-           <select name='genre' id='genre'>
-            <option value = ''> Scegli il genere </option>
-            <#list genres as g>
-            <option value = "${g}"> ${g} </option>
-            </#list>
+            <select name='genre' id='genre'>
+                <option value = ''> Scegli il genere </option>
+                <#list genres as g>
+                    <option value = "${g}"> ${g} </option>
+                </#list>
             </select>
             <select name='channel' id='channel'>
-            <option value = ''> Scegli i canali </option>
-            <#list channels as c>
-            <option value ="${c.key}"> ${c.name} </option>
-            </#list>
+                <option value = ''> Scegli i canali </option>
+                <#list channels as c>
+                    <option value ="${c.key}"> ${c.name} </option>
+                </#list>
             </select>
             Ora Min:
             <input type='time' id='min' name='min'>

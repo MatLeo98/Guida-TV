@@ -53,7 +53,7 @@ public class ProgramProxy  extends ProgramImpl implements DataItemProxy{
     }
 
     @Override
-    public void setSeasonsNumber(int seasonsNumber) {
+    public void setSeasonsNumber(Integer seasonsNumber) {
         super.setSeasonsNumber(seasonsNumber);
         this.modified = true;
     }

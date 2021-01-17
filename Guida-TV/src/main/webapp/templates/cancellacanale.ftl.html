@@ -4,25 +4,25 @@
 <title>Servlet Delete</title>       
 </head>
 <body>
-<h1> Elimina un canale: </h1>
-<table style='width:100%'>
-<tr>
-<th>Numero canale</th>
-<th>Nome canale</th>
-<th>Elimina</th>
-</tr>
-<#list channels as c>
-<tr>
-<td style='text-align:center'>  ${c.key}  </td> 
-<td style='text-align:center'> ${c.name} </td> 
-<td style='text-align:center'>
-<form method='post' action='delete?channel=0&delCh=${c.key}'>
-<input type='submit' name='delete' value='ELIMINA'/>
-</form>
-</td>
-</tr>
-</#list> 
-</table>
+    <h1> Elimina un canale: </h1>
+    <table style='width:100%'>
+        <tr>
+            <th>Numero canale</th>
+            <th>Nome canale</th>
+            <th>Elimina</th>
+        </tr>
+        <#list channels as c>
+            <tr>
+                <td style='text-align:center'>  ${c.key}  </td> 
+                <td style='text-align:center'> ${c.name} </td> 
+                <td style='text-align:center'>
+                    <form method='post' action='delete?channel=0&delCh=${c.key}'>
+                    <input type='submit' name='delete' value='ELIMINA'/>
+                    </form>
+                </td>
+            </tr>
+        </#list> 
+    </table>
 </body>
 </html>
        

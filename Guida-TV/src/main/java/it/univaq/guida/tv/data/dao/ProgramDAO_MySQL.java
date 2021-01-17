@@ -50,7 +50,7 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
             programByID = connection.prepareStatement("SELECT * FROM program WHERE idProgram = ?");
             allPrograms = connection.prepareStatement("SELECT idProgram FROM program");
             insertProgram = connection.prepareStatement("INSERT INTO program (name, description, genre, link, isSerie, seasonsNumber, imageId) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            updateProgram = connection.prepareStatement("UPDATE program SET name = ?, description = ?, genre = ?, link = ?, isSerie = ?, seasonsNumber = ?, version = ? WHERE idProgram = ? AND version = ?");
+            updateProgram = connection.prepareStatement("UPDATE program SET name = ?, description = ?, genre = ?, link = ?, seasonsNumber = ?, imageId = ?, version = ? WHERE idProgram = ? AND version = ?");
             deleteProgram = connection.prepareStatement("DELETE FROM program WHERE idProgram = ?");
             
         } catch (SQLException ex) {
@@ -163,13 +163,14 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
     public void storeProgram(Program program) throws DataException {
         try{
         if (program.getKey() != null && program.getKey() > 0) {//update
-            
+            System.out.println("Numero stagioni store:" + program.getSeasonsNumber());
                 updateProgram.setString(1, program.getName());
                 updateProgram.setString(2, program.getDescription());
                 updateProgram.setString(3, program.getGenre().toString());
                 updateProgram.setString(4, program.getLink());
-                updateProgram.setBoolean(5, program.IsSerie());
-                updateProgram.setInt(6, program.getSeasonsNumber());
+                
+                updateProgram.setInt(5, program.getSeasonsNumber());
+                updateProgram.setInt(6,program.getImage().getKey());  
                 
                 long current_version = program.getVersion();
                 long next_version = current_version + 1;                

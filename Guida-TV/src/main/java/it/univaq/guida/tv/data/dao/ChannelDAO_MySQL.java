@@ -46,7 +46,7 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
             allChannels = connection.prepareStatement("SELECT idChannel FROM channel");
             channelByID = connection.prepareStatement("SELECT * FROM channel WHERE idChannel = ?");
             insertChannel = connection.prepareStatement("INSERT INTO channel (idChannel,name, imageId) VALUES(?,?,?)");
-            updateChannel = connection.prepareStatement("UPDATE channel SET name = ?, version = ? WHERE idChannel = ? AND version = ?");
+            updateChannel = connection.prepareStatement("UPDATE channel SET name = ?, imageId = ?, version = ? WHERE idChannel = ? AND version = ?");
             deleteChannel = connection.prepareStatement("DELETE FROM channel WHERE idChannel = ?");
 
         } catch (SQLException ex) {
@@ -153,15 +153,16 @@ public class ChannelDAO_MySQL extends DAO implements ChannelDAO{
                 
             }else{             
                 
-                updateChannel.setString(1,channel.getName());                
+                updateChannel.setString(1,channel.getName()); 
+                updateChannel.setInt(2,channel.getImage().getKey());     
             
                 long current_version = c.getVersion();
                 long next_version = current_version + 1;
 
-                updateChannel.setLong(2, next_version);
-                updateChannel.setLong(4, current_version);
+                updateChannel.setLong(3, next_version);
+                updateChannel.setLong(5, current_version);
                 
-                updateChannel.setInt(3, num);
+                updateChannel.setInt(4, num);
 
                 if (updateChannel.executeUpdate() == 0) {
                     throw new OptimisticLockException(c);

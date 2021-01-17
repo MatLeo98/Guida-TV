@@ -10,13 +10,13 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-            <body>
-            <#include "searchbar.ftl.html">
-            <h1>Programmi in onda </h1>
-            <#list onAirPrograms as s>
-           <h3> Ora in onda: <a href = 'program?id= ${s.program.key}'>   ${s.program.name} </a></h3>
-           <h1> <a href = 'channel?id=${s.channel.key}'> ${s.channel.name} </a></h1>
-            </#list>
+    <body>
+        <#include "searchbar.ftl.html">
+        <h1>Programmi in onda </h1>
+        <#list onAirPrograms as s>
+            <h3> Ora in onda: <a href = 'program?id= ${s.program.key}'>   ${s.program.name} </a></h3>
+            <h1> <a href = 'channel?id=${s.channel.key}'> ${s.channel.name} </a></h1>
+        </#list>
 
     </body>
 </html>
