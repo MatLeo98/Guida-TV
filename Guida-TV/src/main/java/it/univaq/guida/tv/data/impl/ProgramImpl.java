@@ -24,7 +24,7 @@ public class ProgramImpl extends DataItemImpl<Integer> implements Program {
     private String link;
     private Image image;
     private Boolean isSerie;
-    private int seasonsNumber;
+    private Integer seasonsNumber;
     
     private List<Episode> episodes;
     
@@ -109,12 +109,12 @@ public class ProgramImpl extends DataItemImpl<Integer> implements Program {
     }
 
     @Override
-    public int getSeasonsNumber() {
+    public Integer getSeasonsNumber() {
         return seasonsNumber;
     }
 
     @Override
-    public void setSeasonsNumber(int seasonsNumber) {
+    public void setSeasonsNumber(Integer seasonsNumber) {
         this.seasonsNumber = seasonsNumber;
     }
     

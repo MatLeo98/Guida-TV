@@ -15,6 +15,7 @@ import it.univaq.guida.tv.data.impl.ProgramImpl;
 import it.univaq.guida.tv.data.impl.ProgramImpl.Genre;
 import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Episode;
+import it.univaq.guida.tv.data.model.Image;
 import it.univaq.guida.tv.data.model.Program;
 import it.univaq.guida.tv.data.model.Schedule;
 import java.io.IOException;
@@ -470,6 +471,11 @@ public class Edit extends BaseController {
             Integer n = Integer.parseInt(request.getParameter("channelNumber"));
             Channel channel = ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(n);
             channel.setName(request.getParameter("channelName"));
+            if(!(request.getParameter("image").equals(channel.getImage().getLink()))){
+                Image image = channel.getImage();
+                image.setLink(request.getParameter("image"));
+                image = ((GuidatvDataLayer)request.getAttribute("datalayer")).getImageDAO().storeImage(image);
+            }
             ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().storeChannel(channel);
             request.setAttribute("var", 1);
         }
@@ -480,10 +486,15 @@ public class Edit extends BaseController {
             program.setDescription(request.getParameter("programDescription"));
             program.setGenre(Genre.valueOf(request.getParameter("genre")));
             program.setLink(request.getParameter("link"));
-            program.setIsSerie(Boolean.valueOf(request.getParameter("serie")));
+            if(!(request.getParameter("image").equals(program.getImage().getLink()))){
+                Image image = program.getImage();
+                image.setLink(request.getParameter("image"));
+                image = ((GuidatvDataLayer)request.getAttribute("datalayer")).getImageDAO().storeImage(image);
+            }
             if(program.IsSerie()){
-            program.setSeasonsNumber(Integer.parseInt(request.getParameter("nSeasons")));
-            }            
+                program.setSeasonsNumber(Integer.parseInt(request.getParameter("nSeasons")));
+            }   
+            System.out.println("Numero stagioni:" + program.getSeasonsNumber());
             ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().storeProgram(program);
             request.setAttribute("var", 2);
         }

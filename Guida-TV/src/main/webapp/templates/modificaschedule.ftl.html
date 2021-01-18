@@ -6,77 +6,67 @@
 <body>
 <h1> Modifica o elimina un palinsesto: </h1>
 <#if channelSelected??>
-<form method='post' action='edit?schedule=0'>
-Scegli il canale:
-<select name='ch' id='ch'>
-<option value = '${channelSelected.key}'> ${channelSelected.name} </option>
-<#list channels as c>
-    <#if (c == channelSelected)>
-    <#else>
-        <option value = '${c.key}'> ${c.name} </option>
-    </#if>
-</#list>
-
-</select>
-<input type='submit' name='select' value='SELEZIONA'/>
-</form>
-<table style='width:100%'>
-<tr>
-<th>Programma</th>
-<th>Episodio</th>
-<th>Data</th>
-<th>Ora inizio</th>
-<th>Ora fine</th>
-<th>Modifica</th>
-<th>Elimina</th>
-</tr>
-<#list schedules as s>
-<tr>
-<form method='post' action='edit?schedule=1'>
-    <input type='text' name='sk' value='${s.key}' hidden/>
-<td style='text-align:center'> <input type='text' name='pName' value='${s.program.name}' readonly /> </td>
-
-<!--if(s.getEpisode() != null){​​​​-->
-<!--List<Episode> episodes = ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getProgramEpisodes(s.getProgram())-->
-<#if (s.program.seasonsNumber >= 1)>
-<td style='text-align:center'> 
- <select name='ep' id='ep'>
-
-<option value='${s.episode.key}'> S${s.episode.seasonNumber}E${s.episode.number} ${s.episode.name} </option>
-
-<#list episodes as e>
-    <#if (e.program == s.program)>
-    <!--if(!(e.getName().equals(s.getEpisode().getName()))){​​​​-->
-    <#if (s.episode == e)>
-    <#else>
-        <option value='${e.key}'> S${e.seasonNumber}E${e.number} ${e.name} </option>
-    </#if>
-    </#if>
-</#list>
-
-</select>
-</td>
-<#else>
- <td style='text-align:center'> ${s.program.name} non ha episodi <!--<input type='text' name='empty' disabled />--> </td>
- </#if>
-
-<td style='text-align:center'> <input type='date' name='d' value='${s.date}'/> </td>
-<td style='text-align:center'> <input type='time' name='st' value='${s.startTime}'/> </td>
-<td style='text-align:center'> <input type='time' name='et' value='${s.endTime}'/> </td>
-<td style='text-align:center'>
-<input type='submit' name='edit' value='MODIFICA'/>
-</form>
-</td>
-<td style='text-align:center'>
-<form method='post' action='edit?schedule=0&delSched=${s.key}'>
-<input type='submit' name='delete' value='ELIMINA'/>
-</form>
-</td>
-</tr>
-</#list>
-
-
-</table>
+    <form method='post' action='edit?schedule=0'>
+        Scegli il canale:
+        <select name='ch' id='ch'>
+            <option value = '${channelSelected.key}'> ${channelSelected.name} </option>
+            <#list channels as c>
+                <#if (c == channelSelected)>
+                <#else>
+                    <option value = '${c.key}'> ${c.name} </option>
+                </#if>
+            </#list>
+        </select>
+        <input type='submit' name='select' value='SELEZIONA'/>
+    </form>
+    <table style='width:100%'>
+        <tr>
+            <th>Programma</th>
+            <th>Episodio</th>
+            <th>Data</th>
+            <th>Ora inizio</th>
+            <th>Ora fine</th>
+            <th>Modifica</th>
+            <th>Elimina</th>
+        </tr>
+        <#list schedules as s>
+            <tr>
+                <form method='post' action='edit?schedule=1'>
+                    <input type='text' name='sk' value='${s.key}' hidden/>
+                    <td style='text-align:center'> <input type='text' name='pName' value='${s.program.name}' readonly /> </td>
+                    <!--if(s.getEpisode() != null){​​​​-->
+                    <!--List<Episode> episodes = ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getProgramEpisodes(s.getProgram())-->
+                    <#if (s.program.seasonsNumber >= 1)>
+                        <td style='text-align:center'> 
+                            <select name='ep' id='ep'>
+                                <option value='${s.episode.key}'> S${s.episode.seasonNumber}E${s.episode.number} ${s.episode.name} </option>
+                                <#list episodes as e>
+                                    <#if (e.program == s.program)>
+                                    <!--if(!(e.getName().equals(s.getEpisode().getName()))){​​​​-->
+                                        <#if (s.episode == e)>
+                                        <#else>
+                                            <option value='${e.key}'> S${e.seasonNumber}E${e.number} ${e.name} </option>
+                                        </#if>
+                                    </#if>
+                                </#list>
+                            </select>
+                        </td>
+                    <#else>
+                        <td style='text-align:center'> ${s.program.name} non ha episodi <!--<input type='text' name='empty' disabled />--> </td>
+                    </#if>
+                    <td style='text-align:center'> <input type='date' name='d' value='${s.date}'/> </td>
+                    <td style='text-align:center'> <input type='time' name='st' value='${s.startTime}'/> </td>
+                    <td style='text-align:center'> <input type='time' name='et' value='${s.endTime}'/> </td>
+                    <td style='text-align:center'> <input type='submit' name='edit' value='MODIFICA'/> </td>                
+                </form>               
+                <td style='text-align:center'>
+                    <form method='post' action='edit?schedule=0&delSched=${s.key}'>
+                        <input type='submit' name='delete' value='ELIMINA'/>
+                    </form>
+                </td>
+            </tr>
+        </#list>
+    </table>
 <#else>
     <form method='post' action='edit?schedule=0'>
         Scegli un canale
