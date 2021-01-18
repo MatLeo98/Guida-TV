@@ -284,15 +284,14 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     @Override
     public void storeSchedule(Schedule schedule) throws DataException {
         String start = schedule.getStartTime().toString();
-        String end = schedule.getEndTime().toString();
         try {
              
             if (schedule.getKey() != null && schedule.getKey() > 0) {//update
                 
                 updateSchedule.setString(1, start);
-                updateSchedule.setString(2, end);
+                updateSchedule.setString(2, schedule.getEndTime().toString());
                 updateSchedule.setString(3, schedule.getDate().toString()); 
-                updateSchedule.setString(4, generateTS(start, end).toString());           
+                updateSchedule.setString(4, generateTS(start).toString());           
                 
                 if(schedule.getProgram().IsSerie()){
                 updateSchedule.setInt(5, schedule.getEpisode().getKey());
@@ -316,10 +315,9 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
                 
             }else{//insert            
             insertSchedule.setString(1, start);
-            insertSchedule.setString(2, end);
+            insertSchedule.setString(2, schedule.getEndTime().toString());
             insertSchedule.setString(3, schedule.getDate().toString()); 
-            System.out.println(generateTS(start, end).toString());
-            insertSchedule.setString(4, generateTS(start, end).toString());           
+            insertSchedule.setString(4, generateTS(start).toString());           
             insertSchedule.setInt(5, schedule.getChannel().getKey());
             insertSchedule.setInt(6, schedule.getProgram().getKey());
             if(schedule.getProgram().IsSerie()){
@@ -473,7 +471,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     }
     
    @Override
-    public TimeSlot generateTS(String s, String e) throws DataException {
+    public TimeSlot generateTS(String s) throws DataException {
         TimeSlot ts = null;
         LocalTime mattinaMin = LocalTime.parse("06:00:00");
         LocalTime mattinaMax = LocalTime.parse("11:59:59");
@@ -484,17 +482,17 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
         LocalTime notteMin = LocalTime.parse("00:00:00");
         LocalTime notteMax = LocalTime.parse("05:59:59"); 
         LocalTime start = LocalTime.parse(s);
-        LocalTime end = LocalTime.parse(e);
-        if(mattinaMin.compareTo(start) <= 0 && mattinaMax.compareTo(end) >= 0)  
-             ts = TimeSlot.valueOf("mattina");
         
-        if(pomeriggioMin.compareTo(start) <= 0 && pomeriggioMax.compareTo(end) >= 0) 
+        if(mattinaMin.compareTo(start) <= 0 && mattinaMax.compareTo(start) >= 0)  
+             ts = TimeSlot.valueOf("mattina");
+        System.out.println("Sono qui");
+        if(pomeriggioMin.compareTo(start) <= 0 && pomeriggioMax.compareTo(start) >= 0) 
              ts = TimeSlot.valueOf("pomeriggio");
              
-        if(seraMin.compareTo(start) <= 0 && seraMax.compareTo(end) >= 0)  
+        if(seraMin.compareTo(start) <= 0 && seraMax.compareTo(start) >= 0)  
              ts = TimeSlot.valueOf("sera");
              
-        if(notteMin.compareTo(start) <= 0 && notteMax.compareTo(end) >= 0)
+        if(notteMin.compareTo(start) <= 0 && notteMax.compareTo(start) >= 0)
              ts = TimeSlot.valueOf("notte");
         
         return ts;
