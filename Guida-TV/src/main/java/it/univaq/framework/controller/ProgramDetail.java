@@ -6,6 +6,9 @@
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
+import it.univaq.framework.result.SplitSlashesFmkExt;
+import it.univaq.framework.result.TemplateManagerException;
+import it.univaq.framework.result.TemplateResult;
 import it.univaq.framework.security.SecurityLayer;
 import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
 import it.univaq.guida.tv.data.model.Channel;
@@ -65,8 +68,14 @@ public class ProgramDetail extends BaseController {
         
         Program program = (Program) request.getAttribute("program");
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
+        
+        try {
+            TemplateResult res = new TemplateResult(getServletContext());
+            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+            res.activate("programdetail1.ftl.html", request, response);
+            
+            //try (PrintWriter out = response.getWriter()) {
+            /*
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -77,7 +86,7 @@ public class ProgramDetail extends BaseController {
             
             Image image = program.getImage();
             if(image != null){
-             out.println("<p><img style='width:10%; height:5%;' src='"+program.getImage().getLink()+"' alt='image1'/></p>");
+            out.println("<p><img style='width:10%; height:5%;' src='"+program.getImage().getLink()+"' alt='image1'/></p>");
             }
             out.println("<h1> " + program.getName() + "</h1>");
             out.println("<p>" + program.getDescription() + "</p>");
@@ -85,8 +94,10 @@ public class ProgramDetail extends BaseController {
             out.println("<a href=\"" + program.getLink() + "\"> Approfondisci  </a>");
             out.println("</body>");
             out.println("</html>");
+            */
+       
             
-        } catch (IOException ex) {
+        } catch (TemplateManagerException ex) {
             Logger.getLogger(ProgramDetail.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -97,8 +108,15 @@ public class ProgramDetail extends BaseController {
         List<Schedule> episodes = (List<Schedule>) request.getAttribute("episodes");
         
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
+        
+         
+        try {
+            TemplateResult res = new TemplateResult(getServletContext());
+            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+            res.activate("programdetail1.ftl.html", request, response);
+            /*
+            try (PrintWriter out = response.getWriter()) {
+            
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -107,7 +125,7 @@ public class ProgramDetail extends BaseController {
             out.println("<body>");
             Image image = program.getImage();
             if(image != null){
-             out.println("<p><img style='height:10%; width:10%;' src='"+program.getImage().getLink()+"' alt='image1'/></p>");
+            out.println("<p><img style='height:10%; width:10%;' src='"+program.getImage().getLink()+"' alt='image1'/></p>");
             }
             out.println("<h1> " + program.getName() + "</h1>");
             out.println("<p>" + program.getDescription() + "</p>");
@@ -115,15 +133,16 @@ public class ProgramDetail extends BaseController {
             out.println("<a href=\"" + program.getLink() + "\"> Approfondisci  </a>");
             out.println("<h2> Episodi dell'ultimo mese </h2>");
             for(Schedule s : episodes){
-                out.println("<h3> Episodio numero " + s.getEpisode().getNumber() + " - " + s.getEpisode().getName() + "</h3>");
-                out.println("<p> Andato in onda: " + s.getDate() + " dalle ore: " + s.getStartTime() + " alle ore "+ s.getEndTime() + " ( <a href = 'channel?id=" + s.getChannel().getKey() + "'>" + s.getChannel().getName() + "</a> )</p>");
+            out.println("<h3> Episodio numero " + s.getEpisode().getNumber() + " - " + s.getEpisode().getName() + "</h3>");
+            out.println("<p> Andato in onda: " + s.getDate() + " dalle ore: " + s.getStartTime() + " alle ore "+ s.getEndTime() + " ( <a href = 'channel?id=" + s.getChannel().getKey() + "'>" + s.getChannel().getName() + "</a> )</p>");
             }
             out.println("</body>");
             out.println("</html>");
-            
-        } catch (IOException ex) {
+            */
+        } catch (TemplateManagerException ex) {
             Logger.getLogger(ProgramDetail.class.getName()).log(Level.SEVERE, null, ex);
         }
+            
     }
 
     
