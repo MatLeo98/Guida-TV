@@ -15,8 +15,12 @@ and open the template in the editor.
         <#include "searchbar.ftl.html">
         <h1>Programmi in onda </h1>
         <#list onAirPrograms as s>
-            <h3> Ora in onda: <a href = 'program?id= ${s.program.key}'>   ${s.program.name} </a></h3>
             <h1> <a href = 'channel?id=${s.channel.key}'> ${s.channel.name} </a></h1>
+            <#if (s.program.seasonsNumber >= 1)>
+                <h3> Ora in onda: <a href = 'program?id=${s.program.key}'>   ${s.program.name} - ${s.episode.name} </a></h3>  
+            <#else>
+                <h3> Ora in onda: <a href = 'program?id=${s.program.key}'>   ${s.program.name} </a></h3>  
+            </#if>
         </#list>
 
     </body>
