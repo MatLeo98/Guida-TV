@@ -13,11 +13,14 @@ and open the template in the editor.
     </head>
     <body>
         <#include "searchbar.ftl.html">
+        <br>
+        <br>
+        <a href="http://localhost:8080/Guida-tivu/schedules"> Palinsesto completo per ogni canale </a>
         <h1>Programmi in onda </h1>
         <#list onAirPrograms as s>
             <h1> <a href = 'channel?id=${s.channel.key}'> ${s.channel.name} </a></h1>
             <#if (s.program.seasonsNumber >= 1)>
-                <h3> Ora in onda: <a href = 'program?id=${s.program.key}'>   ${s.program.name} - ${s.episode.name} </a></h3>  
+                <h3> Ora in onda: <a href = 'program?id=${s.program.key}'>   ${s.program.name} - ${s.episode.name} - S${s.episode.seasonNumber} E${s.episode.number} </a></h3>  
             <#else>
                 <h3> Ora in onda: <a href = 'program?id=${s.program.key}'>   ${s.program.name} </a></h3>  
             </#if>

@@ -11,7 +11,11 @@
     <h1> ${channel.name} </h1>
     <h2>Palinsesto del ${date} </h2>
      <#list schedule as s>
-        <h3> <a href = 'program?id=${s.program.key}'> ${s.program.name} </a>  </h3>
+        <#if (s.program.seasonsNumber >= 1)>
+                <h3> Ora in onda: <a href = 'program?id=${s.program.key}'>   ${s.program.name} - ${s.episode.name} - S${s.episode.seasonNumber} E${s.episode.number} </a></h3>  
+            <#else>
+                <h3> Ora in onda: <a href = 'program?id=${s.program.key}'>   ${s.program.name} </a></h3>  
+        </#if>
         <h3>Ora di inizio: ${s.startTime}            </h3>
         <h3>Ora di fine:   ${s.endTime}                 </h3>
         <h3>Genere:        ${s.program.genre}           </h3>

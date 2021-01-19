@@ -413,7 +413,7 @@ public class Insert extends BaseController {
                     schedule.setChannel(channel);*/
                     Program program = null;
                     if(request.getParameter("pr" + i).substring(0,1).equals("e")){
-                      Integer e = Integer.parseInt(request.getParameter("pr" + i).substring(1,2));
+                      Integer e = Integer.parseInt(request.getParameter("pr" + i).substring(1));
                       Episode episode = ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getEpisode(e);  
                       schedule.setEpisode(episode);
                       program = episode.getProgram();

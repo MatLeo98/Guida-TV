@@ -12,6 +12,7 @@ import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Schedule;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -48,13 +49,16 @@ public class ScheduleList extends BaseController {
             
             if (request.getParameter("tsSelect") == null){
                 //TimeSlot timeSelected = TimeSlot.valueOf("sera");
-                request.setAttribute("nowtimeslot", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getCurTimeSlot());
-                request.setAttribute("schedules", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getTodaySchedule((TimeSlot)request.getAttribute("nowtimeslot")));
+                TimeSlot timeslot = ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getCurTimeSlot();
+                request.setAttribute("timeslot", timeslot);
+                request.setAttribute("schedules", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getScheduleByTimeSlotDate(timeslot, LocalDate.now()));
                 action_schedule(request, response);
             }else{
                 
                 TimeSlot timeSelected = TimeSlot.valueOf(request.getParameter("tsSelect"));
-                request.setAttribute("schedules", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getTodaySchedule(timeSelected));
+                request.setAttribute("timeslot", timeSelected);
+                LocalDate dateSelected = LocalDate.parse(request.getParameter("dateSelect"));
+                request.setAttribute("schedules", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getScheduleByTimeSlotDate(timeSelected, dateSelected));
                 action_schedule(request, response);
             }
             //request.setAttribute("schedule", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getSchedule(1));
@@ -75,24 +79,34 @@ public class ScheduleList extends BaseController {
         List<Schedule> schedules = (List<Schedule>) request.getAttribute("schedules");
         TimeSlot[] timeslots = TimeSlot.class.getEnumConstants(); //VA FATTO IN UN METODO CREDO
         //Schedule schedule = (Schedule) request.getAttribute("schedule");
-        /* TODO output your page here. You may use following sample code. */
-        
+        LocalDate today = LocalDate.now();
+        LocalDate tomorrow = today.plusDays(1);
+        LocalDate thirdDay = today.plusDays(2);
+        TimeSlot timeslot = (TimeSlot)request.getAttribute("timeslot");
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
             out.println("<title>Servlet Lista</title>");            
             out.println("</head>");
             out.println("<body>");
+            out.println("<h1> Palinsesto completo per ogni canale </h1>");
             out.println(" <form method=\"get\" action=\"schedules\">");
             out.println("<label for=\"tsSelect\">Scegli una fascia oraria:</label>");
             out.println("<select name=\"tsSelect\" id=\"tsSelect\">");
-            for(TimeSlot timeslot : timeslots){
-                out.println("<option value=\""+timeslot+"\">"+timeslot.toString()+"</option>");
+            out.println("<option value=\""+timeslot+"\">"+timeslot.toString()+"</option>");
+            for(TimeSlot ts : timeslots){
+                out.println("<option value=\""+ts+"\">"+ts.toString()+"</option>");
             }
             out.println("</select>");
+            out.println("<br><br>");
+            out.println("<label for=\"dateSelect\">Scegli un giorno:</label>");
+            out.println("<select name='dateSelect' id='dateSelect'>");
+            out.println("<option value='"+ today +"'> Oggi </option>");
+            out.println("<option value='"+ tomorrow +"'> Domani </option>");
+            out.println("<option value='"+ thirdDay +"'> Dopodomani </option>");
+             out.println("</select>");
             out.println("<br><br>");
             out.println("<input type=\"submit\" name=\"s\"/>");
             out.println("</form>");
@@ -100,7 +114,7 @@ public class ScheduleList extends BaseController {
            // out.println("<h1>Servlet Lista at " + request.getContextPath() + "</h1>");
             for(Channel c : channels){
                 
-                out.println("<h1>Canale: <a href = 'channel?id=" + c.getKey() + "'>" + c.getName() + " </a> </h1>");
+                out.println("<h2> <a href = 'channel?id=" + c.getKey() + "'>" + c.getName() + " </a> </h2>");
             
                 for(Schedule s : schedules){
                     if( s.getChannel().getName().equals(c.getName())){

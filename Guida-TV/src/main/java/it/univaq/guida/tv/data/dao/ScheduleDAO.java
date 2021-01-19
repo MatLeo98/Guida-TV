@@ -37,22 +37,14 @@ public interface ScheduleDAO {
     List<Schedule> getOnAirPrograms() throws DataException;
     
     List<Schedule> getLastMonthEpisodes(Program program) throws DataException;
-
-    List<Schedule> getScheduleByDate(LocalDate date) throws DataException;
-
-    List<Schedule> getScheduleByTimeSlot(TimeSlot timeslot) throws DataException;
     
-    List<Schedule> getTodaySchedule(TimeSlot timeslot) throws DataException;
+    List<Schedule> getScheduleByTimeSlotDate(TimeSlot timeslot, LocalDate date) throws DataException;
 
     List<Schedule> getScheduleByChannel(Channel channel, LocalDate date) throws DataException; 
     
      List<Schedule> getScheduleByChannelAdmin(Channel channel, LocalDate date) throws DataException;
     
     List<Schedule> getScheduleByFavChannel(Channel channel, LocalDate date, TimeSlot timeslot) throws DataException;
-    
-    List<Schedule> getScheduleBetweenDates(LocalDate startDate, LocalDate endDate) throws DataException;
-    
-    List<Schedule> getScheduleBetweenTimes(LocalDateTime startTime, LocalDateTime endTime) throws DataException;
     
     TimeSlot getCurTimeSlot() throws DataException;
 

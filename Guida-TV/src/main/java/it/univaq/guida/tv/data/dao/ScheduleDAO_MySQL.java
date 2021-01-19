@@ -11,7 +11,6 @@ import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
 import it.univaq.framework.data.OptimisticLockException;
 import it.univaq.framework.data.proxy.ScheduleProxy;
-import it.univaq.guida.tv.data.impl.ScheduleImpl;
 import it.univaq.guida.tv.data.impl.ScheduleImpl.TimeSlot;
 import it.univaq.guida.tv.data.model.Channel;
 import it.univaq.guida.tv.data.model.Episode;
@@ -49,6 +48,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     private PreparedStatement scheduleByChannel;
     private PreparedStatement updateSchedule;
     private PreparedStatement deleteSchedule;
+    private PreparedStatement scheduleByTimeSlotDate;
 
     public ScheduleDAO_MySQL(DataLayer d) {
         super(d);
@@ -64,7 +64,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             sOnAirPrograms = connection.prepareStatement("SELECT * FROM schedule WHERE startTime <= CURTIME() && endTime >= CURTIME() && date = CURDATE()");
             //s = connection.prepareStatement("SELECT * FROM episode");SELECT * FROM schedule WHERE '10:30:00' < startTime && '11:40:00' > endTime
             //s = connection.prepareStatement("SELECT * FROM episode");
-            todaySchedule = connection.prepareStatement("SELECT * FROM schedule WHERE date = CURDATE() AND timeSlot = ? ORDER BY channelId");
+            scheduleByTimeSlotDate = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? AND timeSlot = ? ORDER BY channelId");
             lastMonth = connection.prepareStatement("SELECT * FROM schedule WHERE DATE(date) >= DATE(NOW()) - INTERVAL 30 DAY AND programId = ?");
             scheduleByID = connection.prepareStatement("SELECT * FROM schedule WHERE idSchedule = ?");
             todayScheduleByChannel = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? AND channelId = ? ORDER BY startTime");
@@ -99,6 +99,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             scheduleByChannel.close();
             updateSchedule.close();
             deleteSchedule.close();
+            scheduleByTimeSlotDate.close();
 
         } catch (SQLException ex) {
             //
@@ -199,16 +200,6 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
         }
         return result;
     }
-    
-    @Override
-    public List<Schedule> getScheduleByDate(LocalDate date) throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<Schedule> getScheduleByTimeSlot(ScheduleImpl.TimeSlot timeslot) throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public List<Schedule> getScheduleByChannel(Channel channel, LocalDate date) throws DataException {
@@ -269,16 +260,6 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             throw new DataException("Unable to load schedule by channel", ex);
         }
         return result; 
-    }
-
-    @Override
-    public List<Schedule> getScheduleBetweenDates(LocalDate startDate, LocalDate endDate) throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<Schedule> getScheduleBetweenTimes(LocalDateTime startTime, LocalDateTime endTime) throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -365,11 +346,12 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     }
 
     @Override
-    public List<Schedule> getTodaySchedule(TimeSlot timeslot) throws DataException {
+    public List<Schedule> getScheduleByTimeSlotDate(TimeSlot timeslot, LocalDate date) throws DataException {
        List<Schedule> result = new ArrayList();
         try {
-            todaySchedule.setString(1, timeslot.toString());
-         try(ResultSet rs = todaySchedule.executeQuery()) {
+            scheduleByTimeSlotDate.setString(1, date.toString());
+            scheduleByTimeSlotDate.setString(2, timeslot.toString());
+         try(ResultSet rs = scheduleByTimeSlotDate.executeQuery()) {
                 while (rs.next()) {
                     
                     result.add((Schedule) getSchedule(rs.getInt("idSchedule")));
@@ -377,7 +359,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             }
         }
         catch (SQLException ex) {
-            throw new DataException("Unable to load articles by issue", ex);
+            throw new DataException("Unable to load schedule by timeslot and date", ex);
         }
         return result; 
     }   
