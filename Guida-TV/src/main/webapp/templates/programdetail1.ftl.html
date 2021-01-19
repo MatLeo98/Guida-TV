@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Servlet ProgramDetail</title>
+    <link rel="stylesheet" href="style/programdetail.css" type="text/css"/>
+</head>
+<div>
+
+<div class="centro">
+
+     <#if program.image??>
+        <p> <img class="foto" src='${program.image.link}' alt='image1'/> </p>
+    </#if>
+<div class="testo">
+<#if (program.seasonsNumber >=1)>
+
+    <h1> ${program.name}</h1>
+ <div class="descrizione2">
+    <p> ${program.description}</p>
+ </div>
+    <div class="genere2"> <p> ${program.genre}</p> </div>
+
+    <div class="altro">
+    <a href="${program.link}"> Approfondisci  </a>
+    <h2> Episodi dell'ultimo mese </h2>
+    <#list episodes as s>
+        <h3> Episodio numero ${s.episode.number} - ${s.episode.name}</h3>
+        <p> Andato in onda: ${s.date} dalle ore: ${s.startTime} alle ore ${s.endTime} ( <a href = 'channel?id=" + s.getChannel().getKey() + "'> ${s.channel.name} </a> )</p>
+    </#list>
+   </div>
+</div>
+<#else>
+
+    <h1>  ${program.name} </h1>
+    <p>   ${program.description} </p>
+    <p>   ${program.genre}  </p>
+
+<i class="fas fa-link">
+<a href="${program.link}"> Approfondisci  </a>
+</i>
+
+
+
+</#if>
+<b class="titolo"> TITOLO</b>
+<b class="descrizione"> DESCRIZIONE</b>
+<b class="genere">GENERE</b>
+</div>
+</div>
+
+</body>
+</html>
+
+
+
+
+

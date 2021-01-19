@@ -20,12 +20,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Time;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -117,8 +118,8 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
         ScheduleProxy schedule = createSchedule();
         try {
             schedule.setKey(rs.getInt("idSchedule"));
-            schedule.setStartTime(rs.getTime("startTime").toLocalTime());
-            schedule.setEndTime(rs.getTime("endTime").toLocalTime());
+            schedule.setStartTime(rs.getTime("startTime").toLocalTime().minus(1, ChronoUnit.HOURS));
+            schedule.setEndTime(rs.getTime("endTime").toLocalTime().minus(1, ChronoUnit.HOURS));
             schedule.setDate(rs.getDate("date").toLocalDate());
             schedule.setTimeslot(TimeSlot.valueOf(rs.getString("timeSlot")));
             schedule.setProgramKey(rs.getInt("programId"));
