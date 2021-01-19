@@ -38,6 +38,8 @@ public abstract class BaseController extends HttpServlet {
         try (GuidatvDataLayer datalayer = new GuidatvDataLayer(ds)) {
             datalayer.init();
             request.setAttribute("datalayer", datalayer);
+            ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().delSchedules();
+            System.out.println("ciao");
             processRequest(request, response);
         } catch (Exception ex) {
             ex.printStackTrace(); //for debugging only

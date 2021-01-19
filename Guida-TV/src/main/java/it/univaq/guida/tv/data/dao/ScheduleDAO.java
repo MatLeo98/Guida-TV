@@ -55,5 +55,7 @@ public interface ScheduleDAO {
     List<Schedule> search(String s, String g, String c, String min, String max, String d1, String d2) throws DataException;
     
     TimeSlot generateTS(String s) throws DataException;
+
+    void delSchedules();
     
 }
