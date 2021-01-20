@@ -51,6 +51,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     private PreparedStatement deleteSchedule;
     private PreparedStatement scheduleByTimeSlotDate;
     private PreparedStatement delSchedules30Ds;
+    private PreparedStatement dropEvent;
 
     public ScheduleDAO_MySQL(DataLayer d) {
         super(d);
@@ -77,7 +78,8 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             scheduleByChannel = connection.prepareStatement("SELECT * FROM schedule WHERE date >= ? AND channelId = ? ORDER BY date");
             updateSchedule = connection.prepareStatement("UPDATE schedule SET startTime = ?, endTime = ?, date = ?, timeSlot = ?, episodeId = ?, version = ? WHERE idSchedule = ? AND version = ?");
             deleteSchedule = connection.prepareStatement("DELETE FROM schedule WHERE idSchedule = ?");
-            delSchedules30Ds = connection.prepareStatement("CREATE EVENT delschedules ON SCHEDULE EVERY 1 MINUTE DO DELETE FROM `schedule` where date < now() - interval 31 day;"); //AGGIUNGERE DROP EVENT IF EXISTS delschedules;
+            dropEvent = connection.prepareStatement("DROP EVENT IF EXISTS delschedules;");
+            delSchedules30Ds = connection.prepareStatement("CREATE EVENT delschedules ON SCHEDULE EVERY 1 DAY DO DELETE FROM `schedule` where date < now() - interval 31 day;"); //AGGIUNGERE DROP EVENT IF EXISTS delschedules;
             
         } catch (SQLException ex) {
             throw new DataException("Error initializing newspaper data layer", ex);
@@ -104,6 +106,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             deleteSchedule.close();
             scheduleByTimeSlotDate.close();
             delSchedules30Ds.close();
+            dropEvent.close();
 
         } catch (SQLException ex) {
             //
@@ -488,10 +491,11 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
     @Override
     public void delSchedules() {
         try {
-            
+            dropEvent.executeUpdate();
             delSchedules30Ds.executeUpdate();
                 
         } catch (SQLException ex) {
+            
             Logger.getLogger(ScheduleDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
