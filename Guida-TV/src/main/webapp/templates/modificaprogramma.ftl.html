@@ -32,7 +32,7 @@
            <input type='text' placeholder='Descrizione' name='programDescription' value="${programSelected.description}">
            <br>
            <br>
-           <select name='genre' id='genre'>
+           <select style='width:177px;' name='genre' id='genre'>
            
            <option value = ${programSelected.genre}>${programSelected.genre}</option>
            
@@ -60,6 +60,9 @@
             <br>
 <button type='submit'>Modifica</button>
 </form>
+<br>
+<br>
+<a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina di gestione </a>
 <#else>
     <form method='post' action='edit?program=1'>
         Programma da modificare:           

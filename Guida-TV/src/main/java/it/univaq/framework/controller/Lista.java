@@ -5,10 +5,10 @@
  */
 package it.univaq.framework.controller;
 
-import it.univaq.guida.tv.data.impl.ChannelImpl;
-import it.univaq.guida.tv.data.impl.ImageImpl;
-import it.univaq.guida.tv.data.model.Channel;
-import it.univaq.guida.tv.data.model.Image;
+import it.univaq.guidatv.data.impl.ChannelImpl;
+import it.univaq.guidatv.data.impl.ImageImpl;
+import it.univaq.guidatv.data.model.Channel;
+import it.univaq.guidatv.data.model.Image;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;

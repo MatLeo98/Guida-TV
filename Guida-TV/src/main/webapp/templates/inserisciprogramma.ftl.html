@@ -7,20 +7,34 @@
     <h1> Inserisci un nuovo programma: </h1>
     <form method='post' action='insert?program=1'>        
         <input type='text' placeholder='Nome programma' name='programName'>
-        <textarea id='programDescription' placeholder='Descrizione' name='programDescription'></textarea>
-        <select name='genre' id='genre'>
+        <br>
+        <br>
+        <textarea style='width:171px; height:150px;' id='programDescription' placeholder='Descrizione' name='programDescription'></textarea>
+        <br>
+        <br>
+        <select style='width:177px;' name='genre' id='genre'>
              <#list genres as g>
                 <option value = "${g}"> ${g} </option>
              </#list>
         </select>
+        <br>
+        <br>
         <input type='text' placeholder='Link approfondimento' name='link'>
+        <br>
+        <br>
         <input type='text' placeholder='Link immagine' name='image'>
+        <br>
+        <br>
         <select name='serie' id='serie'>
             <option value = ''> Serie? </option>
             <option value = 'false'> No </option>
             <option value = 'true'> Si </option>
         </select>
+        <br>
+        <br>
         <input type='text' placeholder='Numero stagioni' name='nSeasons'>
+        <br>
+        <br>
         <button type='submit'>Crea</button>
     </form>
 </body>

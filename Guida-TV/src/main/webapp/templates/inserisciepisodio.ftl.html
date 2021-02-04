@@ -6,6 +6,8 @@
 <body>
     <h1> Inserisci nuovi episodi: </h1>
     <a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina di gestione </a>
+    <br>
+    <br>
     <#if programSelected??>
         <form method='post' action='insert?episode=1'>
             Scegli il programma:
@@ -24,19 +26,30 @@
             <input type='text' id='ln' name='ln'>
             <input type='submit' name='select' value='SELEZIONA'/>
         </form>
-        <form method='post' action='insert?episode=1'> 
-            <#list rows as r>
-                <input type='text' id='nElem' name='nElem' value='${lNum}' hidden >
-                Nome episodio:
-                <input type='text' name='episodeName${r}'>
-                Numero stagione:
-                <input type='text' name='seasonNumber${r}'>
-                Numero episodio:
-                <input type='text' name='episodeNumber${r}'> 
-                <br>
-            </#list>
-            <button type='submit'>Crea</button>
-        </form>
+        <table>
+            <tr>
+                <th>Nome Episodio</th>
+                <th>Numero stagione</th>
+                <th>Numero Episodio</th>
+            </tr>
+            <form method='post' action='insert?episode=1'> 
+                <#list rows as r>
+                <tr>
+                    <input type='text' id='nElem' name='nElem' value='${lNum}' hidden >               
+                    <td>
+                        <input type='text' name='episodeName${r}'>
+                    </td>              
+                    <td>
+                        <input type='text' name='seasonNumber${r}'>
+                    </td>
+                    <td>
+                        <input type='text' name='episodeNumber${r}'>
+                    </td>
+                </tr>
+                </#list>
+        </table>
+                <button type='submit'>Crea</button>
+            </form>
     <#else>
         <form method='post' action='insert?episode=1'>
             Scegli il programma:

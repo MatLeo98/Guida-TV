@@ -6,7 +6,7 @@
 package it.univaq.framework.controller;
 
 
-import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
+import it.univaq.guidatv.data.dao.GuidatvDataLayer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.annotation.Resource;
@@ -39,7 +39,6 @@ public abstract class BaseController extends HttpServlet {
             datalayer.init();
             request.setAttribute("datalayer", datalayer);
             ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().delSchedules();
-            System.out.println("ciao");
             processRequest(request, response);
         } catch (Exception ex) {
             ex.printStackTrace(); //for debugging only

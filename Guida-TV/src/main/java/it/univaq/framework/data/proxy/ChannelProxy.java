@@ -8,9 +8,9 @@ package it.univaq.framework.data.proxy;
 import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
-import it.univaq.guida.tv.data.dao.ImageDAO;
-import it.univaq.guida.tv.data.impl.ChannelImpl;
-import it.univaq.guida.tv.data.model.Image;
+import it.univaq.guidatv.data.dao.ImageDAO;
+import it.univaq.guidatv.data.impl.ChannelImpl;
+import it.univaq.guidatv.data.model.Image;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

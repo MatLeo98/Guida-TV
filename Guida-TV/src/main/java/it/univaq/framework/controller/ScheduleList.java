@@ -6,10 +6,10 @@
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
-import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
-import it.univaq.guida.tv.data.impl.ScheduleImpl.TimeSlot;
-import it.univaq.guida.tv.data.model.Channel;
-import it.univaq.guida.tv.data.model.Schedule;
+import it.univaq.guidatv.data.dao.GuidatvDataLayer;
+import it.univaq.guidatv.data.impl.ScheduleImpl.TimeSlot;
+import it.univaq.guidatv.data.model.Channel;
+import it.univaq.guidatv.data.model.Schedule;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;

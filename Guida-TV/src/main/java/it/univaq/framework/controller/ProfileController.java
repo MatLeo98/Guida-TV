@@ -6,14 +6,14 @@
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
-import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
-import it.univaq.guida.tv.data.impl.ScheduleImpl;
-import it.univaq.guida.tv.data.model.Channel;
-import it.univaq.guida.tv.data.model.FavouriteChannel;
-import it.univaq.guida.tv.data.model.FavouriteProgram;
-import it.univaq.guida.tv.data.model.Program;
-import it.univaq.guida.tv.data.model.SavedSearches;
-import it.univaq.guida.tv.data.model.User;
+import it.univaq.guidatv.data.dao.GuidatvDataLayer;
+import it.univaq.guidatv.data.impl.ScheduleImpl;
+import it.univaq.guidatv.data.model.Channel;
+import it.univaq.guidatv.data.model.FavouriteChannel;
+import it.univaq.guidatv.data.model.FavouriteProgram;
+import it.univaq.guidatv.data.model.Program;
+import it.univaq.guidatv.data.model.SavedSearches;
+import it.univaq.guidatv.data.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;

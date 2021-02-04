@@ -7,10 +7,10 @@ package it.univaq.framework.data.proxy;
 
 import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
-import it.univaq.guida.tv.data.impl.UserImpl;
-import it.univaq.guida.tv.data.model.FavouriteChannel;
-import it.univaq.guida.tv.data.model.FavouriteProgram;
-import it.univaq.guida.tv.data.model.SavedSearches;
+import it.univaq.guidatv.data.impl.UserImpl;
+import it.univaq.guidatv.data.model.FavouriteChannel;
+import it.univaq.guidatv.data.model.FavouriteProgram;
+import it.univaq.guidatv.data.model.SavedSearches;
 import java.util.List;
 
 /**

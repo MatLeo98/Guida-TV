@@ -6,9 +6,9 @@
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
-import it.univaq.guida.tv.data.dao.GuidatvDataLayer;
-import it.univaq.guida.tv.data.impl.ScheduleImpl;
-import it.univaq.guida.tv.data.model.User;
+import it.univaq.guidatv.data.dao.GuidatvDataLayer;
+import it.univaq.guidatv.data.impl.ScheduleImpl;
+import it.univaq.guidatv.data.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.UUID;

@@ -8,12 +8,12 @@ package it.univaq.framework.data.proxy;
 import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
-import it.univaq.guida.tv.data.dao.ChannelDAO;
-import it.univaq.guida.tv.data.dao.UserDAO;
-import it.univaq.guida.tv.data.impl.FavouriteChannelImpl;
-import it.univaq.guida.tv.data.impl.ScheduleImpl;
-import it.univaq.guida.tv.data.model.Channel;
-import it.univaq.guida.tv.data.model.User;
+import it.univaq.guidatv.data.dao.ChannelDAO;
+import it.univaq.guidatv.data.dao.UserDAO;
+import it.univaq.guidatv.data.impl.FavouriteChannelImpl;
+import it.univaq.guidatv.data.impl.ScheduleImpl;
+import it.univaq.guidatv.data.model.Channel;
+import it.univaq.guidatv.data.model.User;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

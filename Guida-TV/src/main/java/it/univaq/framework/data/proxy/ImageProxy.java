@@ -8,7 +8,7 @@ package it.univaq.framework.data.proxy;
 import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
-import it.univaq.guida.tv.data.impl.ImageImpl;
+import it.univaq.guidatv.data.impl.ImageImpl;
 import java.io.InputStream;
 
 /**
