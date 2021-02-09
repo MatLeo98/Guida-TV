@@ -12,6 +12,7 @@ import it.univaq.guidatv.data.dao.GuidatvDataLayer;
 import it.univaq.guidatv.data.model.Program;
 import it.univaq.guidatv.data.model.SavedSearches;
 import it.univaq.guidatv.data.model.Schedule;
+import it.univaq.guidatv.data.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -46,7 +47,8 @@ public class SearchResults extends BaseController {
             String max = request.getParameter("max");
             if(request.getParameter("saved") != null){
                 HttpSession session = request.getSession(false);
-                String email = (String) session.getAttribute("email");
+                User user = (User) session.getAttribute("user");
+                String email = user.getKey();
                 tit = (String) session.getAttribute("title");
                 gen = (String) session.getAttribute("genre");
                 ch = (String) session.getAttribute("channel");
@@ -75,7 +77,8 @@ public class SearchResults extends BaseController {
         HttpSession session = request.getSession(false);
         String email = null;
         if(session != null){
-            email = (String) session.getAttribute("email");
+            User user = (User) session.getAttribute("user");
+            email = user.getKey();
         }
                  
         
@@ -123,7 +126,8 @@ public class SearchResults extends BaseController {
     private void store_prefPrograms(HttpServletRequest request, HttpServletResponse response) {
        List<Schedule> search = (List<Schedule>) request.getAttribute("search");
        HttpSession session = request.getSession(false);
-       String email = (String) session.getAttribute("email");
+       User user = (User) session.getAttribute("user");
+       String email = user.getKey();
        List<Program> programs = new ArrayList<>();
        DataLayer datalayer = (DataLayer)request.getAttribute("datalayer");
        SavedSearches ss;
