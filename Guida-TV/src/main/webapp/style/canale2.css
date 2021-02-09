@@ -1,0 +1,26 @@
+#container{
+    background-image: url(../src/canale_bg.png);
+}
+
+#guidatv{
+    margin-bottom: 30vh;
+}
+#guidatv > img{
+    border-radius: 2rem;
+    margin-top: 12vh;
+}
+#guidatv > *{
+    margin: 2rem;
+}
+#info{
+    max-width: 45vw;
+    min-width: 45vw
+}
+#info > p{
+    line-height: 95%;
+    margin: 0;
+}
+
+.serie{
+    margin-top: 2vh;
+}

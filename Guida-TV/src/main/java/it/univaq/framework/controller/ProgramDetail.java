@@ -11,6 +11,7 @@ import it.univaq.framework.result.TemplateManagerException;
 import it.univaq.framework.result.TemplateResult;
 import it.univaq.framework.security.SecurityLayer;
 import it.univaq.guidatv.data.dao.GuidatvDataLayer;
+import it.univaq.guidatv.data.impl.ProgramImpl.Genre;
 import it.univaq.guidatv.data.model.Channel;
 import it.univaq.guidatv.data.model.Episode;
 import it.univaq.guidatv.data.model.Image;
@@ -47,8 +48,11 @@ public class ProgramDetail extends BaseController {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException {
+             request.setAttribute("genres", Genre.values());
+           
         
         try {
+             request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
             int id = SecurityLayer.checkNumeric(request.getParameter("id"));
             request.setAttribute("program", ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getProgram(id));
             Program program = (Program) request.getAttribute("program");

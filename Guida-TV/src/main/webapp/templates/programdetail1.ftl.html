@@ -1,57 +1,77 @@
-<!DOCTYPE html>
-<html>
+<html lang="it_IT">
 <head>
-<title>Servlet ProgramDetail</title>
-    <link rel="stylesheet" href="style/programdetail.css" type="text/css"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descrizione</title>
+
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/canale.css">
+
+    <!-- Monserrat import from google fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&display=swap" rel="stylesheet">
 </head>
-<div>
+<body>
 
-<div class="centro">
+    <button id="hamburger"></button>
+    <div id="menu" class="flex-column">
+        <input type="button" value="chiudi" id="chiudi">
+        <a href="http://localhost:8080/Guida-tivu/">home</a>
+        <a href="http://localhost:8080/Guida-tivu/schedules">schedules</a>
+        <a href="http://localhost:8080/Guida-tivu/login">login</a>
+        <a href="http://localhost:8080/Guida-tivu/register">registrati</a>
+        
+    </div>
 
-     <#if program.image??>
-        <p> <img class="foto" src='${program.image.link}' alt='image1'/> </p>
-    </#if>
-<div class="testo">
-<#if (program.seasonsNumber >=1)>
+    <div id="container" class="flex-column between">
+           <#include "searchbar.ftl.html">
+      
+        <div id="guidatv" class="flex-row between">
+             <#if program.image??>
+             <p> <img width="230px" height="300px" class="foto" src='${program.image.link}' alt='image1'/> </p>
+             </#if>
+            </img>
+            <div id="info" class="flex-column between">
+                
+                <div class="flex-row between">
+                    <h1 class="bold">Titolo</h1>
+                    <h1>${program.name}</h1>
+                </div>
+                
+                <h1 class="bold">Descrizione</h1>
+                <p class="bold">${program.description}</p>
+                
+                <div class="flex-row between">
+                    <h1 class="bold">Genere</h1>
+                    <h1> ${program.genre}</h1>
+                </div>
+                
+                <#if (program.seasonsNumber >=1)>
+                <#list episodes as s>
+                <div class="serie">
+                    <h2>Ep Num: ${s.episode.number} <b> ${s.episode.name}</b> del <b>${s.date} </b> alle <b>${s.startTime}</b> SU <b> ${s.channel.name} </b> </h2>
+                </div>
+                </#list>
+                </#if>
+                
+            </div>
+            <div class="flex-column center text-center">
+                <img style="margin-left: auto; margin-right: auto;" height="100px" width="76px" src="./src/plus.png" alt="">
+                <a style="margin-top: 1rem;" href="${program.link}">LINK ESTERNO</a>
+            </div>
+        </div>
 
-    <h1> ${program.name}</h1>
- <div class="descrizione2">
-    <p> ${program.description}</p>
- </div>
-    <div class="genere2"> <p> ${program.genre}</p> </div>
+    </div>
 
-    <div class="altro">
-    <a href="${program.link}"> Approfondisci  </a>
-    <h2> Episodi dell'ultimo mese </h2>
-    <#list episodes as s>
-        <h3> Episodio numero ${s.episode.number} - ${s.episode.name}</h3>
-        <p> Andato in onda: ${s.date} dalle ore: ${s.startTime} alle ore ${s.endTime} ( <a href = 'channel?id=" + s.getChannel().getKey() + "'> ${s.channel.name} </a> )</p>
-    </#list>
-   </div>
-</div>
-<#else>
-
-    <h1>  ${program.name} </h1>
-    <p>   ${program.description} </p>
-    <p>   ${program.genre}  </p>
-
-<i class="fas fa-link">
-<a href="${program.link}"> Approfondisci  </a>
-</i>
-
-
-
-</#if>
-<b class="titolo"> TITOLO</b>
-<b class="descrizione"> DESCRIZIONE</b>
-<b class="genere">GENERE</b>
-</div>
-</div>
-
+    <script>
+        document.getElementById("hamburger").onclick = function (){
+            document.getElementById("menu").classList = "showing flex-column";
+        }
+        document.getElementById("chiudi").onclick = function (){
+            document.getElementById("menu").classList = "hiding flex-column";
+        }
+    </script>
+    
 </body>
 </html>
-
-
-
-
 

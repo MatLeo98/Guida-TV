@@ -6,6 +6,9 @@
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
+import it.univaq.framework.result.SplitSlashesFmkExt;
+import it.univaq.framework.result.TemplateManagerException;
+import it.univaq.framework.result.TemplateResult;
 import it.univaq.guidatv.data.dao.GuidatvDataLayer;
 import it.univaq.guidatv.data.model.User;
 import java.io.IOException;
@@ -95,9 +98,13 @@ public class LoginController extends BaseController {
         }
 
     private void login_action(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-        out.println("<!DOCTYPE html>");
+        try {
+            TemplateResult res = new TemplateResult(getServletContext());
+            res.activate("login.ftl.html", request, response);
+            // try (PrintWriter out = response.getWriter()) {
+            
+            /*
+            out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
             out.println("<title>Login</title>");            
@@ -107,24 +114,21 @@ public class LoginController extends BaseController {
             out.println("<h1> LOGIN </h1>");
             out.println("<br><br>");
             out.println("<form method=\"post\" action=\"login\">");
-                /*out.println("<input type=\"text\" id=\"name\" name=\"name\" placeholder=\"Nome\"/>");
-                out.println("<br><br>");
-                out.println("<input type=\"text\" id=\"surname\" name=\"surname\" placeholder=\"Cognome\"/>");
-                out.println("<br><br>");*/
-                out.println("<input type=\"email\" id=\"email\" name=\"email\" placeholder=\"Email\"/>");
-                out.println("<br><br>");
-                out.println("<input type=\"password\" id=\"password\" name=\"password\" placeholder=\"Password\"/>");
-                out.println("<br><br>");
-                out.println("<input type=\"submit\" name=\"login\" value=\"LOGIN\"/>");
+            out.println("<input type=\"email\" id=\"email\" name=\"email\" placeholder=\"Email\"/>");
+            out.println("<br><br>");
+            out.println("<input type=\"password\" id=\"password\" name=\"password\" placeholder=\"Password\"/>");
+            out.println("<br><br>");
+            out.println("<input type=\"submit\" name=\"login\" value=\"LOGIN\"/>");
             out.println(" </center>");
             out.println("</form>");
             out.println("</body>");
             out.println("</html>");
-            
-    }   catch (IOException ex) {
+            */
+        } catch (TemplateManagerException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }   
+    
 
     private void logged(HttpServletRequest request, HttpServletResponse response) {
         try (PrintWriter out = response.getWriter()){

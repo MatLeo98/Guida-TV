@@ -1,0 +1,31 @@
+#container{
+    background-image: url(../src/canale_bg.png);
+}
+
+#index-programmi{
+    margin-left: auto;
+    margin-right: auto;
+    width: auto;
+    margin-top: 17vh;
+    max-height: 51%;
+}
+
+.programmi{
+    margin-left: 25 px;
+    margin-right: 10px;
+    margin-bottom: 1vh;
+    width: auto;
+    padding: 1.1vh;
+    border-radius: 0.4rem;
+    font-size: 150%;
+    background-color: #ffffff55;
+}
+
+
+
+
+
+
+
+
+

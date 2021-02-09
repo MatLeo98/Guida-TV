@@ -1,0 +1,32 @@
+#container{
+    background-image: url(../src/login_bg.png);
+}
+
+#username{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 35vh;
+    margin-bottom: 2vh;
+    width: 35vw;
+    font-size: 200%;
+    text-transform: lowercase;
+    background-color: #ffffff55;
+}
+#password{
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5vh;
+    width: 35vw;
+    font-size: 200%;
+    text-transform: lowercase;
+    background-color: #ffffff55;
+}
+#invia{
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5vh;
+    width: 11vw;
+    font-size: 130%;
+    color: #000000;
+    background-color: #ffffff;
+}

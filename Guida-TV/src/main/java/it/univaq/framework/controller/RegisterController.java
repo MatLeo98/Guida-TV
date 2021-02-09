@@ -6,6 +6,9 @@
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
+import it.univaq.framework.result.SplitSlashesFmkExt;
+import it.univaq.framework.result.TemplateManagerException;
+import it.univaq.framework.result.TemplateResult;
 import it.univaq.guidatv.data.dao.GuidatvDataLayer;
 import it.univaq.guidatv.data.impl.ScheduleImpl;
 import it.univaq.guidatv.data.model.User;
@@ -38,22 +41,22 @@ public class RegisterController extends BaseController{
 
     private void action_default(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Registrazione</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<center>");
-            out.println("<h1> REGISTRATI </h1>");
-            out.println("<br><br>");
-            out.println("<form method=\"post\" action=\"register\">");
-                /*out.println("<input type=\"text\" id=\"name\" name=\"name\" placeholder=\"Nome\"/>");
+            try {
+                TemplateResult res = new TemplateResult(getServletContext());
+                res.activate("registrati.ftl.html", request, response);
+                /* TODO output your page here. You may use following sample code. */
+                
+                /*
+                out.println("<!DOCTYPE html>");
+                out.println("<html>");
+                out.println("<head>");
+                out.println("<title>Registrazione</title>");
+                out.println("</head>");
+                out.println("<body>");
+                out.println("<center>");
+                out.println("<h1> REGISTRATI </h1>");
                 out.println("<br><br>");
-                out.println("<input type=\"text\" id=\"surname\" name=\"surname\" placeholder=\"Cognome\"/>");
-                out.println("<br><br>");*/
+                out.println("<form method=\"post\" action=\"register\">");
                 out.println("<input type=\"email\" id=\"email\" name=\"email\" placeholder=\"Email\"/>");
                 out.println("<br><br>");
                 out.println("<input type=\"password\" id=\"password\" name=\"password\" placeholder=\"Password\"/>");
@@ -64,14 +67,14 @@ public class RegisterController extends BaseController{
                 out.println("<input type=\"submit\" name=\"register\" value=\"REGISTRATI\"/>");
                 out.println("<br><br>");
                 out.println("<a href=\"login\"> LOGIN </a>");
-            out.println(" </center>");
-            out.println("</form>");
-            out.println("</body>");
-            out.println("</html>");
+                out.println(" </center>");
+                out.println("</form>");
+                out.println("</body>");
+                out.println("</html>");  */
+            } catch (TemplateManagerException ex) {
+                Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
-        } catch (IOException ex) {
-            Logger.getLogger(ProgramDetail.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     private void register_action(HttpServletRequest request, HttpServletResponse response) {

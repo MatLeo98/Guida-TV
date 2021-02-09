@@ -46,6 +46,9 @@ public class ChannelDetail extends BaseController {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException {
         
+         request.setAttribute("genres", ProgramImpl.Genre.values());
+         
+        
         try {
             int id = SecurityLayer.checkNumeric(request.getParameter("id"));
             Channel channel = ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(id);

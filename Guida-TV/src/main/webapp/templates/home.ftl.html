@@ -1,30 +1,60 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-   <!-- <link rel="stylesheet" href="style/default.css" type="text/css"/>  -->
-        <title>Home</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <#include "searchbar.ftl.html">
-        <br>
-        <br>
-        <a href="http://localhost:8080/Guida-tivu/schedules"> Palinsesto completo per ogni canale </a>
-        <h1>Programmi in onda </h1>
-        <#list onAirPrograms as s>
-            <h1> <a href = 'channel?id=${s.channel.key}'> ${s.channel.name} </a></h1>
-            <#if (s.program.seasonsNumber >= 1)>
-                <h3> Ora in onda: <a href = 'program?id=${s.program.key}'>   ${s.program.name} - ${s.episode.name} - S${s.episode.seasonNumber} E${s.episode.number} </a></h3>  
-            <#else>
-                <h3> Ora in onda: <a href = 'program?id=${s.program.key}'>   ${s.program.name} </a></h3>  
-            </#if>
-        </#list>
+<html lang="it_IT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descrizione</title>
 
-    </body>
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/index.css">
+
+    <!-- Monserrat import from google fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <button id="hamburger"></button>
+    <div id="menu" class="flex-column">
+        <input type="button" value="chiudi" id="chiudi">
+        <a href="http://localhost:8080/Guida-tivu/schedules">schedules</a>
+        <a href="http://localhost:8080/Guida-tivu/login">login</a>
+        <a href="http://localhost:8080/Guida-tivu/register">registrati</a>
+        
+        <#if email??>
+        <a href="http://localhost:8080/Guida-tivu/profile">Profilo ${email}</a>
+        </#if>
+        
+    </div>
+    
+
+    <div id="container" class="flex-column">
+        <#include "searchbar.ftl.html">
+      
+
+        <div id="index-programmi" class="flex-column">
+            <h1> Ora In Onda </h1>
+              
+           <#list onAirPrograms as s>
+           <div class="flex-row">
+            <h3> <a class="programmi" href = 'channel?id=${s.channel.key}'> ${s.channel.name} </a></h3>
+            <h3> Presenta <a class="programmi" href = 'program?id=${s.program.key}'>   ${s.program.name}  </a></h3>  
+
+                        </div>
+            </#list>
+
+           
+        </div>
+
+    </div>
+
+    <script>
+        document.getElementById("hamburger").onclick = function (){
+            document.getElementById("menu").classList = "showing flex-column";
+        }
+        document.getElementById("chiudi").onclick = function (){
+            document.getElementById("menu").classList = "hiding flex-column";
+        }
+    </script>
+    
+</body>
 </html>

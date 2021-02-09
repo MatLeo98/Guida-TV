@@ -1,0 +1,45 @@
+<html lang="it_IT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descrizione</title>
+
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/login.css">
+
+    <!-- Monserrat import from google fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <button id="hamburger"></button>
+    <div id="menu" class="flex-column">
+        <input type="button" value="chiudi" id="chiudi">
+            <a href="http://localhost:8080/Guida-tivu/">home</a>
+             <a href="http://localhost:8080/Guida-tivu/schedules">schedules</a>
+        <a href="http://localhost:8080/Guida-tivu/register">registrati</a>
+    </div>
+
+    
+    <form method="post" action="login">
+    <div id="container" class="flex-column">
+        <input id="username" name="email" type="text" placeholder="EMAIL">
+        <input id="password" name="password" type="password" placeholder="PASSWORD">
+        <input id="invia" name="login" type="submit" value="invia">
+        </form>
+    </div>
+
+    
+
+    <script>
+        document.getElementById("hamburger").onclick = function (){
+            document.getElementById("menu").classList = "showing flex-column";
+        }
+        document.getElementById("chiudi").onclick = function (){
+            document.getElementById("menu").classList = "hiding flex-column";
+        }
+    </script>
+    
+</body>
+</html>

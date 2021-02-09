@@ -1,0 +1,63 @@
+#container{
+    width: 96%;
+    margin-left: 2%;
+    margin-right: 2%;
+    background-image: url(../src/registrati_bg.png);
+}
+
+.benvenuto{
+   margin-left: 3vw;
+}
+
+#username{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 35vh;
+    margin-bottom: 2vh;
+    width: 35vw;
+    font-size: 200%;
+    text-transform: lowercase;
+    background-color: #ffffff55;
+}
+#password{
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2vh;
+    width: 35vw;
+    font-size: 200%;
+    text-transform: lowercase;
+    background-color: #ffffff55;
+}
+
+#password2{
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5vh;
+    width: 35vw;
+    font-size: 200%;
+    text-transform: lowercase;
+    background-color: #ffffff55;
+}
+#registrati{
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5vh;
+    width: 11vw;
+    font-size: 130%;
+    color: #000000;
+    background-color: #ffffff;
+}
+
+p{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1vh;
+    margin-bottom: 0;
+    font-size: 180%;
+}
+a{
+    margin-top: 0;
+    padding: 0;
+    line-height: 1rem;
+    font-size: 180%;
+}

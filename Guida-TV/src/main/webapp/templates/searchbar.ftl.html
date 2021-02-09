@@ -4,36 +4,44 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
+
+
 <html>
     <head>
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/index.css">
     </head>
     <body>
         <form action='searchresults'>
-            <input type='text' placeholder='Titolo' name='title'>
-            <select name='genre' id='genre'>
-                <option value = ''> Scegli il genere </option>
-                <#list genres as g>
+           <div id="ricerca" class="flex-column">
+            <div id="ricerca-riga1" class="flex-row between">
+                <input type="text" placeholder="Titolo" name="title">
+                <select name="genre" id="genre">
+                    <option value = ''> Scegli il genere </option>
+                     <#list genres as g>
                     <option value = "${g}"> ${g} </option>
-                </#list>
-            </select>
-            <select name='channel' id='channel'>
-                <option value = ''> Scegli i canali </option>
-                <#list channels as c>
+                    </#list>
+                </select>
+                <select name="channel" id="channel">
+                      <option value = ''> Scegli i canali </option>
+                    <#list channels as c>
                     <option value ="${c.key}"> ${c.name} </option>
-                </#list>
-            </select>
-            Ora Min:
-            <input type='time' id='min' name='min'>
-            Ora Max:
-            <input type='time' id='max' name='max'>
-            Da:
-            <input type='date' id='date1' name='date1'>
-            A: 
-            <input type='date' id='date2' name='date2'>
-            <button type='submit'>Search</button>
+                    </#list>
+                </select>
+               Da: <input type='date' id='date1' name='date1'>
+            </div>
+            <div id="ricerca-riga2" class="flex-row between">
+                <input type='time' id='min' name='min'>
+                     <input type='time' id='max' name='max'>
+               A:  <input type='date' id='date2' name='date2'>
+                <input id="cerca" type="submit" value="Ricerca">
+               
+            </div>
+        </div>
             </form>
     </body>
 </html>
