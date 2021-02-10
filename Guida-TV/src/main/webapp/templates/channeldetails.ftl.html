@@ -43,26 +43,26 @@
                 <h1>${date}</h1>
                 </div>
                 
-                <div class="flex-row between">
-                     <h1 class="bold">Ora in Onda</h1>
+               
+                     <h1 class="bold">Oggi in Onda</h1>
                      
-                     <#if s.program.name??>
-                    <h1>  ${s.program.name}</h1>
+                     <#list schedule as s>
+                      <div class="flex-row between">
+                          <h1> <a href='program?id=${s.program.key}'>  ${s.program.name} </a></h1>
+                    <h1>  Dalle: <b> ${s.startTime} </b> </h1>
+                    <h1>  Alle: <b> ${s.endTime} </b> </h1>
+                     </div>
+                    </#list>
+
                     
-                    
-                    <#else>
-                    <h1>NULLA </h1>
-                    </#if> 
-                    
-                </div>
+               
                 
-                <p class="bold"> Clicca su Link Esterno per avere info sul programma</p>
+          
                 
                 
             </div>
             <div class="flex-column center text-center">
-                <img style="margin-left: auto; margin-right: auto;" height="100px" width="76px" src="./src/plus.png" alt="">
-                <a style="margin-top: 1rem;" href="${s.program.link}">LINK ESTERNO</a>
+               
             </div>
         </div>
 

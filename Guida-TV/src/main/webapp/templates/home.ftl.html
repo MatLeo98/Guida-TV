@@ -17,12 +17,18 @@
     <div id="menu" class="flex-column">
         <input type="button" value="chiudi" id="chiudi">
         <a href="http://localhost:8080/Guida-tivu/schedules">schedules</a>
-        <a href="http://localhost:8080/Guida-tivu/login">login</a>
-        <a href="http://localhost:8080/Guida-tivu/register">registrati</a>
+
         
         <#if email??>
         <a href="http://localhost:8080/Guida-tivu/profile">Profilo ${email}</a>
-        </#if>
+        <a href="http://localhost:8080/Guida-tivu/profile">LOG-OUT</a>
+       
+        
+        <#else>
+         <a href="http://localhost:8080/Guida-tivu/login">login</a>
+         <a href="http://localhost:8080/Guida-tivu/register">registrati</a>
+         </#if>
+        
         
     </div>
     
