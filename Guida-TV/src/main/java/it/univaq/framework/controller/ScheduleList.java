@@ -6,6 +6,8 @@
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
+import it.univaq.framework.result.TemplateManagerException;
+import it.univaq.framework.result.TemplateResult;
 import it.univaq.guidatv.data.dao.GuidatvDataLayer;
 import it.univaq.guidatv.data.impl.ScheduleImpl.TimeSlot;
 import it.univaq.guidatv.data.model.Channel;
@@ -45,6 +47,7 @@ public class ScheduleList extends BaseController {
         
         try {
             
+            
             request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
             
             if (request.getParameter("tsSelect") == null){
@@ -53,6 +56,7 @@ public class ScheduleList extends BaseController {
                 request.setAttribute("timeslot", timeslot);
                 request.setAttribute("schedules", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getScheduleByTimeSlotDate(timeslot, LocalDate.now()));
                 action_schedule(request, response);
+                
             }else{
                 
                 TimeSlot timeSelected = TimeSlot.valueOf(request.getParameter("tsSelect"));
@@ -60,6 +64,7 @@ public class ScheduleList extends BaseController {
                 LocalDate dateSelected = LocalDate.parse(request.getParameter("dateSelect"));
                 request.setAttribute("schedules", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getScheduleByTimeSlotDate(timeSelected, dateSelected));
                 action_schedule(request, response);
+                
             }
             //request.setAttribute("schedule", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getSchedule(1));
             
@@ -75,16 +80,29 @@ public class ScheduleList extends BaseController {
     }
 
     private void action_schedule(HttpServletRequest request, HttpServletResponse response) {
-        List<Channel> channels = (List<Channel>) request.getAttribute("channels");
+        /*List<Channel> channels = (List<Channel>) request.getAttribute("channels");
         List<Schedule> schedules = (List<Schedule>) request.getAttribute("schedules");
-        TimeSlot[] timeslots = TimeSlot.class.getEnumConstants(); //VA FATTO IN UN METODO CREDO
+        TimeSlot[] timeslots = TimeSlot.class.getEnumConstants(); //VA FATTO IN UN METODO CREDO*/
         //Schedule schedule = (Schedule) request.getAttribute("schedule");
         LocalDate today = LocalDate.now();
         LocalDate tomorrow = today.plusDays(1);
         LocalDate thirdDay = today.plusDays(2);
-        TimeSlot timeslot = (TimeSlot)request.getAttribute("timeslot");
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        request.setAttribute("today",today);
+        request.setAttribute("tomorrow",tomorrow);
+        request.setAttribute("thirdDay",thirdDay);
+        TimeSlot[] timeslots = TimeSlot.class.getEnumConstants();
+        request.setAttribute("timeslots",timeslots);
+        //TimeSlot timeslot = (TimeSlot)request.getAttribute("timeslot");
+        
+        try {
+            TemplateResult res = new TemplateResult(getServletContext());
+            res.activate("schedules.ftl.html", request, response);
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(ScheduleList.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        //response.setContentType("text/html;charset=UTF-8");
+        /*try (PrintWriter out = response.getWriter()) {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -113,7 +131,7 @@ public class ScheduleList extends BaseController {
             
            // out.println("<h1>Servlet Lista at " + request.getContextPath() + "</h1>");
             for(Channel c : channels){
-                
+               
                 out.println("<h2> <a href = 'channel?id=" + c.getKey() + "'>" + c.getName() + " </a> </h2>");
             
                 for(Schedule s : schedules){
@@ -138,7 +156,7 @@ public class ScheduleList extends BaseController {
             out.println("</html>");
         } catch (IOException ex) {
             Logger.getLogger(ScheduleList.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
     }
 
 }

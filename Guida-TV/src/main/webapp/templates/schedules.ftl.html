@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Guida-TV</title>            
+    </head>
+    <body>
+        <h1> Palinsesto completo per ogni canale </h1>
+        <form method="get" action="schedules">
+            <label for="tsSelect">Scegli una fascia oraria:</label>
+            <select name="tsSelect" id="tsSelect">
+                <option value="${timeslot}">${timeslot}</option>
+                <#list timeslots as ts>
+                    <option value="${ts}">${ts}</option>
+                </#list>
+            </select>
+            <br><br>
+            <label for="dateSelect">Scegli un giorno:</label>
+            <select name='dateSelect' id='dateSelect'>
+                <option value="${today}"> Oggi </option>
+                <option value="${tomorrow}"> Domani </option>
+                <option value="${thirdDay}"> Dopodomani </option>
+            </select>
+            <input type="submit" name="s"/>
+        </form>
+
+        <#list channels as c>
+
+            <h2> <a href = 'channel?id=${c.key}'> ${c.name}</a> </h2>
+            <#list schedules as s>
+            
+                <#if s.channel.name == c.name >
+                    <p>Programma: <a href = 'program?id=${s.program.key}'>${s.program.name}</a></p>
+                    <#if s.episode??>
+                        <p>Episodio numero: ${s.episode.number} - ${s.episode.name}</p>
+                    </#if>
+                    <p> Data:  ${s.date} </p>
+                    <p> Ora inizio: ${s.startTime}</p>
+                    <p> Ora fine: ${s.endTime}</p>
+                    <br>
+                </#if>
+            </#list>
+        </#list>
+
+    </body>
+</html>
