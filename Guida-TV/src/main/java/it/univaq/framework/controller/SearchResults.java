@@ -7,6 +7,8 @@ package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataLayer;
+import it.univaq.framework.result.TemplateManagerException;
+import it.univaq.framework.result.TemplateResult;
 import it.univaq.framework.security.SecurityLayer;
 import it.univaq.guidatv.data.dao.GuidatvDataLayer;
 import it.univaq.guidatv.data.model.Program;
@@ -59,7 +61,7 @@ public class SearchResults extends BaseController {
                 request.setAttribute("savedS", ((GuidatvDataLayer)request.getAttribute("datalayer")).getSavedSearchesDAO().storeSavedSearches(tit, gen, ch, date1, date2, min, max, email));
                 request.setAttribute("search", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().search(tit, gen, ch, min, max, date1, date2));
                 store_prefPrograms(request,response);
-                action_results(request, response);
+                //action_results(request, response);
                 
               
             }else{
@@ -79,20 +81,21 @@ public class SearchResults extends BaseController {
         if(session != null){
             User user = (User) session.getAttribute("user");
             email = user.getKey();
+            request.setAttribute("email",email);
         }
                  
         
-        response.setContentType("text/html;charset=UTF-8");
+        /*response.setContentType("text/html;charset=UTF-8");
         List<Schedule> search = (List<Schedule>) request.getAttribute("search");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
+           
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
             out.println("<title>Servlet SearchResults</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<body>");
+            out.println("<body>");*/
             if(email != null){
                 String tit = request.getParameter("title");
                 String gen = request.getParameter("genre");
@@ -108,11 +111,17 @@ public class SearchResults extends BaseController {
                 session.setAttribute("date2", date2);
                 session.setAttribute("min", min);
                 session.setAttribute("max", max);
-            out.println("<form method=\"post\" action=\"searchresults?saved=1\">");
+            /*out.println("<form method=\"post\" action=\"searchresults?saved=1\">");
             out.println("<button type='submit'>Salva questi criteri di ricerca</button>");
-            out.println("</form>");
+            out.println("</form>");*/
             }
-            out.println("<h1>RISULTATI:</h1>");
+            try {
+                TemplateResult res = new TemplateResult(getServletContext());
+                res.activate("searchresults.ftl.html", request, response);
+            } catch (TemplateManagerException ex) {
+                Logger.getLogger(SearchResults.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            /*out.println("<h1>RISULTATI:</h1>");
             for(Schedule s : search){
             out.println("<h3><a href = 'program?id=" + s.getProgram().getKey() + "'>" + s.getProgram().getName() + "</a></h3>");
             }
@@ -120,7 +129,7 @@ public class SearchResults extends BaseController {
             out.println("</html>");
         } catch (IOException ex) {
             Logger.getLogger(SearchResults.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
     }
 
     private void store_prefPrograms(HttpServletRequest request, HttpServletResponse response) {

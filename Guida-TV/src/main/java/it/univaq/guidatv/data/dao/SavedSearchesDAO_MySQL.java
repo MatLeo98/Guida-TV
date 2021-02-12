@@ -175,7 +175,7 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
         SavedSearches ss = null;
         try {
             
-            System.out.println(minTime +"-" +maxTime);
+           
             storeSearches.setString(1,titolo);
             storeSearches.setString(2,genere);
             storeSearches.setTime(3,java.sql.Time.valueOf(minTime+":00"));
@@ -184,7 +184,7 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
             storeSearches.setDate(6,java.sql.Date.valueOf(dateMin)); 
             storeSearches.setDate(7,java.sql.Date.valueOf(dateMax));
             storeSearches.setString(8,email);
-            System.out.println("sql:" + storeSearches);
+            
             
             if (storeSearches.executeUpdate() == 1) {
                  try (ResultSet keys = storeSearches.getGeneratedKeys()) {

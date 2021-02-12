@@ -79,7 +79,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             updateSchedule = connection.prepareStatement("UPDATE schedule SET startTime = ?, endTime = ?, date = ?, timeSlot = ?, episodeId = ?, version = ? WHERE idSchedule = ? AND version = ?");
             deleteSchedule = connection.prepareStatement("DELETE FROM schedule WHERE idSchedule = ?");
             dropEvent = connection.prepareStatement("DROP EVENT IF EXISTS delschedules;");
-            delSchedules30Ds = connection.prepareStatement("CREATE EVENT delschedules ON SCHEDULE EVERY 1 DAY DO DELETE FROM `schedule` where date < now() - interval 31 day;"); //AGGIUNGERE DROP EVENT IF EXISTS delschedules;
+            delSchedules30Ds = connection.prepareStatement("CREATE EVENT delschedules ON SCHEDULE EVERY 1 DAY DO DELETE FROM `schedule` where date < now() - interval 31 day;"); 
             
         } catch (SQLException ex) {
             throw new DataException("Error initializing newspaper data layer", ex);

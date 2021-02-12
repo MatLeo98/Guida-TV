@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>Guida-TV</title>            
+    </head>
+    <body>
+    <#if email??>
+    <form method="post" action="searchresults?saved=1">
+        <button type='submit'>Salva questi criteri di ricerca</button>
+    </form>
+    </#if>
+    <h1>RISULTATI:</h1>
+    <#list search as s>
+        <h3><a href = 'program?id=${s.program.key}'>${s.program.name}</a></h3>
+    </#list>
+    </body>
+</html>
