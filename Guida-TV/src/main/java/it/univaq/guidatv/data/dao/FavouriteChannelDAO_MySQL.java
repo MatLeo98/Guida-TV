@@ -45,7 +45,7 @@ public class FavouriteChannelDAO_MySQL extends DAO implements FavouriteChannelDA
             //precompile all the queries uses in this class
             favChannelById = connection.prepareStatement("SELECT * FROM favouritechannel WHERE idFavChannel = ?");
             storeFavChannels = connection.prepareStatement("INSERT INTO favouritechannel (timeSlot,emailUser,channelId) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            favChannelsByUser = connection.prepareStatement("SELECT * FROM favouritechannel WHERE emailUser = ?");
+            favChannelsByUser = connection.prepareStatement("SELECT * FROM favouritechannel WHERE emailUser = ? ORDER BY channelId");
             delFavCh = connection.prepareStatement("DELETE FROM favouritechannel WHERE idFavChannel = ?");
 
         } catch (SQLException ex) {
