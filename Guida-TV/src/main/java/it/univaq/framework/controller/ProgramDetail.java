@@ -117,6 +117,7 @@ public class ProgramDetail extends BaseController {
         try {
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+            request.setAttribute("after", null);
             res.activate("programdetail1.ftl.html", request, response);
             /*
             try (PrintWriter out = response.getWriter()) {

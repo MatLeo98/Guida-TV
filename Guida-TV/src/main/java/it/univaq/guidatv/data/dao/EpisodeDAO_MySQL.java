@@ -156,11 +156,6 @@ public class EpisodeDAO_MySQL extends DAO implements EpisodeDAO{
         }
         return result; 
     }
-
-    @Override
-    public List<Episode> getLastMonthEpisodes(Program program) throws DataException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
     @Override
     public void storeEpisode(Episode episode) throws DataException{

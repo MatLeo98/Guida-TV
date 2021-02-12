@@ -48,9 +48,23 @@
                 
                 <#if (program.seasonsNumber >=1)>
                 <#list episodes as s>
-                <div class="serie">
-                    <h2>Ep Num: ${s.episode.number} <b> ${s.episode.name}</b> del <b>${s.date} </b> alle <b>${s.startTime}</b> SU <b> ${s.channel.name} </b> </h2>
-                </div>
+                <#assign before = s.episode.key>
+                <#if after??>
+                    <#if before != after> 
+                        <div class="serie">
+                            <h2>S:${s.episode.seasonNumber} E${s.episode.number} <b> ${s.episode.name} <br> <br> &nbsp &nbsp </b> <b>${s.date} </b> alle <b>${s.startTime}</b> SU <b> ${s.channel.name} </b> </h2>
+                        </div>
+                    <#else>
+                        <div class="serie">
+                            <h2> &nbsp &nbsp <b>${s.date} </b> alle <b>${s.startTime}</b> SU <b> ${s.channel.name} </b> </h2>
+                        </div>
+                    </#if>
+                <#else>
+                        <div class="serie">
+                            <h2>S${s.episode.seasonNumber} E${s.episode.number} <b> ${s.episode.name} <br> <br> </b> &nbsp &nbsp <b>${s.date} </b> alle <b>${s.startTime}</b> SU <b> ${s.channel.name} </b> </h2>
+                        </div>
+                </#if>
+                <#assign after = s.episode.key>
                 </#list>
                 </#if>
                 

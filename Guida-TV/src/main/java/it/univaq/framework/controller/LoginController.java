@@ -39,12 +39,14 @@ public class LoginController extends BaseController {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         
-        HttpSession s = request.getSession(true);
-        User loggeduser = (User) s.getAttribute("user");
-         
+        HttpSession s = request.getSession(false);
+        User loggedUser = null;
+        if(s!=null){
+        loggedUser = (User) s.getAttribute("user");
+        }
         if (request.getParameter("logout") == null) {
             
-            if (loggeduser != null && !(loggeduser.getKey()).isEmpty()){
+            if (loggedUser != null && !(loggedUser.getKey()).isEmpty()){
            
                     logged(request, response);
               
@@ -58,6 +60,7 @@ public class LoginController extends BaseController {
                         
                         User user = ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().getUser(email);
                         if(user != null && BCrypt.checkpw(request.getParameter("password"), user.getPassword())){
+                            s = request.getSession(true);
                             s.setAttribute("user", user);
                             
                                 logged(request, response);

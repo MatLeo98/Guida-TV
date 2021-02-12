@@ -340,7 +340,8 @@ public class ProfileController extends BaseController {
 
     private void setEmail(HttpServletRequest request, HttpServletResponse response) {
         HttpSession s = request.getSession(false);
-        String email = (String) s.getAttribute("email");
+        User user = (User) s.getAttribute("user");
+        String email = user.getKey();
         Boolean newsletter = (Integer.parseInt(request.getParameter("emailgiornaliera"))==1);
         String[] channels = null;
         String[] timeslots = null;
