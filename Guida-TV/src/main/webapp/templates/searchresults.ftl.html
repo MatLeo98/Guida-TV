@@ -5,9 +5,12 @@
     </head>
     <body>
     <#if email??>
-    <form method="post" action="searchresults?saved=1">
-        <button type='submit'>Salva questi criteri di ricerca</button>
-    </form>
+        <form method="post" action="searchresults?saved=1">
+            <button type='submit'>Salva questi criteri di ricerca</button>
+        </form>
+        <#if message??>
+            <p> ${message} </p>
+        </#if>
     </#if>
     <h1>RISULTATI:</h1>
     <#list search as s>
