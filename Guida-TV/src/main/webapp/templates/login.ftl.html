@@ -27,6 +27,9 @@
         <input id="username" name="email" type="text" placeholder="EMAIL">
         <input id="password" name="password" type="password" placeholder="PASSWORD">
         <input id="invia" name="login" type="submit" value="invia">
+        <#if loginerror??>
+            <center> <p style="color:red;"> ${loginerror} </p></center>
+        </#if>
         </form>
     </div>
 

@@ -48,108 +48,77 @@ public class ProfileController extends BaseController {
             throws ServletException {
         try {
             HttpSession s = request.getSession(false);
-            
-            if(s != null){
+
+            if (s != null) {
                 User user = (User) s.getAttribute("user");
-                      
-                      
-                if (user != null && !(user.getKey().isEmpty())){  
-                    request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
-                    if (!(request.getParameter("emailgiornaliera") == null)){
-                        setEmail(request,response);
-                    }  
-                    if(request.getParameter("daymail") != null){
-                        setEmailSS(request,response);
+
+                if (user != null && !(user.getKey().isEmpty())) {
+                    request.setAttribute("channels", ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannels());
+                    if (!(request.getParameter("emailgiornaliera") == null)) {
+                        setEmail(request, response);
+                    }
+                    if (request.getParameter("daymail") != null) {
+                        setEmailSS(request, response);
                     }
                     System.out.println(request.getParameter("delch"));
-                    if(request.getParameter("delch") != null){
-                        delFavChannel(request,response);
+                    if (request.getParameter("delch") != null) {
+                        delFavChannel(request, response);
                     }
-                    if(request.getParameter("delprog") != null){
-                        delFavProgram(request,response);
+                    if (request.getParameter("delprog") != null) {
+                        delFavProgram(request, response);
                     }
-                    if(request.getParameter("delSS") != null){
-                        delSS(request,response);
+                    if (request.getParameter("delSS") != null) {
+                        delSS(request, response);
                     }
 
-                    request.setAttribute("savedS",((GuidatvDataLayer)request.getAttribute("datalayer")).getSavedSearchesDAO().getSavedSearches(user));
-                    request.setAttribute("favPrograms",((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteProgramDAO().getFavouritePrograms(user));
-                    request.setAttribute("favChannels",((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteChannelDAO().getFavouriteChannels(user));
+                    request.setAttribute("savedS", ((GuidatvDataLayer) request.getAttribute("datalayer")).getSavedSearchesDAO().getSavedSearches(user));
+                    request.setAttribute("favPrograms", ((GuidatvDataLayer) request.getAttribute("datalayer")).getFavouriteProgramDAO().getFavouritePrograms(user));
+                    request.setAttribute("favChannels", ((GuidatvDataLayer) request.getAttribute("datalayer")).getFavouriteChannelDAO().getFavouriteChannels(user));
 
+                    actions(request, response);
 
-                    actions(request,response);
-
-
-                }else{
-
-                    try (PrintWriter out = response.getWriter()) {
-                        response.setContentType("text/html;charset=UTF-8");
-                         out.println("<!DOCTYPE html>");
-                         out.println("<html>");
-                         out.println("<body>");
-                        out.println("<h3> Devi essere loggato per visualizzare il profilo");
-                        out.println("<br><br>");
-                        out.println("<a href=\"login\">GO TO LOGIN</a>"); //DA CAMBIARE CHE VA DIRETTAMENTE ALLA PAGINA LOGIN
-                        out.println("</body>");
-                        out.println("</html>");
-                    } catch (IOException ex) {
-                        Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                } else {
+                    notLogged(request, response);
                 }
-            }else{
-                try (PrintWriter out = response.getWriter()) {
-                        response.setContentType("text/html;charset=UTF-8");
-                         out.println("<!DOCTYPE html>");
-                         out.println("<html>");
-                         out.println("<body>");
-                        out.println("<h3> Devi essere loggato per visualizzare il profilo");
-                        out.println("<br><br>");
-                        out.println("<a href=\"login\">GO TO LOGIN</a>"); //DA CAMBIARE CHE VA DIRETTAMENTE ALLA PAGINA LOGIN
-                        out.println("</body>");
-                        out.println("</html>");
-                    } catch (IOException ex) {
-                        Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                
-            } 
-            
+            } else {
+                notLogged(request, response);
+            }
+
         } catch (DataException ex) {
             Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
+
     }
 
     private void actions(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
-        request.setAttribute("user",user);
+        request.setAttribute("user", user);
         try {
-            user = ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().getUser(user.getKey());
-            request.setAttribute("after",null);
-         ScheduleImpl.TimeSlot[] timeslots = ScheduleImpl.TimeSlot.class.getEnumConstants();
-         request.setAttribute("timeslots",timeslots);
-         if(!user.isConfirmed()){
-            request.setAttribute("confirmed","no");
-            String URI = user.getUri();
-            request.setAttribute("URI", URI);
-         }
-         
+            user = ((GuidatvDataLayer) request.getAttribute("datalayer")).getUserDAO().getUser(user.getKey());
+            request.setAttribute("after", null);
+            ScheduleImpl.TimeSlot[] timeslots = ScheduleImpl.TimeSlot.class.getEnumConstants();
+            request.setAttribute("timeslots", timeslots);
+            if (!user.isConfirmed()) {
+                request.setAttribute("confirmed", "no");
+                String URI = user.getUri();
+                request.setAttribute("URI", URI);
+            }
+
             TemplateResult res = new TemplateResult(getServletContext());
             res.activate("profile.ftl.html", request, response);
-            
-            
+
         } catch (DataException ex) {
             Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (TemplateManagerException ex) {
             Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
         }
-         /*List<Channel> channels = (List<Channel>) request.getAttribute("channels");
+        /*List<Channel> channels = (List<Channel>) request.getAttribute("channels");
          
          List<SavedSearches> savedS = (List<SavedSearches>) request.getAttribute("savedS");
          List<FavouriteProgram> programs = (List<FavouriteProgram>) request.getAttribute("favPrograms");
          List<FavouriteChannel> favCh = (List<FavouriteChannel>) request.getAttribute("favChannels");*/
-         
-         
+
         response.setContentType("text/html;charset=UTF-8");
         /*try (PrintWriter out = response.getWriter()) {
         out.println("<!DOCTYPE html>");
@@ -361,62 +330,70 @@ public class ProfileController extends BaseController {
         HttpSession s = request.getSession(false);
         User user = (User) s.getAttribute("user");
         String email = user.getKey();
-        Boolean newsletter = (Integer.parseInt(request.getParameter("emailgiornaliera"))==1);
+        Boolean newsletter = (Integer.parseInt(request.getParameter("emailgiornaliera")) == 1);
         String[] channels = null;
         String[] timeslots = null;
-        if(request.getParameterValues("channels[]") != null)
+        if (request.getParameterValues("channels[]") != null) {
             channels = request.getParameterValues("channels[]");
-        else{
+        } else {
             channels = new String[1];
             channels[0] = "default";
         }
-        if(request.getParameterValues("timeslots[]") != null)
+        if (request.getParameterValues("timeslots[]") != null) {
             timeslots = request.getParameterValues("timeslots[]");
-        else{ //SE NON VIENE SCELTA NESSUNA FASCIA ORARIA, VENGONO SETTATE TUTTE
+        } else { //SE NON VIENE SCELTA NESSUNA FASCIA ORARIA, VENGONO SETTATE TUTTE
             timeslots = new String[4];
             timeslots[0] = "mattina";
             timeslots[1] = "pomeriggio";
             timeslots[2] = "sera";
             timeslots[3] = "notte";
-            
+
         }
-        ((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteChannelDAO().storeFavChannel(channels,timeslots, email);
-        ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().setNewsletter(email,newsletter);
+        ((GuidatvDataLayer) request.getAttribute("datalayer")).getFavouriteChannelDAO().storeFavChannel(channels, timeslots, email);
+        ((GuidatvDataLayer) request.getAttribute("datalayer")).getUserDAO().setNewsletter(email, newsletter);
     }
 
     private void setEmailSS(HttpServletRequest request, HttpServletResponse response) {
-        
-       Integer id = Integer.parseInt(request.getParameter("daymail"));
-       Boolean dayMail = (Integer.parseInt(request.getParameter("daymailss"))==1);
-       
+
+        Integer id = Integer.parseInt(request.getParameter("daymail"));
+        Boolean dayMail = (Integer.parseInt(request.getParameter("daymailss")) == 1);
+
         try {
-            ((GuidatvDataLayer)request.getAttribute("datalayer")).getSavedSearchesDAO().setDayMail(id,dayMail);
-            
+            ((GuidatvDataLayer) request.getAttribute("datalayer")).getSavedSearchesDAO().setDayMail(id, dayMail);
+
         } catch (DataException ex) {
             Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
+
     }
 
     private void delFavChannel(HttpServletRequest request, HttpServletResponse response) {
-       Integer id = Integer.parseInt(request.getParameter("delch"));
-      
-       ((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteChannelDAO().deleteFavouriteChannel(id);
+        Integer id = Integer.parseInt(request.getParameter("delch"));
+
+        ((GuidatvDataLayer) request.getAttribute("datalayer")).getFavouriteChannelDAO().deleteFavouriteChannel(id);
     }
 
     private void delFavProgram(HttpServletRequest request, HttpServletResponse response) {
-       Integer id = Integer.parseInt(request.getParameter("delprog"));
-      
-       ((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteProgramDAO().deleteFavouriteProgram(id);
+        Integer id = Integer.parseInt(request.getParameter("delprog"));
+
+        ((GuidatvDataLayer) request.getAttribute("datalayer")).getFavouriteProgramDAO().deleteFavouriteProgram(id);
     }
 
     private void delSS(HttpServletRequest request, HttpServletResponse response) {
         Integer id = Integer.parseInt(request.getParameter("delSS"));
-      
-       ((GuidatvDataLayer)request.getAttribute("datalayer")).getSavedSearchesDAO().deleteSavedSearch(id);
-    }
-    
 
-    
+        ((GuidatvDataLayer) request.getAttribute("datalayer")).getSavedSearchesDAO().deleteSavedSearch(id);
+    }
+
+    private void notLogged(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            TemplateResult res = new TemplateResult(getServletContext());
+            res.activate("devilogin.ftl.html", request, response);
+            response.setContentType("text/html;charset=UTF-8");
+
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
 }
