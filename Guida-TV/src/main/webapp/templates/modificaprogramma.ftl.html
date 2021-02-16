@@ -27,10 +27,10 @@
            </form>
            <form method='post' action='edit?program=1'>
            <input type='text' name='prog' value="${programSelected.key}" hidden/>
-           <input type='text' placeholder='Nome canale' name='programName' value="${programSelected.name}">
+           <input type='text' placeholder='Nome programma' name='programName' value="${programSelected.name}">
            <br>
            <br>
-           <input type='text' placeholder='Descrizione' name='programDescription' value="${programSelected.description}">
+           <textarea style='width:171px; height:150px;' id='programDescription' placeholder='Descrizione' name='programDescription'> ${programSelected.description} </textarea>
            <br>
            <br>
            <select style='width:177px;' name='genre' id='genre'>

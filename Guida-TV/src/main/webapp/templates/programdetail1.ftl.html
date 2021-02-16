@@ -15,12 +15,7 @@
 
     <button id="hamburger"></button>
     <div id="menu" class="flex-column">
-        <input type="button" value="chiudi" id="chiudi">
-        <a href="http://localhost:8080/Guida-tivu/">home</a>
-        <a href="http://localhost:8080/Guida-tivu/schedules">schedules</a>
-        <a href="http://localhost:8080/Guida-tivu/login">login</a>
-        <a href="http://localhost:8080/Guida-tivu/register">registrati</a>
-        
+        <#include "menu.ftl.html"> 
     </div>
 
     <div id="container" class="flex-column between">
@@ -33,39 +28,41 @@
             </img>
             <div id="info" class="flex-column between">
                 
-                <div class="flex-row between">
+               <#-- <div class="flex-row between"> -->
                     <h1 class="bold">Titolo</h1>
                     <h1>${program.name}</h1>
-                </div>
+                <#-- </div> -->
                 
                 <h1 class="bold">Descrizione</h1>
-                <p class="bold">${program.description}</p>
+                <p>${program.description}</p>
                 
-                <div class="flex-row between">
+                <#-- <div class="flex-row between"> -->
                     <h1 class="bold">Genere</h1>
                     <h1> ${program.genre}</h1>
-                </div>
+                <#-- </div> -->
+                
                 
                 <#if (program.seasonsNumber >=1)>
-                <#list episodes as s>
-                <#assign before = s.episode.key>
-                <#if after??>
-                    <#if before != after> 
-                        <div class="serie">
-                            <h2>S:${s.episode.seasonNumber} E${s.episode.number} <b> ${s.episode.name} <br> <br> &nbsp &nbsp </b> <b>${s.date} </b> alle <b>${s.startTime}</b> SU <b> ${s.channel.name} </b> </h2>
-                        </div>
+                    <h1 class="bold">Episodi andati in onda (ultimo mese):</h1>
+                    <#list episodes as s>
+                    <#assign before = s.episode.key>
+                    <#if after??>
+                        <#if before != after> 
+                            <div class="serie">
+                                <h2>S:${s.episode.seasonNumber} E${s.episode.number} <b> ${s.episode.name} <br> &nbsp &nbsp </b> <b>${s.date} </b> alle <b>${s.startTime}</b> SU <b> <a href = 'channel?id=${s.channel.key}'>${s.channel.name}</a> </b> </h2>
+                            </div>
+                        <#else>
+                            <div class="serie">
+                                <h2> &nbsp &nbsp <b>${s.date} </b> alle <b>${s.startTime}</b> SU <b> <a href = 'channel?id=${s.channel.key}'>${s.channel.name}</a> </b> </h2>
+                            </div>
+                        </#if>
                     <#else>
-                        <div class="serie">
-                            <h2> &nbsp &nbsp <b>${s.date} </b> alle <b>${s.startTime}</b> SU <b> ${s.channel.name} </b> </h2>
-                        </div>
+                            <div class="serie">
+                                <h2>S${s.episode.seasonNumber} E${s.episode.number} <b> ${s.episode.name} <br> </b> &nbsp &nbsp <b>${s.date} </b> alle <b>${s.startTime}</b> SU <b> <a href = 'channel?id=${s.channel.key}'>${s.channel.name}</a> </b> </h2>
+                            </div>
                     </#if>
-                <#else>
-                        <div class="serie">
-                            <h2>S${s.episode.seasonNumber} E${s.episode.number} <b> ${s.episode.name} <br> <br> </b> &nbsp &nbsp <b>${s.date} </b> alle <b>${s.startTime}</b> SU <b> ${s.channel.name} </b> </h2>
-                        </div>
-                </#if>
-                <#assign after = s.episode.key>
-                </#list>
+                    <#assign after = s.episode.key>
+                    </#list>
                 </#if>
                 
             </div>

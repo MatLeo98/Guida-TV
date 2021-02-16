@@ -15,6 +15,7 @@ import it.univaq.guidatv.data.impl.ProgramImpl;
 import it.univaq.guidatv.data.model.Channel;
 import it.univaq.guidatv.data.model.Image;
 import it.univaq.guidatv.data.model.Schedule;
+import it.univaq.guidatv.data.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -73,6 +75,12 @@ public class ChannelDetail extends BaseController {
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("date", date);
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+            HttpSession session = request.getSession(false);
+            if(session!=null){
+            User user = (User) session.getAttribute("user");
+            String email = user.getKey();
+             request.setAttribute ("email",email);
+            }
             res.activate("channeldetails.ftl.html", request, response);
             //try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
