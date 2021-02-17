@@ -21,6 +21,10 @@
     <div id="container" class="flex-column between">
            <#include "searchbar.ftl.html">
       
+           
+           
+         <#if (program.seasonsNumber >=1)>  
+           
         <div id="guidatv" class="flex-row between">
              <#if program.image??>
              <p> <img width="230px" height="300px" class="foto" src='${program.image.link}' alt='image1'/> </p>
@@ -43,7 +47,7 @@
                 
                 
                 
-                <#if (program.seasonsNumber >=1)>
+                
                 <div class="index-episodi">
                     <h1 class="bold">Episodi andati in onda nell'ultimo mese </h1>
                     <#list episodes as s>
@@ -65,8 +69,32 @@
                     </#if>
                     <#assign after = s.episode.key>
                     </#list>
-                </#if>
                 </div>
+                <#else>
+                <div id="guidatv" class="flex-row between">
+             <#if program.image??>
+             <p> <img width="230px" height="300px" class="foto" src='${program.image.link}' alt='image1'/> </p>
+             </#if>
+            </img>
+            <div  class="flex-column between">
+                
+               <#-- <div class="flex-row between"> -->
+                    <h1 class="bold">Titolo</h1>
+                    <h1>${program.name}</h1>
+                <#-- </div> -->
+                
+                <h1 class="bold">Descrizione</h1>
+                <p>${program.description}</p>
+                
+                <#-- <div class="flex-row between"> -->
+                    <h1 class="bold">Genere</h1>
+                    <h1> ${program.genre}</h1>
+                <#-- </div> -->
+                </#if>
+                
+                
+                
+                
                 
             </div>
             <div class="flex-column center text-center">
