@@ -1,29 +1,46 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Guida-TV</title>            
-    </head>
-    <body>
-        <h1> Palinsesto completo per ogni canale </h1>
-        <form method="get" action="schedules">
-            <label for="tsSelect">Scegli una fascia oraria:</label>
-            <select name="tsSelect" id="tsSelect">
-                <option value="${timeslot}">${timeslot}</option>
-                <#list timeslots as ts>
-                    <option value="${ts}">${ts}</option>
-                </#list>
-            </select>
-            <br><br>
-            <label for="dateSelect">Scegli un giorno:</label>
-            <select name='dateSelect' id='dateSelect'>
-                <option value="${today}"> Oggi </option>
-                <option value="${tomorrow}"> Domani </option>
-                <option value="${thirdDay}"> Dopodomani </option>
-            </select>
-            <input type="submit" name="s"/>
-        </form>
 
-        <#list channels as c>
+
+
+<html lang="it_IT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descrizione</title>
+
+    <link rel="stylesheet" href="style/style2.css">
+    <link rel="stylesheet" href="style/index2.css">
+
+    <!-- Monserrat import from google fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <button id="hamburger"></button>
+    <div id="menu" class="flex-column">
+        <input type="button" value="chiudi" id="chiudi">
+        <a href="http://localhost:8080/Guida-tivu/schedules">schedules</a>
+
+        
+        <#if email??>
+        <a href="http://localhost:8080/Guida-tivu/profile">Profilo ${email}</a>
+        <a href="http://localhost:8080/Guida-tivu/login?logout=1">LOG-OUT</a>
+       
+        
+        <#else>
+         <a href="http://localhost:8080/Guida-tivu/">Home</a>
+         <a href="http://localhost:8080/Guida-tivu/login">login</a>
+         <a href="http://localhost:8080/Guida-tivu/register">registrati</a>
+         </#if>
+        
+        
+    </div>
+
+    <div id="container" class="flex-column">
+         <#include "searchbar.ftl.html">
+
+        <div id="index-schedule" class="flex-column">
+    <#list channels as c>
 
             <h2> <a href = 'channel?id=${c.key}'> ${c.name}</a> </h2>
             <#list schedules as s>
@@ -40,6 +57,18 @@
                 </#if>
             </#list>
         </#list>
+        </div>
 
-    </body>
+    </div>
+
+    <script>
+        document.getElementById("hamburger").onclick = function (){
+            document.getElementById("menu").classList = "showing flex-column";
+        }
+        document.getElementById("chiudi").onclick = function (){
+            document.getElementById("menu").classList = "hiding flex-column";
+        }
+    </script>
+    
+</body>
 </html>

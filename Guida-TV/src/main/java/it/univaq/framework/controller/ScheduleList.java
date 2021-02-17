@@ -9,6 +9,7 @@ import it.univaq.framework.data.DataException;
 import it.univaq.framework.result.TemplateManagerException;
 import it.univaq.framework.result.TemplateResult;
 import it.univaq.guidatv.data.dao.GuidatvDataLayer;
+import it.univaq.guidatv.data.impl.ProgramImpl;
 import it.univaq.guidatv.data.impl.ScheduleImpl.TimeSlot;
 import it.univaq.guidatv.data.model.Channel;
 import it.univaq.guidatv.data.model.Schedule;
@@ -46,6 +47,8 @@ public class ScheduleList extends BaseController {
        
         
         try {
+            request.setAttribute("genres", ProgramImpl.Genre.values());
+            request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
             
             
             request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());

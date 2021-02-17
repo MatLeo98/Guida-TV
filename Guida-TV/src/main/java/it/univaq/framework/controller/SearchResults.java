@@ -11,6 +11,7 @@ import it.univaq.framework.result.TemplateManagerException;
 import it.univaq.framework.result.TemplateResult;
 import it.univaq.framework.security.SecurityLayer;
 import it.univaq.guidatv.data.dao.GuidatvDataLayer;
+import it.univaq.guidatv.data.impl.ProgramImpl;
 import it.univaq.guidatv.data.model.Program;
 import it.univaq.guidatv.data.model.SavedSearches;
 import it.univaq.guidatv.data.model.Schedule;
@@ -38,8 +39,11 @@ import javax.servlet.http.HttpSession;
 public class SearchResults extends BaseController {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+          
             throws ServletException {
         try{
+            request.setAttribute("genres", ProgramImpl.Genre.values());
+            request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
             String tit = request.getParameter("title");
             String gen = request.getParameter("genre");
             String ch = request.getParameter("channel");

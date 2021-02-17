@@ -5,29 +5,30 @@
 #index-programmi{
     margin-left: auto;
     margin-right: auto;
-    width: auto;
-    margin-top: 17vh;
+    width: 35vw;
+    margin-top: 2vh;
     max-height: 51%;
-      overflow-y: scroll;
+    overflow-y: scroll;
+}
+
+
+
+#index-schedule{
+    margin-left: auto;
+    margin-right: auto;
+    width: 35vw;
+    margin-top: 2vh;
+    max-height: 80%;
+    overflow-y: scroll;
 }
 
 .programmi{
-    margin-left: 25 px;
-    margin-right: 10px;
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: 1vh;
-    width: auto;
+    width: 30vw;
     padding: 1.1vh;
     border-radius: 0.4rem;
     font-size: 150%;
     background-color: #ffffff55;
-
 }
-
-
-
-
-
-
-
-
-

@@ -1,17 +1,60 @@
-<!DOCTYPE html>
-<html>
-    <head>
-    <title>Guida-TV</title>            
-    </head>
-    <body>
-    <#if email??>
-    <form method="post" action="searchresults?saved=1">
-        <button type='submit'>Salva questi criteri di ricerca</button>
-    </form>
-    </#if>
+
+<html lang="it_IT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descrizione</title>
+
+    <link rel="stylesheet" href="style/style2.css">
+    <link rel="stylesheet" href="style/index2.css">
+
+    <!-- Monserrat import from google fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <button id="hamburger"></button>
+    <div id="menu" class="flex-column">
+        <input type="button" value="chiudi" id="chiudi">
+        <a href="http://localhost:8080/Guida-tivu/schedules">schedules</a>
+
+        
+        <#if email??>
+        <a href="http://localhost:8080/Guida-tivu/profile">Profilo ${email}</a>
+        <a href="http://localhost:8080/Guida-tivu/login?logout=1">LOG-OUT</a>
+       
+        
+        <#else>
+         <a href="http://localhost:8080/Guida-tivu/">Home</a>
+         <a href="http://localhost:8080/Guida-tivu/login">login</a>
+         <a href="http://localhost:8080/Guida-tivu/register">registrati</a>
+         </#if>
+        
+        
+    </div>
+
+    <div id="container" class="flex-column">
+         <#include "searchbar.ftl.html">
+
+        <div id="index-programmi" class="flex-column">
     <h1>RISULTATI:</h1>
     <#list search as s>
         <h3><a href = 'program?id=${s.program.key}'>${s.program.name}</a></h3>
+
     </#list>
-    </body>
+        </div>
+
+    </div>
+
+    <script>
+        document.getElementById("hamburger").onclick = function (){
+            document.getElementById("menu").classList = "showing flex-column";
+        }
+        document.getElementById("chiudi").onclick = function (){
+            document.getElementById("menu").classList = "hiding flex-column";
+        }
+    </script>
+    
+</body>
 </html>
