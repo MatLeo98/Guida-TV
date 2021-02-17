@@ -41,8 +41,8 @@
          
          
          
-         <div class="flex-row">
-             <form method="get" action="schedules">
+         <div class="flex-row"  style="Justify-content: space-evenly; padding-top: 5vh;  height: 70vh;">
+             <form method="get" action="schedules" style="margin-top: 25vh;">
             <label for="tsSelect">Scegli una fascia oraria:</label>
             <select name="tsSelect" id="tsSelect">
                 <option value="${timeslot}">${timeslot}</option>
@@ -57,9 +57,11 @@
                 <option value="${tomorrow}"> Domani </option>
                 <option value="${thirdDay}"> Dopodomani </option>
             </select>
+            <br>
+            <br>
             <input type="submit" name="s"/>
         </form>
-         </div>
+         
 
         <div id="index-schedule" class="flex-column">
     <#list channels as c>
@@ -80,7 +82,7 @@
             </#list>
         </#list>
         </div>
-
+</div>
     </div>
 
     <script>
