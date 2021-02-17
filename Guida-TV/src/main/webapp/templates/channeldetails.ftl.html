@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Descrizione</title>
+    <title>${channel.name}</title>
 
     <link rel="stylesheet" href="style/style.css">
     <link rel="stylesheet" href="style/canale2.css">
@@ -15,12 +15,7 @@
 
     <button id="hamburger"></button>
     <div id="menu" class="flex-column">
-        <input type="button" value="chiudi" id="chiudi">
-        <a href="http://localhost:8080/Guida-tivu/">home</a>
-        <a href="http://localhost:8080/Guida-tivu/schedules">schedules</a>
-        <a href="http://localhost:8080/Guida-tivu/login">login</a>
-        <a href="http://localhost:8080/Guida-tivu/register">registrati</a>
-        
+      <#include "menu.ftl.html">   
     </div>
 
     <div id="container" class="flex-column between">
@@ -44,22 +39,16 @@
                 </div>
                 
                
-                     <h1>Oggi in Onda</h1>
+                     <h1 class="bold">Oggi in Onda:</h1>
                      
                      <#list schedule as s>
                       <div class="flex-row between">
-                          <h1> <a href='program?id=${s.program.key}'>  ${s.program.name} </a></h1>
-                    <h1>  Dalle: <b> ${s.startTime} </b> </h1>
-                    <h1>  Alle: <b> ${s.endTime} </b> </h1>
+                          <h1> <a href='program?id=${s.program.key}'>  ${s.program.name} </a></h1> &nbsp &nbsp
+                          <h1>  Dalle: <b> ${s.startTime} </b> </h1>
+                          <h1>  Alle: <b> ${s.endTime} </b> </h1>
                      </div>
                     </#list>
-
-                    
-               
-                
-          
-                
-                
+         
             </div>
             <div class="flex-column center text-center">
                

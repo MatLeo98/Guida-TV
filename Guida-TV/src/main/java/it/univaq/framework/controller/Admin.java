@@ -52,48 +52,14 @@ public class Admin extends BaseController {
                         sendEmail(request,response);
                     action_admin(request, response);
                 }else{
-                    
-                        
                         request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-                        res.activate("sonoin.ftl.html", request, response);
-                        //try (PrintWriter out = response.getWriter()) {
-                        //response.setContentType("text/html;charset=UTF-8");
-                        //  out.println("<!DOCTYPE html>");
-                        // out.println("<html>");
-                        // out.println("<body>");
-                        /*out.println("<h3> Non sei autorizzato ad accedere a questa pagina </h3>");
-                        out.println("<br><br>");
-                        out.println("<a href=\"home\">HOME</a>"); //DA CAMBIARE CHE VA DIRETTAMENTE ALLA PAGINA LOGIN
-                        out.println("</body>");
-                        out.println("</html>");*/
-                        /*  } catch (IOException ex) {
-                        Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    */                
+                        res.activate("sonoin.ftl.html", request, response);                
                 }
             }else{
-                       
-            
-               
-                request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-                res.activate("devilogin.ftl.html", request, response);
-                /* try (PrintWriter out = response.getWriter()) {
-                response.setContentType("text/html;charset=UTF-8");
-                out.println("<!DOCTYPE html>");
-                out.println("<html>");
-                out.println("<body>");
-                out.println("<h3> Devi essere loggato per accedere a questa pagina");
-                out.println("<br><br>");
-                out.println("<a href=\"login\">GO TO LOGIN</a>"); //DA CAMBIARE CHE VA DIRETTAMENTE ALLA PAGINA LOGIN
-                out.println("</body>");
-                out.println("</html>");
-                } catch (IOException ex) {
-                Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            */          
+                notLogged(request,response);        
             }
-        }else{request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-                res.activate("devilogin.ftl.html", request, response);
+        }else{
+            notLogged(request,response);
         }
         } catch (TemplateManagerException ex) {
                 Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
@@ -196,6 +162,17 @@ public class Admin extends BaseController {
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void notLogged(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            TemplateResult res = new TemplateResult(getServletContext());
+            res.activate("devilogin.ftl.html", request, response);
+            response.setContentType("text/html;charset=UTF-8");
+
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

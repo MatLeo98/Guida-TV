@@ -38,49 +38,48 @@ public class LoginController extends BaseController {
      */
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        
+
         HttpSession s = request.getSession(false);
         User loggedUser = null;
-        if(s!=null){
-        loggedUser = (User) s.getAttribute("user");
+        if (s != null) {
+            loggedUser = (User) s.getAttribute("user");
         }
         if (request.getParameter("logout") == null) {
-            
-            if (loggedUser != null && !(loggedUser.getKey()).isEmpty()){
-           
-                    logged(request, response);
-              
-            }else{
+
+            if (loggedUser != null && !(loggedUser.getKey()).isEmpty()) {
+
+                logged(request, response);
+
+            } else {
                 String email = request.getParameter("email");
-                
-                if (email == null || email.isEmpty()) {                       
+
+                if (email == null || email.isEmpty()) {
                     login_action(request, response);
-                }else{
+                } else {
                     try {
-                        
-                        User user = ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().getUser(email);
-                        if(user != null && BCrypt.checkpw(request.getParameter("password"), user.getPassword())){
+
+                        User user = ((GuidatvDataLayer) request.getAttribute("datalayer")).getUserDAO().getUser(email);
+                        if (user != null && BCrypt.checkpw(request.getParameter("password"), user.getPassword())) {
                             s = request.getSession(true);
                             s.setAttribute("user", user);
-                            
-                                logged(request, response);
-                                                   
-                        }else{
-                            action_error(request,response);
+
+                            logged(request, response);
+
+                        } else {
+                            action_error(request, response);
+
                         }
                     } catch (DataException ex) {
                         Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
+
                 }
-            }       
-        }else{
-           s.invalidate();
-           login_action(request, response); 
+            }
+        } else {
+            s.invalidate();
+            login_action(request, response);
         }
-        
-        
-         
+
         /*if (request.getParameter("email") == null){
             login_action(request,response);
         }else{
@@ -97,94 +96,47 @@ public class LoginController extends BaseController {
             } 
            
         }*/
-            
-        }
+    }
 
     private void login_action(HttpServletRequest request, HttpServletResponse response) {
         try {
             TemplateResult res = new TemplateResult(getServletContext());
             res.activate("login.ftl.html", request, response);
-            // try (PrintWriter out = response.getWriter()) {
-            
-            /*
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Login</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<center>");
-            out.println("<h1> LOGIN </h1>");
-            out.println("<br><br>");
-            out.println("<form method=\"post\" action=\"login\">");
-            out.println("<input type=\"email\" id=\"email\" name=\"email\" placeholder=\"Email\"/>");
-            out.println("<br><br>");
-            out.println("<input type=\"password\" id=\"password\" name=\"password\" placeholder=\"Password\"/>");
-            out.println("<br><br>");
-            out.println("<input type=\"submit\" name=\"login\" value=\"LOGIN\"/>");
-            out.println(" </center>");
-            out.println("</form>");
-            out.println("</body>");
-            out.println("</html>");
-            */
+
         } catch (TemplateManagerException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }   
-    
+    }
 
     private void logged(HttpServletRequest request, HttpServletResponse response) {
-        try (PrintWriter out = response.getWriter()){
-            
+        try {
+
             HttpSession s = request.getSession(false);
             User user = (User) s.getAttribute("user");
-           
-           
 
+            if (user.getKey().equalsIgnoreCase("admin@email.it")) {
+                response.sendRedirect("http://localhost:8080/Guida-tivu/admin");
+            } else {
+                response.sendRedirect("http://localhost:8080/Guida-tivu/home");
+            }
 
-            out.println("<h1> ciao " + user.getKey() + "</h1>");
-            out.println("<h2> login succesfull! </h2>");
-                if(user.getKey().equalsIgnoreCase("admin@email.it")){
-                    out.println("<a href=\"admin\"> Gestione pagina (admin) </a>"); 
-                }else{
-                    out.println("<a href=\"home\"> Home </a>");
-                }
-            out.println("<p><a href=\"login?logout=1\">LOGOUT</a></p>");
-               
         } catch (IOException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-    }
-    
-    private void admin_logged (HttpServletRequest request, HttpServletResponse response) {
-        try (PrintWriter out = response.getWriter()){
-            
-            HttpSession s = request.getSession(false);
-           User user = (User) s.getAttribute("user");
 
-
-            out.println("<h1> ciao " + user.getKey() + "</h1>");
-            out.println("<h2> login succesfull! </h2>");
-            out.println("<a href=\"admin\"> Gestione pagina (admin) </a>");
-            out.println("<p><a href=\"login?logout=1\">LOGOUT</a></p>");
-               
-        } catch (IOException ex) {
-            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
     }
 
     private void action_error(HttpServletRequest request, HttpServletResponse response) {
-        try (PrintWriter out = response.getWriter()){
+        try {
 
-                  User user = (User) request.getAttribute("user");
-                      out.println("<h1> Login failed</h1>");
-                      out.println("<a href=\"login\"> RIPROVA </a>");
-                        //request.setAttribute("user", user);
-                } catch (IOException ex) {
-                    Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            request.setAttribute("loginerror", "Username e/o password errati");
+
+            TemplateResult res = new TemplateResult(getServletContext());
+            res.activate("login.ftl.html", request, response);
+
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

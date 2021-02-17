@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Descrizione</title>
+    <title>Login</title>
 
     <link rel="stylesheet" href="style/style.css">
     <link rel="stylesheet" href="style/login.css">
@@ -16,8 +16,8 @@
     <button id="hamburger"></button>
     <div id="menu" class="flex-column">
         <input type="button" value="chiudi" id="chiudi">
-            <a href="http://localhost:8080/Guida-tivu/">home</a>
-             <a href="http://localhost:8080/Guida-tivu/schedules">schedules</a>
+        <a href="http://localhost:8080/Guida-tivu/">home</a>
+        <a href="http://localhost:8080/Guida-tivu/schedules">schedules</a>
         <a href="http://localhost:8080/Guida-tivu/register">registrati</a>
     </div>
 
@@ -26,7 +26,10 @@
     <div id="container" class="flex-column">
         <input id="username" name="email" type="text" placeholder="EMAIL">
         <input id="password" name="password" type="password" placeholder="PASSWORD">
-        <input id="invia" name="login" type="submit" value="invia">
+        <input id="invia" name="login" type="submit" value="Login">
+        <#if loginerror??>
+            <center> <p style="color:red;"> ${loginerror} </p></center>
+        </#if>
         </form>
     </div>
 

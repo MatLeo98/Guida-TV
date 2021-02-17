@@ -63,22 +63,15 @@ public class Home extends BaseController {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    
-  
-    
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException{  
-        
-      /*HttpSession s = request.getSession(true);
+            throws ServletException {
+
+        /*HttpSession s = request.getSession(true);
        s.setAttribute("datalayer",((GuidatvDataLayer)request.getAttribute("datalayer")));*/
-      
-      
-       /* Timer timer = new Timer();
+ /* Timer timer = new Timer();
         timer.schedule(sendEmail(request,response), 0, 5000);    */
-        
-       
-       //ULTIMO FUNZIONANTE
+        //ULTIMO FUNZIONANTE
         /*ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         try {
             executor.scheduleAtFixedRate(sendEmail(request,response), 0, 5, TimeUnit.SECONDS);
@@ -98,65 +91,44 @@ public class Home extends BaseController {
             Scheduler scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start();
             scheduler.scheduleJob(job, trigger);*/
-       /* } catch (DataException ex) {
+ /* } catch (DataException ex) {
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
         }*/
-        
-       
-        
-        try {  
-            
-        
-           TemplateResult res = new TemplateResult(getServletContext());
+        try {
+
+            TemplateResult res = new TemplateResult(getServletContext());
             //aggiungiamo al template un wrapper che ci permette di chiamare la funzione stripSlashes
             //add to the template a wrapper object that allows to call the stripslashes function
-            
+
             HttpSession session = request.getSession(false);
-            
-            if(session!=null){
-            User user = (User) session.getAttribute("user");
-            String email = user.getKey();
-             request.setAttribute ("email",email);
+
+            if (session != null) {
+                User user = (User) session.getAttribute("user");
+                String email = user.getKey();
+                request.setAttribute("email", email);
             }
 
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
             request.setAttribute("genres", Genre.values());
- 
-            request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
-            request.setAttribute("onAirPrograms", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getOnAirPrograms());
+
+            request.setAttribute("channels", ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannels());
+            request.setAttribute("onAirPrograms", ((GuidatvDataLayer) request.getAttribute("datalayer")).getScheduleDAO().getOnAirPrograms());
             res.activate("home.ftl.html", request, response);
-            
+
             //action_home(request, response);   
-            
-            
-            
-        
-        
-        
-            
         } catch (NumberFormatException ex) {
-            request.setAttribute("message", "Home key not specified");           
-        } catch (DataException ex) { 
+            request.setAttribute("message", "Home key not specified");
+        } catch (DataException ex) {
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
         } catch (TemplateManagerException ex) {
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
         }
-      
+
     }
-    
-    
 
     private void action_home(final HttpServletRequest request, HttpServletResponse response) throws SchedulerException {
         System.out.println("hola");
-        
-        
-          
-          
-          
-          
-          
-        
-       
+
         /* Scheduler scheduler;
          
          
@@ -247,7 +219,7 @@ public class Home extends BaseController {
         }*/
     }
 
-   /* public static class SendEmailJob extends BaseController implements Job {
+    /* public static class SendEmailJob extends BaseController implements Job {
 
         @Override
         public void execute(JobExecutionContext context) throws JobExecutionException{
@@ -341,7 +313,7 @@ public class Home extends BaseController {
         
     }*/
 
-    /*private TimerTask sendEmail(HttpServletRequest request, HttpServletResponse response) {
+ /*private TimerTask sendEmail(HttpServletRequest request, HttpServletResponse response) {
         
         System.out.println("ciao");
         try {
@@ -396,17 +368,7 @@ public class Home extends BaseController {
         } catch (IOException ex) {
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
         }*/
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    /*private Runnable sendEmail(final HttpServletRequest request, HttpServletResponse response) throws DataException {
+ /*private Runnable sendEmail(final HttpServletRequest request, HttpServletResponse response) throws DataException {
         
         HttpSession s = request.getSession(false);
         final GuidatvDataLayer datalayer = (GuidatvDataLayer) s.getAttribute("datalayer");
@@ -475,7 +437,4 @@ public class Home extends BaseController {
             
         return helloRunnable;
     }*/
-      
-    
-
 }

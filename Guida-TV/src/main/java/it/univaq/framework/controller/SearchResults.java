@@ -64,6 +64,7 @@ public class SearchResults extends BaseController {
                 max = (String) session.getAttribute("max");
                 request.setAttribute("savedS", ((GuidatvDataLayer)request.getAttribute("datalayer")).getSavedSearchesDAO().storeSavedSearches(tit, gen, ch, date1, date2, min, max, email));
                 request.setAttribute("search", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().search(tit, gen, ch, min, max, date1, date2));
+                request.setAttribute("message","Ricerca salvata");
                 store_prefPrograms(request,response);
                 //action_results(request, response);
                 

@@ -17,6 +17,7 @@ import it.univaq.guidatv.data.model.Episode;
 import it.univaq.guidatv.data.model.Image;
 import it.univaq.guidatv.data.model.Program;
 import it.univaq.guidatv.data.model.Schedule;
+import it.univaq.guidatv.data.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -27,6 +28,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -76,6 +78,12 @@ public class ProgramDetail extends BaseController {
         try {
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+            HttpSession session = request.getSession(false);
+            if(session!=null){
+            User user = (User) session.getAttribute("user");
+            String email = user.getKey();
+             request.setAttribute ("email",email);
+            }
             res.activate("programdetail1.ftl.html", request, response);
             
             //try (PrintWriter out = response.getWriter()) {
