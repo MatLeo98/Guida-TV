@@ -42,8 +42,9 @@
          
          
          <div class="flex-row"  style="Justify-content: space-evenly; padding-top: 5vh;  height: 70vh;">
-             <form method="get" action="schedules" style="margin-top: 25vh;">
-            <label for="tsSelect">Scegli una fascia oraria:</label>
+             <form method="get" action="schedules" style="margin-top: 20vh; margin-left: 5vh">
+                 <p> Scegli giorno e fascia oraria </p>
+            <label for="tsSelect"></label>
             <select name="tsSelect" id="tsSelect">
                 <option value="${timeslot}">${timeslot}</option>
                 <#list timeslots as ts>
@@ -51,7 +52,7 @@
                 </#list>
             </select>
             <br><br>
-            <label for="dateSelect">Scegli un giorno:</label>
+            <label for="dateSelect"></label>
             <select name='dateSelect' id='dateSelect'>
                 <option value="${today}"> Oggi </option>
                 <option value="${tomorrow}"> Domani </option>
