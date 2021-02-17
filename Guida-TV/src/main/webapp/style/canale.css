@@ -14,7 +14,9 @@
 }
 #info{
     max-width: 42vw;
-    min-width: 42vw
+    min-width: 42vw;
+    height:  70vh;
+    overflow-y: scroll;
 }
 #info > p{
     line-height: 95%;

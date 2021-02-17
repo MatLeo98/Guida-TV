@@ -38,6 +38,28 @@
 
     <div id="container" class="flex-column">
          <#include "searchbar.ftl.html">
+         
+         
+         
+         <div class="flex-row">
+             <form method="get" action="schedules">
+            <label for="tsSelect">Scegli una fascia oraria:</label>
+            <select name="tsSelect" id="tsSelect">
+                <option value="${timeslot}">${timeslot}</option>
+                <#list timeslots as ts>
+                    <option value="${ts}">${ts}</option>
+                </#list>
+            </select>
+            <br><br>
+            <label for="dateSelect">Scegli un giorno:</label>
+            <select name='dateSelect' id='dateSelect'>
+                <option value="${today}"> Oggi </option>
+                <option value="${tomorrow}"> Domani </option>
+                <option value="${thirdDay}"> Dopodomani </option>
+            </select>
+            <input type="submit" name="s"/>
+        </form>
+         </div>
 
         <div id="index-schedule" class="flex-column">
     <#list channels as c>
@@ -48,11 +70,11 @@
                 <#if s.channel.name == c.name >
                     <p>Programma: <a href = 'program?id=${s.program.key}'>${s.program.name}</a></p>
                     <#if s.episode??>
-                        <p>Episodio numero: ${s.episode.number} - ${s.episode.name}</p>
+                        <p>Episodio numero: <a> ${s.episode.number} - ${s.episode.name}</a></p>
                     </#if>
-                    <p> Data:  ${s.date} </p>
-                    <p> Ora inizio: ${s.startTime}</p>
-                    <p> Ora fine: ${s.endTime}</p>
+                    <p> Data: <a> ${s.date}</a> </p>
+                    <p> Ora inizio:<a> ${s.startTime}</a></p>
+                    <p> Ora fine: <a> ${s.endTime} </a></p>
                     <br>
                 </#if>
             </#list>

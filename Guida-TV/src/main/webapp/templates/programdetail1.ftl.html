@@ -44,7 +44,8 @@
                 
                 
                 <#if (program.seasonsNumber >=1)>
-                    <h1 class="bold">Episodi andati in onda (ultimo mese):</h1>
+                <div class="index-episodi">
+                    <h1 class="bold">Episodi andati in onda nell'ultimo mese </h1>
                     <#list episodes as s>
                     <#assign before = s.episode.key>
                     <#if after??>
@@ -65,6 +66,7 @@
                     <#assign after = s.episode.key>
                     </#list>
                 </#if>
+                </div>
                 
             </div>
             <div class="flex-column center text-center">
