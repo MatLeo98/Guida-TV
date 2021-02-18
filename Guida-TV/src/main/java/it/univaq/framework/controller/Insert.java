@@ -21,6 +21,7 @@ import it.univaq.guidatv.data.model.User;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -41,80 +42,85 @@ public class Insert extends BaseController {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         HttpSession s = request.getSession(false);
-        if(request.getParameter("channel") != null){
-            if(request.getParameter("channelNumber") == null){
-                channel_insert(request, response);
-            }else{
-                insert_done(request, response);
-            }
-        }
-            
-        if(request.getParameter("program") != null){
-            if(request.getParameter("programName") == null){
-                program_insert(request, response);
-            }else{
-                insert_done(request, response);
-            }
-        }
-                
-        if(request.getParameter("episode") != null){
-            if(s.getAttribute("programSelected") == null){
-            //if(request.getParameter("episodeName") == null){
-                try{
-                    if(request.getParameter("pr") != null){
-                            try {
-                                Integer id = Integer.parseInt(request.getParameter("pr"));
-                                Program pro = ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getProgram(id);
-                                request.setAttribute("programSelected", pro);
-                                s.setAttribute("programSelected", pro);                                
-                            } catch (DataException ex) {
-                            Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
-                            }        
-                    }
-                    request.setAttribute("programs", ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getPrograms());
-                    episode_insert(request, response);
-                } catch (DataException ex) {
-                    Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
-                  }
-            }else{
-                insert_done(request, response);
-            }                
-        }
-        
-        if(request.getParameter("schedule") != null){
-            //if(s.getAttribute("programSelected") == null){
-            if(s.getAttribute("channelSelected") == null){
-                try{
-                    //if(request.getParameter("pr") != null){
-                        if(request.getParameter("ch") != null){
-                            try {
-                                /*Integer id = Integer.parseInt(request.getParameter("pr"));
-                                Program pro = ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getProgram(id);
-                                request.setAttribute("programSelected", pro);
-                                s.setAttribute("programSelected", pro);*/
-                                Integer id = Integer.parseInt(request.getParameter("ch"));
-                                Channel cha = ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(id);
-                                request.setAttribute("channelSelected", cha);
-                                s.setAttribute("channelSelected", cha);
-                                request.setAttribute("episodes", ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getAllEpisodes());
-                                //request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
-                                request.setAttribute("programs", ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getPrograms());
-                                
-                            } catch (DataException ex) {
-                            Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
-                            }        
-                    }
-                    
-                    request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
-                   
-                    schedule_insert(request, response);
-                }catch (DataException ex) {
-                                Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
+        try {
+            request.setCharacterEncoding("UTF-8");     
+            if(request.getParameter("channel") != null){
+                if(request.getParameter("channelNumber") == null){
+                    channel_insert(request, response);
+                }else{
+                    insert_done(request, response);
                 }
-            }else{
-                insert_done(request, response);
-            } 
-        }    
+            }
+
+            if(request.getParameter("program") != null){
+                if(request.getParameter("programName") == null){
+                    program_insert(request, response);
+                }else{
+                    insert_done(request, response);
+                }
+            }
+
+            if(request.getParameter("episode") != null){
+                if(s.getAttribute("programSelected") == null){
+                //if(request.getParameter("episodeName") == null){
+                    try{
+                        if(request.getParameter("pr") != null){
+                                try {
+                                    Integer id = Integer.parseInt(request.getParameter("pr"));
+                                    Program pro = ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getProgram(id);
+                                    request.setAttribute("programSelected", pro);
+                                    s.setAttribute("programSelected", pro);                                
+                                } catch (DataException ex) {
+                                Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
+                                }        
+                        }
+                        request.setAttribute("programs", ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getPrograms());
+                        episode_insert(request, response);
+                    } catch (DataException ex) {
+                        Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
+                      }
+                }else{
+                    insert_done(request, response);
+                }                
+            }
+
+            if(request.getParameter("schedule") != null){
+                //if(s.getAttribute("programSelected") == null){
+                if(s.getAttribute("channelSelected") == null){
+                    try{
+                        //if(request.getParameter("pr") != null){
+                            if(request.getParameter("ch") != null){
+                                try {
+                                    /*Integer id = Integer.parseInt(request.getParameter("pr"));
+                                    Program pro = ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getProgram(id);
+                                    request.setAttribute("programSelected", pro);
+                                    s.setAttribute("programSelected", pro);*/
+                                    Integer id = Integer.parseInt(request.getParameter("ch"));
+                                    Channel cha = ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannel(id);
+                                    request.setAttribute("channelSelected", cha);
+                                    s.setAttribute("channelSelected", cha);
+                                    request.setAttribute("episodes", ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getAllEpisodes());
+                                    //request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
+                                    request.setAttribute("programs", ((GuidatvDataLayer)request.getAttribute("datalayer")).getProgramDAO().getPrograms());
+
+                                } catch (DataException ex) {
+                                Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
+                                }        
+                        }
+
+                        request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
+
+                        schedule_insert(request, response);
+                    }catch (DataException ex) {
+                                    Logger.getLogger(Edit.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }else{
+                    insert_done(request, response);
+                } 
+            }    
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
+        }
                
     }
     
@@ -356,12 +362,13 @@ public class Insert extends BaseController {
     
     private void insert_done(HttpServletRequest request, HttpServletResponse response){            
         
-            try (PrintWriter out = response.getWriter()){
+            try {
+
                 if(request.getParameter("channel") != null){//CHANNEL
                     Integer n = Integer.parseInt(request.getParameter("channelNumber"));
                     Channel channel = ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().createChannel();
-                    channel.setKey(n);
-                    channel.setName(request.getParameter("channelName"));
+                    channel.setKey(n);                 
+                    channel.setName(request.getParameter("channelName"));                  
                     Image image = ((GuidatvDataLayer)request.getAttribute("datalayer")).getImageDAO().createImage();
                     image.setLink(request.getParameter("image"));
                     image = ((GuidatvDataLayer)request.getAttribute("datalayer")).getImageDAO().storeImage(image);
@@ -462,9 +469,7 @@ public class Insert extends BaseController {
                 }
             } catch (DataException ex) {
                 Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-            Logger.getLogger(Insert.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            }
     }
 
 }

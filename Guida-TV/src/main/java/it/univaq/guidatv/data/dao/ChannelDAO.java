@@ -6,10 +6,7 @@
 package it.univaq.guidatv.data.dao;
 
 import it.univaq.framework.data.DataException;
-import it.univaq.framework.data.proxy.ChannelProxy;
 import it.univaq.guidatv.data.model.Channel;
-import it.univaq.guidatv.data.model.FavouriteChannel;
-import java.sql.ResultSet;
 import java.util.List;
 
 /**

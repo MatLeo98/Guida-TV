@@ -1,6 +1,3 @@
-
-
-
 <html lang="it_IT">
 <head>
     <meta charset="UTF-8">
@@ -48,7 +45,11 @@
             <select name="tsSelect" id="tsSelect">
                 <option value="${timeslot}">${timeslot}</option>
                 <#list timeslots as ts>
+                    <#if (ts == timeslot)>
+
+                    <#else>
                     <option value="${ts}">${ts}</option>
+                    </#if>                  
                 </#list>
             </select>
             <br><br>

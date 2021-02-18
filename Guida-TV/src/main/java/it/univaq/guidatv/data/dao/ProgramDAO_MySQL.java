@@ -5,7 +5,6 @@
  */
 package it.univaq.guidatv.data.dao;
 
-import it.univaq.framework.controller.ProfileController;
 import it.univaq.framework.data.DAO;
 import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItemProxy;
