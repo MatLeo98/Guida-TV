@@ -37,7 +37,7 @@
                     <h1>${program.name}</h1>
                 <#-- </div> -->
                 
-                <h1 class="bold">Descrizione</h1>
+                <h1 class="bold" style="max-width: 42vw;">Descrizione</h1>
                 <p>${program.description}</p>
                 
                 <#-- <div class="flex-row between"> -->
@@ -49,7 +49,7 @@
                 
                 
                 <div class="index-episodi">
-                    <h1 class="bold">Episodi andati in onda nell'ultimo mese </h1>
+                    <h1 class="bold">Episodi nell'ultimo mese </h1>
                     <#list episodes as s>
                     <#assign before = s.episode.key>
                     <#if after??>
