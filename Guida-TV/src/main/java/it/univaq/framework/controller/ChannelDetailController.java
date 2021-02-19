@@ -32,7 +32,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author Matteo
  */
-public class ChannelDetail extends BaseController {
+public class ChannelDetailController extends BaseController {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -59,7 +59,7 @@ public class ChannelDetail extends BaseController {
             request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
             request.setAttribute("genres", ProgramImpl.Genre.values());
         } catch (DataException ex) {
-            Logger.getLogger(ChannelDetail.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ChannelDetailController.class.getName()).log(Level.SEVERE, null, ex);
         }
         action_channel(request, response);
         
@@ -87,7 +87,7 @@ public class ChannelDetail extends BaseController {
             //  out.println("<!DOCTYPE html>");
             /*  out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ChannelDetail</title>");            
+            out.println("<title>Servlet ChannelDetailController</title>");            
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>" + channel.getName() + "</h1>");
@@ -104,7 +104,7 @@ public class ChannelDetail extends BaseController {
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
             } */
         } catch (TemplateManagerException ex) {
-            Logger.getLogger(ChannelDetail.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ChannelDetailController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -24,7 +24,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author giorg
  */
-public class Home extends BaseController {
+public class HomeController extends BaseController {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -63,9 +63,9 @@ public class Home extends BaseController {
         } catch (NumberFormatException ex) {
             request.setAttribute("message", "Home key not specified");
         } catch (DataException ex) {
-            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (TemplateManagerException ex) {
-            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }

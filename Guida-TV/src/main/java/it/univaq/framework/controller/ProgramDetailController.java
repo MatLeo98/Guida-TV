@@ -35,7 +35,7 @@ import javax.servlet.http.HttpSession;
  * @author giorg
  */
 
-public class ProgramDetail extends BaseController {
+public class ProgramDetailController extends BaseController {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -65,7 +65,7 @@ public class ProgramDetail extends BaseController {
                 program_detail(request, response);
             }
         } catch (DataException ex) {
-            Logger.getLogger(ProgramDetail.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProgramDetailController.class.getName()).log(Level.SEVERE, null, ex);
         }
        
     }
@@ -91,7 +91,7 @@ public class ProgramDetail extends BaseController {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ProgramDetail</title>");            
+            out.println("<title>Servlet ProgramDetailController</title>");            
             out.println("</head>");
             out.println("<body>");
             //out.println("<p><img src='image?imgid=2' alt='image1'/></p>");
@@ -110,7 +110,7 @@ public class ProgramDetail extends BaseController {
        
             
         } catch (TemplateManagerException ex) {
-            Logger.getLogger(ProgramDetail.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProgramDetailController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -133,7 +133,7 @@ public class ProgramDetail extends BaseController {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ProgramDetail</title>");            
+            out.println("<title>Servlet ProgramDetailController</title>");            
             out.println("</head>");
             out.println("<body>");
             Image image = program.getImage();
@@ -153,7 +153,7 @@ public class ProgramDetail extends BaseController {
             out.println("</html>");
             */
         } catch (TemplateManagerException ex) {
-            Logger.getLogger(ProgramDetail.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProgramDetailController.class.getName()).log(Level.SEVERE, null, ex);
         }
             
     }

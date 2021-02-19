@@ -6,9 +6,10 @@
                 <#include "commonBackPages.ftl.html">
             </head>
             <body>
+                <a href='http://localhost:8080/Guida-tivu/admin'>  Torna alla pagina di gestione </a>
             <h1> Modifica un programma: </h1>
             <#if programSelected??>
-            <form method='post' action='edit?program=1' accept-charset="utf-8">
+            <form method='post' action='programs?edit=1' accept-charset="utf-8">
             Programma da modificare:           
             <select name='pr' id='pr'>
                 
@@ -26,7 +27,7 @@
            <br>
            <br>
            </form>
-           <form method='post' action='edit?program=1'>
+           <form method='post' action='programs?edit=1'>
            <input type='text' name='prog' value="${programSelected.key}" hidden/>
            <input type='text' placeholder='Nome programma' name='programName' value="${programSelected.name}">
            <br>
@@ -66,7 +67,7 @@
 <br>
 <a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina di gestione </a>
 <#else>
-    <form method='post' action='edit?program=1'>
+    <form method='post' action='programs?edit=1'>
         Programma da modificare:           
         <select name='pr' id='pr'>
             <#list programs as p>
