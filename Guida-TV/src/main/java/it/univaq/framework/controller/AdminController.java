@@ -35,7 +35,7 @@ import static java.util.concurrent.TimeUnit.*;
  * @author Matteo
  */
 
-public class Admin extends BaseController {
+public class AdminController extends BaseController {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
          TemplateResult res = new TemplateResult(getServletContext());
@@ -62,7 +62,7 @@ public class Admin extends BaseController {
             notLogged(request,response);
         }
         } catch (TemplateManagerException ex) {
-                Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
             }
     }
     
@@ -77,7 +77,7 @@ public class Admin extends BaseController {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Admin</title>");            
+            out.println("<title>Servlet AdminController</title>");            
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>GESTIONE PAGINA</h1>");
@@ -99,10 +99,10 @@ public class Admin extends BaseController {
             out.println("</body>");
             out.println("</html>");
             } catch (IOException ex) {
-            Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
             }
         */      } catch (TemplateManagerException ex) {
-            Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -159,9 +159,9 @@ public class Admin extends BaseController {
             }
             System.out.println("fatto");
         } catch (DataException ex) {
-            Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

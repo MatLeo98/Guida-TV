@@ -9,7 +9,7 @@
 <br>
 <br>
 <#if channelSelected??>
-    <form method='post' action='edit?schedule=0'>
+    <form method='post' action='schedules?editdel=0'>
         Scegli il canale:
         <select name='ch' id='ch'>
             <option value = '${channelSelected.key}'> ${channelSelected.name} </option>
@@ -34,7 +34,7 @@
         </tr>
         <#list schedules as s>
             <tr>
-                <form method='post' action='edit?schedule=1'>
+                <form method='post' action='schedules?editdel=1'>
                     <input type='text' name='sk' value='${s.key}' hidden/>
                     <td style='text-align:center'> <input type='text' name='pName' value='${s.program.name}' readonly /> </td>
                     <!--if(s.getEpisode() != null){​​​​-->
@@ -63,7 +63,7 @@
                     <td style='text-align:center'> <input type='submit' name='edit' value='MODIFICA'/> </td>                
                 </form>               
                 <td style='text-align:center'>
-                    <form method='post' action='edit?schedule=0&delSched=${s.key}'>
+                    <form method='post' action='schedules?editdel=0&delSched=${s.key}'>
                         <input type='submit' name='delete' value='ELIMINA'/>
                     </form>
                 </td>
@@ -71,7 +71,7 @@
         </#list>
     </table>
 <#else>
-    <form method='post' action='edit?schedule=0'>
+    <form method='post' action='schedules?editdel=0'>
         Scegli un canale
         <select name='ch' id='ch'>
             <#list channels as c>

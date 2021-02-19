@@ -9,7 +9,7 @@
 <br>
 <br>
 <#if programSelected??>
-    <form method='post' action='edit?episode=0'>
+    <form method='post' action='episodes?editdel=0'>
         Scegli la serie:       
         <select name='pr' id='pr'>
             <option value = "${programSelected.key}">${programSelected.name}</option>   
@@ -36,7 +36,7 @@
         </tr>                      
         <#list episodes as e>
             <tr>
-                <form method='post' action='edit?episode=0'>
+                <form method='post' action='episodes?editdel=0'>
                     <input type='text' name='ek' value= "${e.key}" hidden/>
                     <td style='text-align:center'> <input type='text' name='sn' value="${e.seasonNumber}"/> </td>
                     <td style='text-align:center'> <input type='text' name='en' value="${e.number}"/> </td>
@@ -44,7 +44,7 @@
                     <td style='text-align:center'> <input type='submit' name='edit' value='MODIFICA'/> </td>
                 </form>
                 <td style='text-align:center'>
-                    <form method='post' action='edit?episode=0&delEp=${e.key}'>
+                    <form method='post' action='episodes?editdel=0&delEp=${e.key}'>
                         <input type='submit' name='delete' value='ELIMINA'/>
                     </form>
                 </td>                 
@@ -52,7 +52,7 @@
         </#list>
     </table>
 <#else>
-    <form method='post' action='edit?episode=0'>
+    <form method='post' action='episodes?editdel=0'>
         Episodio da modificare          
         <select name='pr' id='pr'>
             <#list programs as p>

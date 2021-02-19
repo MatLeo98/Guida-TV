@@ -36,6 +36,7 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
     private PreparedStatement insertProgram;
     private PreparedStatement updateProgram;
     private PreparedStatement deleteProgram;
+     private PreparedStatement deleteProgramEpisode;
 
     public ProgramDAO_MySQL(DataLayer d) {
         super(d);
@@ -51,6 +52,7 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
             insertProgram = connection.prepareStatement("INSERT INTO program (name, description, genre, link, isSerie, seasonsNumber, imageId) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             updateProgram = connection.prepareStatement("UPDATE program SET name = ?, description = ?, genre = ?, link = ?, seasonsNumber = ?, imageId = ?, version = ? WHERE idProgram = ? AND version = ?");
             deleteProgram = connection.prepareStatement("DELETE FROM program WHERE idProgram = ?");
+            deleteProgramEpisode = connection.prepareStatement("DELETE FROM episode WHERE programId = ?");
             
         } catch (SQLException ex) {
             throw new DataException("Error initializing data layer", ex);
@@ -66,6 +68,7 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
             insertProgram.close();
             updateProgram.close();
             deleteProgram.close();
+            deleteProgramEpisode.close();
 
 
         } catch (SQLException ex) {
@@ -227,6 +230,10 @@ public class ProgramDAO_MySQL extends DAO implements ProgramDAO{
         try {
             deleteProgram.setInt(1, program.getKey());
             deleteProgram.executeUpdate();
+            if(program.IsSerie()){
+                deleteProgramEpisode.setInt(1, program.getKey());
+                deleteProgramEpisode.executeUpdate();
+            }
         } catch (SQLException ex) {
             Logger.getLogger(ProgramDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
         }

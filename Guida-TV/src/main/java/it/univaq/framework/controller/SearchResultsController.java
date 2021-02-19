@@ -36,7 +36,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author Matteo
  */
-public class SearchResults extends BaseController {
+public class SearchResultsController extends BaseController {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
           
@@ -76,7 +76,7 @@ public class SearchResults extends BaseController {
         }catch (NumberFormatException ex) {
             request.setAttribute("message", "Home key not specified");           
         } catch (DataException ex) { 
-            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -97,7 +97,7 @@ public class SearchResults extends BaseController {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SearchResults</title>");            
+            out.println("<title>Servlet SearchResultsController</title>");            
             out.println("</head>");
             out.println("<body>");
             out.println("<body>");*/
@@ -124,8 +124,16 @@ public class SearchResults extends BaseController {
                 TemplateResult res = new TemplateResult(getServletContext());
                 res.activate("searchresults.ftl.html", request, response);
             } catch (TemplateManagerException ex) {
-                Logger.getLogger(SearchResults.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(SearchResultsController.class.getName()).log(Level.SEVERE, null, ex);
             }
+            /*out.println("<h1>RISULTATI:</h1>");
+            for(Schedule s : search){
+            out.println("<h3><a href = 'program?id=" + s.getProgram().getKey() + "'>" + s.getProgram().getName() + "</a></h3>");
+            }
+            out.println("</body>");
+            out.println("</html>");
+        } catch (IOException ex) {
+            Logger.getLogger(SearchResultsController.class.getName()).log(Level.SEVERE, null, ex);
             /*out.println("<h1>RISULTATI:</h1>");
             for(Schedule s : search){
             out.println("<h3><a href = 'program?id=" + s.getProgram().getKey() + "'>" + s.getProgram().getName() + "</a></h3>");
@@ -153,7 +161,7 @@ public class SearchResults extends BaseController {
             ss = (SavedSearches) request.getAttribute("savedS"); 
             ((GuidatvDataLayer)request.getAttribute("datalayer")).getFavouriteProgramDAO().storeFavPrograms(programs, email, ss.getKey());
         } catch (DataException ex) {
-            Logger.getLogger(SearchResults.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SearchResultsController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

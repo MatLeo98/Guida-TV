@@ -6,7 +6,7 @@
     </servlet>
     <servlet>
         <servlet-name>Home</servlet-name>
-        <servlet-class>it.univaq.framework.controller.Home</servlet-class>
+        <servlet-class>it.univaq.framework.controller.HomeController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>Lista</servlet-name>
@@ -14,15 +14,15 @@
     </servlet>
     <servlet>
         <servlet-name>ScheduleList</servlet-name>
-        <servlet-class>it.univaq.framework.controller.ScheduleList</servlet-class>
+        <servlet-class>it.univaq.framework.controller.SchedulesController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ChannelDetail</servlet-name>
-        <servlet-class>it.univaq.framework.controller.ChannelDetail</servlet-class>
+        <servlet-class>it.univaq.framework.controller.ChannelDetailController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ProgramDetail</servlet-name>
-        <servlet-class>it.univaq.framework.controller.ProgramDetail</servlet-class>
+        <servlet-class>it.univaq.framework.controller.ProgramDetailController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>RegisterController</servlet-name>
@@ -34,11 +34,11 @@
     </servlet>
     <servlet>
         <servlet-name>SearchResults</servlet-name>
-        <servlet-class>it.univaq.framework.controller.SearchResults</servlet-class>
+        <servlet-class>it.univaq.framework.controller.SearchResultsController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>Admin</servlet-name>
-        <servlet-class>it.univaq.framework.controller.Admin</servlet-class>
+        <servlet-class>it.univaq.framework.controller.AdminController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>Insert</servlet-name>
@@ -59,6 +59,22 @@
     <servlet>
         <servlet-name>ConfirmController</servlet-name>
         <servlet-class>it.univaq.framework.controller.ConfirmController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ChannelController</servlet-name>
+        <servlet-class>it.univaq.framework.controller.ChannelController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProgramController</servlet-name>
+        <servlet-class>it.univaq.framework.controller.ProgramController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EpisodeController</servlet-name>
+        <servlet-class>it.univaq.framework.controller.EpisodeController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ScheduleController</servlet-name>
+        <servlet-class>it.univaq.framework.controller.ScheduleController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>BaseController</servlet-name>
@@ -119,6 +135,22 @@
     <servlet-mapping>
         <servlet-name>ConfirmController</servlet-name>
         <url-pattern>/confirm</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChannelController</servlet-name>
+        <url-pattern>/admin/channels</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProgramController</servlet-name>
+        <url-pattern>/admin/programs</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EpisodeController</servlet-name>
+        <url-pattern>/admin/episodes</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ScheduleController</servlet-name>
+        <url-pattern>/admin/schedules</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

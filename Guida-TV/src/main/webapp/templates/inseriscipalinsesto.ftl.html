@@ -9,7 +9,7 @@
 <br>
 <br>
 <#if channelSelected??>
-    <form method='post' action='insert?schedule=1'>
+    <form method='post' action='schedules?insert=1'>
         Scegli il canale:
         <select name='ch' id='ch'>
             <option value = "${channelSelected.key}"> ${channelSelected.name}</option>
@@ -30,7 +30,7 @@
             <th>Ora fine</th>
             <th>Data</th>
         </tr> 
-        <form method='post' action='insert?schedule=1'> 
+        <form method='post' action='schedules?insert=1'> 
             <#list rows as r>
             <tr>
                 <input type='text' id='nElem' name='nElem' value='${lNum}' hidden >
@@ -68,7 +68,7 @@
         
     
 <#else>
-    <form method='post' action='insert?schedule=1'>
+    <form method='post' action='schedules?insert=1'>
         Scegli il canale:
         <select name='ch' id='ch'>
             <#list channels as c>
