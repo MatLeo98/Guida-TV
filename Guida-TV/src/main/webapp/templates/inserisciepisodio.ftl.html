@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>Admin</title>
+<#include "commonBackPages.ftl.html">
 </head>
 <body>
     <h1> Inserisci nuovi episodi: </h1>
@@ -9,7 +10,7 @@
     <br>
     <br>
     <#if programSelected??>
-        <form method='post' action='insert?episode=1'>
+        <form method='post' action='insert?episode=1' accept-charset="utf-8">
             Scegli il programma:
             <select name='pr' id='pr'>
                 <option value = "${programSelected.key}"> ${programSelected.name}</option>

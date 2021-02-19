@@ -73,7 +73,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             todayScheduleByChannel = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? AND channelId = ? ORDER BY startTime");
             todayScheduleByFavCh = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? AND channelId = ? AND timeSlot = ? ORDER BY startTime");
             todayScheduleByProgram = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? AND programId = ? ORDER BY startTime");
-            search = connection.prepareStatement("SELECT * FROM schedule,program,channel WHERE programId = idProgram AND channelId = idChannel AND program.name LIKE ? AND genre LIKE ? AND channel.name LIKE ? AND startTime >= ? AND startTime <= ? AND date >= ? AND date <= ? GROUP BY program.name");
+            search = connection.prepareStatement("SELECT * FROM schedule,program,channel WHERE programId = idProgram AND channelId = idChannel AND program.name LIKE ? AND genre LIKE ? AND channel.name LIKE ? AND startTime >= ? AND startTime <= ? AND date >= ? AND date <= ? ORDER BY program.name");
             insertSchedule = connection.prepareStatement("INSERT INTO schedule (startTime, endTime, date, timeSlot, channelId, programId, episodeId) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             scheduleByChannel = connection.prepareStatement("SELECT * FROM schedule WHERE date >= ? AND channelId = ? ORDER BY date");
             updateSchedule = connection.prepareStatement("UPDATE schedule SET startTime = ?, endTime = ?, date = ?, timeSlot = ?, episodeId = ?, version = ? WHERE idSchedule = ? AND version = ?");

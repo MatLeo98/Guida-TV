@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>Admin</title>
+<#include "commonBackPages.ftl.html">
 </head>
 <body>
 <h1> Modifica o elimina un palinsesto: </h1>
@@ -9,7 +10,7 @@
 <br>
 <br>
 <#if channelSelected??>
-    <form method='post' action='edit?schedule=0'>
+    <form method='post' action='edit?schedule=0' accept-charset="utf-8">
         Scegli il canale:
         <select name='ch' id='ch'>
             <option value = '${channelSelected.key}'> ${channelSelected.name} </option>

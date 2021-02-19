@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Admin</title>          
+<title>Admin</title>  
+<#include "commonBackPages.ftl.html">
 </head>
 <body>
 <h1> Modifica un canale: </h1>
 <#if channelSelected??>
-<form method='post' action='edit?channel=1'>
+<form method='post' action='edit?channel=1' accept-charset="utf-8">
 Canale da modificare:
 <select name='ch' id='ch'>
           

@@ -18,6 +18,7 @@ import it.univaq.guidatv.data.model.Schedule;
 import it.univaq.guidatv.data.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -42,6 +43,7 @@ public class SearchResults extends BaseController {
           
             throws ServletException {
         try{
+            request.setCharacterEncoding("UTF-8");
             request.setAttribute("genres", ProgramImpl.Genre.values());
             request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
             String tit = request.getParameter("title");
@@ -77,6 +79,8 @@ public class SearchResults extends BaseController {
             request.setAttribute("message", "Home key not specified");           
         } catch (DataException ex) { 
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(SearchResults.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

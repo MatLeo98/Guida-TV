@@ -3,11 +3,12 @@
             <html>
             <head>
                 <title> Admin </title>
+                <#include "commonBackPages.ftl.html">
             </head>
             <body>
             <h1> Modifica un programma: </h1>
             <#if programSelected??>
-            <form method='post' action='edit?program=1'>
+            <form method='post' action='edit?program=1' accept-charset="utf-8">
             Programma da modificare:           
             <select name='pr' id='pr'>
                 

@@ -1,23 +1,14 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-
-
 <html>
-    <head>
-      
+    <head>     
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">        
     </head>
     <body>
-        <form action='searchresults'>
+        <form action='searchresults' accept-charset="utf-8">
            <div id="ricerca" class="flex-column">
             <div id="ricerca-riga1" class="flex-row between">
-                <input type="text" placeholder="Titolo" name="title">
+                <input type="text" placeholder="Titolo programma" name="title">
                 <select name="genre" id="genre">
                     <option value = ''> Scegli il genere </option>
                      <#list genres as g>
@@ -25,9 +16,9 @@ and open the template in the editor.
                     </#list>
                 </select>
                 <select name="channel" id="channel">
-                      <option value = ''> Scegli i canali </option>
+                      <option value = ''> Scegli il canale </option>
                     <#list channels as c>
-                    <option value ="${c.key}"> ${c.name} </option>
+                    <option value ="${c.name}"> ${c.name} </option>
                     </#list>
                 </select>
                Da: <input type='date' id='date1' name='date1'>
