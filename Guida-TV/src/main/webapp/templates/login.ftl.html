@@ -20,12 +20,15 @@
     
     <form method="post" action="login">
     <div id="container" class="flex-column">
+        <#if info??>
+            <center> <p style="color:lightgreen;"> ${info} </p></center>
+        </#if>
         <input id="username" name="email" type="text" placeholder="EMAIL">
         <input id="password" name="password" type="password" placeholder="PASSWORD">
         <input id="invia" name="login" type="submit" value="Login">
         <#if loginerror??>
             <center> <p style="color:red;"> ${loginerror} </p></center>
-        </#if>
+        </#if>        
         </form>
     </div>
 

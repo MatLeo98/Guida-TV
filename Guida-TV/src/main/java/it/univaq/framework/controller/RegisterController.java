@@ -85,19 +85,24 @@ public class RegisterController extends BaseController {
 
                     ((GuidatvDataLayer) request.getAttribute("datalayer")).getUserDAO().storeUser(user);
                     user = ((GuidatvDataLayer) request.getAttribute("datalayer")).getUserDAO().getUser(request.getParameter("email"));
-                    out.println("<h1> ciao " + user.getKey() + "</h1>");
+                    /*out.println("<h1> ciao " + user.getKey() + "</h1>");
                     out.println("<a href=\"login\"> LOGIN </a>");
                     out.println("<br>");
                     out.println("<br>");
-                    //out.println("<a href=\"confirm?URI="+URI+"\"> CONFERMA EMAIL </a>");
-                    out.println("<a href=\"profile\"> Vai al profilo per confermare l'email </a>");
+                    out.println("<a href=\"confirm?URI="+URI+"\"> CONFERMA EMAIL </a>");
+                    out.println("<a href=\"profile\"> Vai al profilo per confermare l'email </a>");*/
                     HttpSession s = request.getSession(true);
                     s.setAttribute("URI", URI);
-
-                    //request.setAttribute("user", user);
+                    TemplateResult res = new TemplateResult(getServletContext());
+                    //request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+                    request.setAttribute("info", "Registrazione effettuata! Per confermare l'email, vai sul profilo");
+                    res.activate("login.ftl.html", request, response);
+                    
                 } catch (DataException ex) {
                     Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
+                    Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (TemplateManagerException ex) {
                     Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }//else{//AGGIUNGERE LABEL PER PASSWORD DIVERSE

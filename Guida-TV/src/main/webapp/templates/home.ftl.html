@@ -9,31 +9,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&display=swap" rel="stylesheet">
 </head>
 <body>
-
     <button id="hamburger"></button>
     <div id="menu" class="flex-column">      
         <#include "menu.ftl.html">     
     </div>  
-
     <div id="container" class="flex-column">
-        <#include "searchbar.ftl.html">   
-
-        
-        
-        
+        <#include "searchbar.ftl.html">          
         <div id="index-programmi" class="flex-column">
-            <h1> Ora In Onda </h1>
-              
+            <h1> Ora In Onda </h1>             
            <#list onAirPrograms as s>
            <div class="flex-row">
-            <h3> <a class="programmi" href = 'channel?id=${s.channel.key}'> ${s.channel.name} </a></h3>
-            <h3> Presenta <a class="programmi" href = 'program?id=${s.program.key}'>   ${s.program.name}  </a></h3>  
-
-                        </div>
+                <h3> <a class="programmi" href = 'channel?id=${s.channel.key}'> ${s.channel.name} </a></h3>
+                <h3> Presenta <a class="programmi" href = 'program?id=${s.program.key}'>   ${s.program.name}  </a></h3>  
+           </div>
             </#list>
-    
         </div>
-
     </div>
 
     <script>

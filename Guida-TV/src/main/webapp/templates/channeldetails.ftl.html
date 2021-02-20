@@ -3,7 +3,7 @@
 <head>
     <#include "common1.ftl.html">
     <title>${channel.name}</title>   
-    <link rel="stylesheet" href="style/canale2.css">
+    <link rel="stylesheet" href="style/canale.css">
     <!-- Monserrat import from google fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&display=swap" rel="stylesheet">
@@ -25,26 +25,34 @@
             </img>
             <div id="info" class="flex-column between">
                 
-                <div class="flex-row between">
+               <#-- <div class="flex-row between"> -->
                     <h1 class="bold">Nome Canale</h1>
                     <h1>${channel.name}</h1>
-                </div>
+                <#-- </div> -->
                 
-                <div class="flex-row between">
+               <#-- <div class="flex-row between"> -->
                 <h1 class="bold">Palinsesto del </h1>
                 <h1>${date}</h1>
-                </div>
+               <#-- </div> -->
                 
-               
+               <div class="index-episodi">
                      <h1 class="bold">Oggi in Onda:</h1>
-                     
-                     <#list schedule as s>
-                      <div class="flex-row between">
-                          <h2> <a href='program?id=${s.program.key}'>  ${s.program.name} </a></h2> 
-                          <h2>  Dalle: <b> ${s.startTime} </b> </h2>
-                          <h2>  Alle: <b> ${s.endTime} </b> </h2>
-                     </div>
-                    </#list>
+                     <#if (schedule?size>0)>
+                     <table>
+                        <#list schedule as s>
+                        <tr>
+                         <div class="flex-row between">
+                             <td><h2> <a href='program?id=${s.program.key}'>  ${s.program.name} </a></h2> </td>
+                             <td><h2>  Dalle: <b> ${s.startTime} </b> </h2></td>
+                             <td><h2>  Alle: <b> ${s.endTime} </b> </h2></td>
+                        </div>
+                        </tr>
+                       </#list>
+                     </table>
+                     <#else>
+                        <h2>  Nessun programma in onda </h2>
+                      </#if> 
+                </div>
          
             </div>
             <div class="flex-column center text-center">

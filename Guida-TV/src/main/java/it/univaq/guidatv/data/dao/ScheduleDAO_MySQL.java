@@ -67,7 +67,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             sOnAirPrograms = connection.prepareStatement("SELECT * FROM schedule WHERE startTime <= CURTIME() && endTime >= CURTIME() && date = CURDATE()");
             //s = connection.prepareStatement("SELECT * FROM episode");SELECT * FROM schedule WHERE '10:30:00' < startTime && '11:40:00' > endTime
             //s = connection.prepareStatement("SELECT * FROM episode");
-            scheduleByTimeSlotDate = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? AND timeSlot = ? ORDER BY channelId");
+            scheduleByTimeSlotDate = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? AND timeSlot = ? ORDER BY channelId, startTime");
             lastMonth = connection.prepareStatement("SELECT * FROM schedule WHERE DATE(date) >= DATE(NOW()) - INTERVAL 30 DAY AND programId = ? ORDER BY episodeId");
             scheduleByID = connection.prepareStatement("SELECT * FROM schedule WHERE idSchedule = ?");
             todayScheduleByChannel = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? AND channelId = ? ORDER BY startTime");

@@ -52,17 +52,23 @@
     <#list channels as c>
 
             <h1> <a href = 'channel?id=${c.key}'> ${c.name}</a> </h1>
-            <#list schedules as s>           
-                <#if s.channel.name == c.name>
-                <h2><a href = 'program?id=${s.program.key}'>${s.program.name}</a>
-                    <#if s.episode??>
-                        (S${s.episode.number} - E${s.episode.number})
+            <table>
+                <#list schedules as s>           
+                    <#if s.channel.name == c.name>
+                    <tr>
+                        <td><h2>
+                            <a href = 'program?id=${s.program.key}'>${s.program.name}
+                            <#if s.episode??>
+                                (S${s.episode.number} - E${s.episode.number})
+                            </#if> 
+                            </a> </h2> </td>
+                           <td><h2>  Dalle  ${s.startTime}</h2> </td>
+                           <td><h2>  alle ${s.endTime}</h2> </td> 
+                        </h2> 
+                    </tr>
                     </#if>
-                    Il ${s.date}
-                    Dalle  ${s.startTime}
-                    alle ${s.endTime} </h2>                   
-                </#if>
-            </#list>
+                </#list>
+             </table>
         </#list>
         </div>
 </div>

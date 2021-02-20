@@ -1,116 +1,116 @@
 <html lang="it_IT">
-<head>
-    <#include "common1.ftl.html">
-    <title>${program.name}</title>
-    <link rel="stylesheet" href="style/canale.css">
+    <head>
+        <#include "common1.ftl.html">
+        <title>${program.name}</title>
+        <link rel="stylesheet" href="style/canale.css">
 
-    <!-- Monserrat import from google fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&display=swap" rel="stylesheet">
-</head>
-<body>
+        <!-- Monserrat import from google fonts -->
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&display=swap" rel="stylesheet">
+    </head>
+    <body>
 
-    <button id="hamburger"></button>
-    <div id="menu" class="flex-column">
-        <#include "menu.ftl.html"> 
-    </div>
-
-    <div id="container" class="flex-column between">
-           <#include "searchbar.ftl.html">
-      
-           
-           
-         <#if (program.seasonsNumber >=1)>  
-           
-        <div id="guidatv" class="flex-row between">
-             <#if program.image??>
-             <p> <img width="230px" height="300px" class="foto" src='${program.image.link}' alt='image1'/> </p>
-             </#if>
-            </img>
-            <div id="info" class="flex-column between">
-                
-               <#-- <div class="flex-row between"> -->
-                    <h1 class="bold">Titolo</h1>
-                    <h1>${program.name}</h1>
-                <#-- </div> -->
-                
-                <h1 class="bold" style="max-width: 42vw;">Descrizione</h1>
-                <p>${program.description}</p>
-                
-                <#-- <div class="flex-row between"> -->
-                    <h1 class="bold">Genere</h1>
-                    <h1> ${program.genre}</h1>
-                <#-- </div> -->
-                
-                
-                
-                
-                <div class="index-episodi">
-                    <h1 class="bold">Episodi nell'ultimo mese </h1>
-                    <#list episodes as s>
-                    <#assign before = s.episode.key>
-                    <#if after??>
-                        <#if before != after> 
-                            <div class="serie">
-                                <h2>S:${s.episode.seasonNumber} E${s.episode.number} <b> ${s.episode.name} <br> &nbsp &nbsp </b> <b>${s.date} </b> alle <b>${s.startTime}</b> SU <b> <a href = 'channel?id=${s.channel.key}'>${s.channel.name}</a> </b> </h2>
-                            </div>
-                        <#else>
-                            <div class="serie">
-                                <h2> &nbsp &nbsp <b>${s.date} </b> alle <b>${s.startTime}</b> SU <b> <a href = 'channel?id=${s.channel.key}'>${s.channel.name}</a> </b> </h2>
-                            </div>
-                        </#if>
-                    <#else>
-                            <div class="serie">
-                                <h2>S${s.episode.seasonNumber} E${s.episode.number} <b> ${s.episode.name} <br> </b> &nbsp &nbsp <b>${s.date} </b> alle <b>${s.startTime}</b> SU <b> <a href = 'channel?id=${s.channel.key}'>${s.channel.name}</a> </b> </h2>
-                            </div>
-                    </#if>
-                    <#assign after = s.episode.key>
-                    </#list>
-                </div>
-                <#else>
-                <div id="guidatv" class="flex-row between">
-             <#if program.image??>
-             <p> <img width="230px" height="300px" class="foto" src='${program.image.link}' alt='image1'/> </p>
-             </#if>
-            </img>
-            <div  class="flex-column between">
-                
-               <#-- <div class="flex-row between"> -->
-                    <h1 class="bold">Titolo</h1>
-                    <h1>${program.name}</h1>
-                <#-- </div> -->
-                
-                <h1 class="bold">Descrizione</h1>
-                <p>${program.description}</p>
-                
-                <#-- <div class="flex-row between"> -->
-                    <h1 class="bold">Genere</h1>
-                    <h1> ${program.genre}</h1>
-                <#-- </div> -->
-                </#if>
-                
-                
-                
-                
-                
-            </div>
-            <div class="flex-column center text-center">
-                <img style="margin-left: auto; margin-right: auto;" height="100px" width="76px" src="./src/plus.png" alt="">
-                 <a style="margin-top: 1rem;" href="${program.link}" target="_blank" rel="noopener noreferrer">LINK ESTERNO</a>
-            </div>
+        <button id="hamburger"></button>
+        <div id="menu" class="flex-column">
+            <#include "menu.ftl.html"> 
         </div>
 
-    </div>
+        <div id="container" class="flex-column between">
+            <#include "searchbar.ftl.html">
 
-    <script>
-        document.getElementById("hamburger").onclick = function (){
-            document.getElementById("menu").classList = "showing flex-column";
-        }
-        document.getElementById("chiudi").onclick = function (){
-            document.getElementById("menu").classList = "hiding flex-column";
-        }
-    </script>
-    
-</body>
-</html>
+
+
+            <#if (program.seasonsNumber >=1)>  
+
+            <div id="guidatv" class="flex-row between">
+                <#if program.image??>
+                <p> <img width="230px" height="300px" class="foto" src='${program.image.link}' alt='image1'/> </p>
+                </#if>
+                </img>
+                <div id="info" class="flex-column between">
+
+                    <#-- <div class="flex-row between"> -->
+                        <h1 class="bold">Titolo</h1>
+                        <h1>${program.name}</h1>
+                        <#-- </div> -->
+
+                    <h1 class="bold" style="max-width: 42vw;">Descrizione</h1>
+                    <p>${program.description}</p>
+
+                    <#-- <div class="flex-row between"> -->
+                        <h1 class="bold">Genere</h1>
+                        <h1> ${program.genre}</h1>
+                        <#-- </div> -->
+
+
+
+
+                    <div class="index-episodi">
+                        <h1 class="bold">Episodi nell'ultimo mese </h1>
+                        <#list episodes as s>
+                        <#assign before = s.episode.key>
+                        <#if after??>
+                        <#if before != after> 
+                        <div class="serie">
+                            <h2>S:${s.episode.seasonNumber} E${s.episode.number} <b> ${s.episode.name} <br> &nbsp &nbsp </b> <b>${s.date} </b> alle <b>${s.startTime}</b> SU <b> <a href = 'channel?id=${s.channel.key}'>${s.channel.name}</a> </b> </h2>
+                        </div>
+                        <#else>
+                        <div class="serie">
+                            <h2> &nbsp &nbsp <b>${s.date} </b> alle <b>${s.startTime}</b> SU <b> <a href = 'channel?id=${s.channel.key}'>${s.channel.name}</a> </b> </h2>
+                        </div>
+                        </#if>
+                        <#else>
+                        <div class="serie">
+                            <h2>S${s.episode.seasonNumber} E${s.episode.number} <b> ${s.episode.name} <br> </b> &nbsp &nbsp <b>${s.date} </b> alle <b>${s.startTime}</b> SU <b> <a href = 'channel?id=${s.channel.key}'>${s.channel.name}</a> </b> </h2>
+                        </div>
+                        </#if>
+                        <#assign after = s.episode.key>
+                        </#list>
+                    </div>
+                    <#else>
+                    <div id="guidatv" class="flex-row between">
+                        <#if program.image??>
+                        <p> <img width="230px" height="300px" class="foto" src='${program.image.link}' alt='image1'/> </p>
+                        </#if>
+                        </img>
+                        <div  class="flex-column between">
+
+                            <#-- <div class="flex-row between"> -->
+                                <h1 class="bold">Titolo</h1>
+                                <h1>${program.name}</h1>
+                                <#-- </div> -->
+
+                            <h1 class="bold">Descrizione</h1>
+                            <p>${program.description}</p>
+
+                            <#-- <div class="flex-row between"> -->
+                                <h1 class="bold">Genere</h1>
+                                <h1> ${program.genre}</h1>
+                                <#-- </div> -->
+                            </#if>
+
+
+
+
+
+                        </div>
+                        <div class="flex-column center text-center">
+                            <img style="margin-left: auto; margin-right: auto;" height="100px" width="76px" src="./src/plus.png" alt="">
+                            <a style="margin-top: 1rem;" href="${program.link}" target="_blank" rel="noopener noreferrer">LINK ESTERNO</a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <script>
+                    document.getElementById("hamburger").onclick = function () {
+                        document.getElementById("menu").classList = "showing flex-column";
+                    }
+                    document.getElementById("chiudi").onclick = function () {
+                        document.getElementById("menu").classList = "hiding flex-column";
+                    }
+                </script>
+
+                </body>
+                </html>
 
