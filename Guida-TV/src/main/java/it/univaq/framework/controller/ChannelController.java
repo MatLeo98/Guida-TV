@@ -138,9 +138,11 @@ public class ChannelController extends BaseController {
             Channel channel = ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannel(n);
             channel.setName(request.getParameter("channelName"));
             if (!(request.getParameter("image").equals(channel.getImage().getLink()))) {
-                Image image = channel.getImage();
-                image.setLink(request.getParameter("image"));
-                image = ((GuidatvDataLayer) request.getAttribute("datalayer")).getImageDAO().storeImage(image);
+                if(request.getParameter("image") != ""){
+                    Image image = channel.getImage();
+                    image.setLink(request.getParameter("image"));
+                    image = ((GuidatvDataLayer) request.getAttribute("datalayer")).getImageDAO().storeImage(image);
+                }
             }
             ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().storeChannel(channel);
             request.setAttribute("var", 1);

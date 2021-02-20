@@ -155,9 +155,11 @@ public class ProgramController extends BaseController {
             program.setGenre(ProgramImpl.Genre.valueOf(request.getParameter("genre")));
             program.setLink(request.getParameter("link"));
             if (!(request.getParameter("image").equals(program.getImage().getLink()))) {
-                Image image = program.getImage();
-                image.setLink(request.getParameter("image"));
-                image = ((GuidatvDataLayer) request.getAttribute("datalayer")).getImageDAO().storeImage(image);
+                if(request.getParameter("image") != ""){
+                    Image image = program.getImage();
+                    image.setLink(request.getParameter("image"));
+                    image = ((GuidatvDataLayer) request.getAttribute("datalayer")).getImageDAO().storeImage(image);
+                }
             }
             if (program.IsSerie()) {
                 program.setSeasonsNumber(Integer.parseInt(request.getParameter("nSeasons")));

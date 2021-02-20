@@ -24,6 +24,9 @@
         <input id="password" type="password" name="password" placeholder="password">
         <input id="password2" type="password" name="confermapw" placeholder="conferma password">
         <input id="registrati" type="submit" name="register" value="registrati">
+        <#if registererror??>
+            <center> <p style="color:red;"> ${registererror} </p></center>
+        </#if>
         </form>
         <p class="bold">gia' registrato?</p>
         <a href="http://localhost:8080/Guida-tivu/login">login</a>

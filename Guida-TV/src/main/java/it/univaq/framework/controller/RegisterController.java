@@ -105,10 +105,9 @@ public class RegisterController extends BaseController {
                 } catch (TemplateManagerException ex) {
                     Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }//else{//AGGIUNGERE LABEL PER PASSWORD DIVERSE
-
-        }
-
+            }else{
+                request.setAttribute("registererror", "Le password inserite non coincidono");      
+            }
     }
-
+    }
 }
