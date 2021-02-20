@@ -1,30 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
+import it.univaq.framework.result.SplitSlashesFmkExt;
 import it.univaq.framework.result.TemplateManagerException;
 import it.univaq.framework.result.TemplateResult;
 import it.univaq.guidatv.data.dao.GuidatvDataLayer;
 import it.univaq.guidatv.data.impl.ProgramImpl;
 import it.univaq.guidatv.data.impl.ScheduleImpl.TimeSlot;
-import it.univaq.guidatv.data.model.Channel;
-import it.univaq.guidatv.data.model.Schedule;
-import java.io.IOException;
-import java.io.PrintWriter;
+import it.univaq.guidatv.data.model.User;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -32,52 +22,38 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class SchedulesController extends BaseController {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-           throws ServletException{
-       
-        
+            throws ServletException {
+
         try {
             request.setAttribute("genres", ProgramImpl.Genre.values());
-            request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
-            
-            
-            request.setAttribute("channels", ((GuidatvDataLayer)request.getAttribute("datalayer")).getChannelDAO().getChannels());
-            
-            if (request.getParameter("tsSelect") == null){
+            request.setAttribute("channels", ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannels());
+
+            request.setAttribute("channels", ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannels());
+
+            if (request.getParameter("tsSelect") == null) {
                 //TimeSlot timeSelected = TimeSlot.valueOf("sera");
-                TimeSlot timeslot = ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getCurTimeSlot();
+                TimeSlot timeslot = ((GuidatvDataLayer) request.getAttribute("datalayer")).getScheduleDAO().getCurTimeSlot();
                 request.setAttribute("timeslot", timeslot);
-                request.setAttribute("schedules", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getScheduleByTimeSlotDate(timeslot, LocalDate.now()));
+                request.setAttribute("schedules", ((GuidatvDataLayer) request.getAttribute("datalayer")).getScheduleDAO().getScheduleByTimeSlotDate(timeslot, LocalDate.now()));
                 action_schedule(request, response);
-                
-            }else{
-                
+
+            } else {
+
                 TimeSlot timeSelected = TimeSlot.valueOf(request.getParameter("tsSelect"));
                 request.setAttribute("timeslot", timeSelected);
                 LocalDate dateSelected = LocalDate.parse(request.getParameter("dateSelect"));
-                request.setAttribute("schedules", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getScheduleByTimeSlotDate(timeSelected, dateSelected));
+                request.setAttribute("schedules", ((GuidatvDataLayer) request.getAttribute("datalayer")).getScheduleDAO().getScheduleByTimeSlotDate(timeSelected, dateSelected));
                 action_schedule(request, response);
-                
+
             }
             //request.setAttribute("schedule", ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getSchedule(1));
-            
-            
-           
-           
+
         } catch (NumberFormatException ex) {
             request.setAttribute("message", "Article key not specified");
-            
-        } catch (DataException ex) { 
+
+        } catch (DataException ex) {
             Logger.getLogger(SchedulesController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -90,20 +66,27 @@ public class SchedulesController extends BaseController {
         LocalDate today = LocalDate.now();
         LocalDate tomorrow = today.plusDays(1);
         LocalDate thirdDay = today.plusDays(2);
-        request.setAttribute("today",today);
-        request.setAttribute("tomorrow",tomorrow);
-        request.setAttribute("thirdDay",thirdDay);
+        request.setAttribute("today", today);
+        request.setAttribute("tomorrow", tomorrow);
+        request.setAttribute("thirdDay", thirdDay);
         TimeSlot[] timeslots = TimeSlot.class.getEnumConstants();
-        request.setAttribute("timeslots",timeslots);
+        request.setAttribute("timeslots", timeslots);
         //TimeSlot timeslot = (TimeSlot)request.getAttribute("timeslot");
-        
+
         try {
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                User user = (User) session.getAttribute("user");
+                String email = user.getKey();
+                request.setAttribute("email", email);
+            }
             TemplateResult res = new TemplateResult(getServletContext());
+            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
             res.activate("schedules.ftl.html", request, response);
         } catch (TemplateManagerException ex) {
             Logger.getLogger(SchedulesController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         //response.setContentType("text/html;charset=UTF-8");
         /*try (PrintWriter out = response.getWriter()) {
             out.println("<!DOCTYPE html>");

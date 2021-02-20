@@ -1,16 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
-import it.univaq.framework.result.SplitSlashesFmkExt;
 import it.univaq.framework.result.TemplateManagerException;
 import it.univaq.framework.result.TemplateResult;
 import it.univaq.guidatv.data.dao.GuidatvDataLayer;
-import it.univaq.guidatv.data.impl.ScheduleImpl;
 import it.univaq.guidatv.data.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,26 +20,26 @@ import org.mindrot.jbcrypt.BCrypt;
  *
  * @author giorg
  */
-public class RegisterController extends BaseController{
+public class RegisterController extends BaseController {
 
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        
-        if (request.getParameter("email") == null){
-            action_default(request,response);
-        }else{
-            register_action(request,response);
+
+        if (request.getParameter("email") == null) {
+            action_default(request, response);
+        } else {
+            register_action(request, response);
         }
     }
 
     private void action_default(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=UTF-8");
-            try {
-                TemplateResult res = new TemplateResult(getServletContext());
-                res.activate("registrati.ftl.html", request, response);
-                /* TODO output your page here. You may use following sample code. */
-                
-                /*
+        try {
+            TemplateResult res = new TemplateResult(getServletContext());
+            res.activate("registrati.ftl.html", request, response);
+            /* TODO output your page here. You may use following sample code. */
+
+ /*
                 out.println("<!DOCTYPE html>");
                 out.println("<html>");
                 out.println("<head>");
@@ -71,48 +64,46 @@ public class RegisterController extends BaseController{
                 out.println("</form>");
                 out.println("</body>");
                 out.println("</html>");  */
-            } catch (TemplateManagerException ex) {
-                Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     private void register_action(HttpServletRequest request, HttpServletResponse response) {
-        
-        
+
         if (request.getParameter("email") != null && request.getParameter("password") != null && request.getParameter("confermapw") != null) {
-            if(request.getParameter("password").equals(request.getParameter("confermapw"))){
-                try (PrintWriter out = response.getWriter()){
-                    
-                    User user = ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().createUser();
+            if (request.getParameter("password").equals(request.getParameter("confermapw"))) {
+                try (PrintWriter out = response.getWriter()) {
+
+                    User user = ((GuidatvDataLayer) request.getAttribute("datalayer")).getUserDAO().createUser();
                     user.setKey(request.getParameter("email"));
                     String hashPass = BCrypt.hashpw(request.getParameter("password"), BCrypt.gensalt());
                     user.setPassword(hashPass);
                     String URI = UUID.randomUUID().toString();
                     user.setUri(URI);
-                    
-                    ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().storeUser(user);
-                    user = ((GuidatvDataLayer)request.getAttribute("datalayer")).getUserDAO().getUser(request.getParameter("email"));
-                      out.println("<h1> ciao " + user.getKey() + "</h1>");
-                      out.println("<a href=\"login\"> LOGIN </a>");
-                      out.println("<br>");
-                      out.println("<br>");
-                      //out.println("<a href=\"confirm?URI="+URI+"\"> CONFERMA EMAIL </a>");
-                      out.println("<a href=\"profile\"> Vai al profilo per confermare l'email </a>");
-                      HttpSession s = request.getSession(true);
-                      s.setAttribute("URI",URI);
-                      
-                      
-                        //request.setAttribute("user", user);
+
+                    ((GuidatvDataLayer) request.getAttribute("datalayer")).getUserDAO().storeUser(user);
+                    user = ((GuidatvDataLayer) request.getAttribute("datalayer")).getUserDAO().getUser(request.getParameter("email"));
+                    out.println("<h1> ciao " + user.getKey() + "</h1>");
+                    out.println("<a href=\"login\"> LOGIN </a>");
+                    out.println("<br>");
+                    out.println("<br>");
+                    //out.println("<a href=\"confirm?URI="+URI+"\"> CONFERMA EMAIL </a>");
+                    out.println("<a href=\"profile\"> Vai al profilo per confermare l'email </a>");
+                    HttpSession s = request.getSession(true);
+                    s.setAttribute("URI", URI);
+
+                    //request.setAttribute("user", user);
                 } catch (DataException ex) {
                     Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
                     Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }//else{//AGGIUNGERE LABEL PER PASSWORD DIVERSE
-            
+
         }
-       
+
     }
-    
+
 }

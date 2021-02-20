@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
@@ -13,6 +8,7 @@ import it.univaq.framework.security.SecurityLayer;
 import it.univaq.guidatv.data.dao.GuidatvDataLayer;
 import it.univaq.guidatv.data.model.Channel;
 import it.univaq.guidatv.data.model.Image;
+import it.univaq.guidatv.data.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -35,45 +31,46 @@ public class ChannelController extends BaseController {
 
         try {
             request.setCharacterEncoding("UTF-8");
-            if (request.getParameter("insert") != null) {
-                System.out.println("ciao");
-                if (request.getParameter("channelNumber") == null) {
-                    channel_insert(request, response);
-                } else {
-                    insert_done(request, response);
-                }
-            }
-
-            if (request.getParameter("edit") != null) {
-                System.out.println("hola");
-                int channel_key;
-                if (request.getParameter("channelNumber") == null) {
-                    if (request.getParameter("ch") != null) { //verifico se ho scelto un elemento dal selettore 
-
-                        Integer id = Integer.parseInt(request.getParameter("ch"));
-                        request.setAttribute("channelSelected", ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannel(id));
-
+            User user = (User) s.getAttribute("user");
+            if (user.getKey().equals("admin@email.it")) {
+                if (request.getParameter("insert") != null) {
+                    if (request.getParameter("channelNumber") == null) {
+                        channel_insert(request, response);
+                    } else {
+                        insert_done(request, response);
                     }
-
-                    request.setAttribute("channels", ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannels());
-                    channel_edit(request, response);
-
-                } else {
-                     System.out.println("bella");
-                    channel_key = SecurityLayer.checkNumeric(request.getParameter("channelNumber"));
-                    request.setAttribute("key", channel_key);
-                    edit_done(request, response);
                 }
-            }
 
-            if (request.getParameter("delete") != null) {
+                if (request.getParameter("edit") != null) {
+                    int channel_key;
+                    if (request.getParameter("channelNumber") == null) {
+                        if (request.getParameter("ch") != null) { //verifico se ho scelto un elemento dal selettore 
 
-                if (request.getParameter("delCh") != null) {
-                    delete_done(request, response);
-                } else {
-                    request.setAttribute("channels", ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannels());
-                    channel_delete(request, response);
+                            Integer id = Integer.parseInt(request.getParameter("ch"));
+                            request.setAttribute("channelSelected", ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannel(id));
+
+                        }
+
+                        request.setAttribute("channels", ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannels());
+                        channel_edit(request, response);
+
+                    } else {
+                        channel_key = SecurityLayer.checkNumeric(request.getParameter("channelNumber"));
+                        request.setAttribute("key", channel_key);
+                        edit_done(request, response);
+                    }
                 }
+
+                if (request.getParameter("delete") != null) {
+                    if (request.getParameter("delCh") != null) {
+                        delete_done(request, response);
+                    } else {
+                        request.setAttribute("channels", ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannels());
+                        channel_delete(request, response);
+                    }
+                }
+            } else {
+                notAuth(request, response);
             }
 
         } catch (UnsupportedEncodingException ex) {
@@ -196,6 +193,17 @@ public class ChannelController extends BaseController {
             Logger.getLogger(ChannelController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DataException ex) {
             Logger.getLogger(ChannelController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void notAuth(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            TemplateResult res = new TemplateResult(getServletContext());
+            res.activate("sonoin.ftl.html", request, response);
+            response.setContentType("text/html;charset=UTF-8");
+
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

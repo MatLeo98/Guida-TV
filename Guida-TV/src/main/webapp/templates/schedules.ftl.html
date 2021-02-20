@@ -13,22 +13,7 @@
 
     <button id="hamburger"></button>
     <div id="menu" class="flex-column">
-        <input type="button" value="chiudi" id="chiudi">
-        <a href="http://localhost:8080/Guida-tivu/schedules">schedules</a>
-
-        
-        <#if email??>
-        <a href="http://localhost:8080/Guida-tivu/profile">Profilo ${email}</a>
-        <a href="http://localhost:8080/Guida-tivu/login?logout=1">LOG-OUT</a>
-       
-        
-        <#else>
-         <a href="http://localhost:8080/Guida-tivu/">Home</a>
-         <a href="http://localhost:8080/Guida-tivu/login">login</a>
-         <a href="http://localhost:8080/Guida-tivu/register">registrati</a>
-         </#if>
-        
-        
+        <#include "menu.ftl.html">             
     </div>
 
     <div id="container" class="flex-column">

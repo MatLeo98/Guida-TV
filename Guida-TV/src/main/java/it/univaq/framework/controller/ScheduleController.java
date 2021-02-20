@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
@@ -11,12 +6,11 @@ import it.univaq.framework.result.TemplateManagerException;
 import it.univaq.framework.result.TemplateResult;
 import it.univaq.framework.security.SecurityLayer;
 import it.univaq.guidatv.data.dao.GuidatvDataLayer;
-import it.univaq.guidatv.data.impl.ProgramImpl;
 import it.univaq.guidatv.data.model.Channel;
 import it.univaq.guidatv.data.model.Episode;
-import it.univaq.guidatv.data.model.Image;
 import it.univaq.guidatv.data.model.Program;
 import it.univaq.guidatv.data.model.Schedule;
+import it.univaq.guidatv.data.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -27,7 +21,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -44,60 +37,64 @@ public class ScheduleController extends BaseController {
 
         try {
             request.setCharacterEncoding("UTF-8");
-            if (request.getParameter("insert") != null) {
-                if (s.getAttribute("channelSelected") == null) {
-                    try {
-                        if (request.getParameter("ch") != null) {
-                            try {
-                                Integer id = Integer.parseInt(request.getParameter("ch"));
-                                Channel cha = ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannel(id);
-                                request.setAttribute("channelSelected", cha);
-                                s.setAttribute("channelSelected", cha);
-                                request.setAttribute("episodes", ((GuidatvDataLayer) request.getAttribute("datalayer")).getEpisodeDAO().getAllEpisodes());
-                                request.setAttribute("programs", ((GuidatvDataLayer) request.getAttribute("datalayer")).getProgramDAO().getPrograms());
-                            } catch (DataException ex) {
-                                Logger.getLogger(ScheduleController.class.getName()).log(Level.SEVERE, null, ex);
+             User user = (User) s.getAttribute("user");
+            if(user.getKey().equals("admin@email.it")){
+                if (request.getParameter("insert") != null) {
+                    if (s.getAttribute("channelSelected") == null) {
+                        try {
+                            if (request.getParameter("ch") != null) {
+                                try {
+                                    Integer id = Integer.parseInt(request.getParameter("ch"));
+                                    Channel cha = ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannel(id);
+                                    request.setAttribute("channelSelected", cha);
+                                    s.setAttribute("channelSelected", cha);
+                                    request.setAttribute("episodes", ((GuidatvDataLayer) request.getAttribute("datalayer")).getEpisodeDAO().getAllEpisodes());
+                                    request.setAttribute("programs", ((GuidatvDataLayer) request.getAttribute("datalayer")).getProgramDAO().getPrograms());
+                                } catch (DataException ex) {
+                                    Logger.getLogger(ScheduleController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                             }
+
+                            request.setAttribute("channels", ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannels());
+                            schedule_insert(request, response);
+                        } catch (DataException ex) {
+                            Logger.getLogger(ScheduleController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        insert_done(request, response);
+                    }
+                }
+
+                if (request.getParameter("editdel") != null) {
+                    int schedule_key;
+                    LocalDate today = LocalDate.now();
+                    if (request.getParameter("pName") == null) {
+                        if (request.getParameter("ch") != null) { //verifico se ho scelto un elemento dal selettore 
+
+                            Integer id = Integer.parseInt(request.getParameter("ch"));
+                            Channel channel = ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannel(id);
+                            request.setAttribute("channelSelected", channel);
+                            request.setAttribute("schedules", ((GuidatvDataLayer) request.getAttribute("datalayer")).getScheduleDAO().getScheduleByChannelAdmin(channel, today));
+                            request.setAttribute("episodes", ((GuidatvDataLayer) request.getAttribute("datalayer")).getEpisodeDAO().getAllEpisodes());
+
+                        }
+
+                        if (request.getParameter("delSched") != null) {
+                            delete_done(request, response);
                         }
 
                         request.setAttribute("channels", ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannels());
-                        schedule_insert(request, response);
-                    } catch (DataException ex) {
-                        Logger.getLogger(ScheduleController.class.getName()).log(Level.SEVERE, null, ex);
+                        schedule_edit(request, response);
+
+                    } else {
+                        schedule_key = SecurityLayer.checkNumeric(request.getParameter("sk"));
+                        request.setAttribute("key", schedule_key);
+                        edit_done(request, response);
                     }
-                } else {
-                    insert_done(request, response);
-                }
+                }           
+            }else{
+                notAuth(request,response);
             }
-
-            if (request.getParameter("editdel") != null) {
-                int schedule_key;
-                LocalDate today = LocalDate.now();
-                if (request.getParameter("pName") == null) {
-                    if (request.getParameter("ch") != null) { //verifico se ho scelto un elemento dal selettore 
-
-                        Integer id = Integer.parseInt(request.getParameter("ch"));
-                        Channel channel = ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannel(id);
-                        request.setAttribute("channelSelected", channel);
-                        request.setAttribute("schedules", ((GuidatvDataLayer) request.getAttribute("datalayer")).getScheduleDAO().getScheduleByChannelAdmin(channel, today));
-                        request.setAttribute("episodes", ((GuidatvDataLayer) request.getAttribute("datalayer")).getEpisodeDAO().getAllEpisodes());
-
-                    }
-
-                    if (request.getParameter("delSched") != null) {
-                        delete_done(request, response);
-                    }
-
-                    request.setAttribute("channels", ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannels());
-                    schedule_edit(request, response);
-
-                } else {
-                    schedule_key = SecurityLayer.checkNumeric(request.getParameter("sk"));
-                    request.setAttribute("key", schedule_key);
-                    edit_done(request, response);
-                }
-            }
-
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(ScheduleController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DataException ex) {
@@ -236,6 +233,17 @@ public class ScheduleController extends BaseController {
             Logger.getLogger(ScheduleController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DataException ex) {
             Logger.getLogger(ScheduleController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void notAuth(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            TemplateResult res = new TemplateResult(getServletContext());
+            res.activate("sonoin.ftl.html", request, response);
+            response.setContentType("text/html;charset=UTF-8");
+
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

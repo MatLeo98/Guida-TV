@@ -1,14 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package it.univaq.framework.controller;
-
 
 import it.univaq.guidatv.data.dao.GuidatvDataLayer;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,12 +14,10 @@ import javax.sql.DataSource;
  * @author giorg
  */
 public abstract class BaseController extends HttpServlet {
-    
+
     @Resource(name = "jdbc/guidatv")
     private DataSource ds;
 
-    
-    
     protected abstract void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException;
 
     private void processBaseRequest(HttpServletRequest request, HttpServletResponse response) {
@@ -38,7 +29,7 @@ public abstract class BaseController extends HttpServlet {
         try (GuidatvDataLayer datalayer = new GuidatvDataLayer(ds)) {
             datalayer.init();
             request.setAttribute("datalayer", datalayer);
-            ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().delSchedules();
+            ((GuidatvDataLayer) request.getAttribute("datalayer")).getScheduleDAO().delSchedules();
             processRequest(request, response);
         } catch (Exception ex) {
             ex.printStackTrace(); //for debugging only

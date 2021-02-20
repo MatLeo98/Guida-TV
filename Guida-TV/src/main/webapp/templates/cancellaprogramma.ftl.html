@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Admin</title>
+        <#include "commonBackPages.ftl.html">
+    </head>
+    <body>
+        <h1> Elimina un programma: </h1>
+        <table>
+        <tr>
+            <th>Nome programma</th>
+            <th>Descrizione</th>
+            <th>Genere</th>
+            <th>Link</th>
+            <th>Elimina</th>
+        </tr>
+        <#if programs??>
+            <#list programs as p>        
+            <tr>
+                <td style='text-align:center' hidden> ${p.key} </td>
+                <td style='text-align:center'> ${p.name} </td>
+                <td style='text-align:center'> ${p.description} </td>
+                <td style='text-align:center'> ${p.genre} </td>
+                <td style='text-align:center'> ${p.link} </td>
+                <td style='text-align:center'>
+                <form method='post' action='programs?delete=0&delPr=${p.key}'>
+                    <input type='submit' name='delete' value='ELIMINA'/>
+                </form>
+                </td>
+            </tr>                     
+            </#list>
+        </#if>
+        </table>      
+    </body>
+</html>

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package it.univaq.framework.controller;
 
 import it.univaq.framework.data.DataException;
@@ -11,23 +6,17 @@ import it.univaq.framework.result.TemplateManagerException;
 import it.univaq.framework.result.TemplateResult;
 import it.univaq.framework.security.SecurityLayer;
 import it.univaq.guidatv.data.dao.GuidatvDataLayer;
-import it.univaq.guidatv.data.impl.ProgramImpl;
-import it.univaq.guidatv.data.model.Channel;
 import it.univaq.guidatv.data.model.Episode;
-import it.univaq.guidatv.data.model.Image;
 import it.univaq.guidatv.data.model.Program;
-import it.univaq.guidatv.data.model.Schedule;
+import it.univaq.guidatv.data.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -44,53 +33,58 @@ public class EpisodeController extends BaseController {
 
         try {
             request.setCharacterEncoding("UTF-8");
-            if (request.getParameter("insert") != null) {
-                if (s.getAttribute("programSelected") == null) {
-                    try {
-                        if (request.getParameter("pr") != null) {
-                            
+            User user = (User) s.getAttribute("user");
+            if (user.getKey().equals("admin@email.it")) {
+                if (request.getParameter("insert") != null) {
+                    if (s.getAttribute("programSelected") == null) {
+                        try {
+                            if (request.getParameter("pr") != null) {
+
                                 Integer id = Integer.parseInt(request.getParameter("pr"));
                                 Program pro = ((GuidatvDataLayer) request.getAttribute("datalayer")).getProgramDAO().getProgram(id);
                                 request.setAttribute("programSelected", pro);
                                 s.setAttribute("programSelected", pro);
-                            
+
+                            }
+                            request.setAttribute("programs", ((GuidatvDataLayer) request.getAttribute("datalayer")).getProgramDAO().getPrograms());
+                            episode_insert(request, response);
+                        } catch (DataException ex) {
+                            Logger.getLogger(EpisodeController.class.getName()).log(Level.SEVERE, null, ex);
                         }
+                    } else {
+                        insert_done(request, response);
+                    }
+                }
+
+                if (request.getParameter("editdel") != null) {
+                    int episode_key;
+                    if (request.getParameter("sn") == null) {
+
+                        if (request.getParameter("pr") != null) { //verifico se ho scelto un elemento dal selettore 
+
+                            Integer id = Integer.parseInt(request.getParameter("pr"));
+                            Program pro = ((GuidatvDataLayer) request.getAttribute("datalayer")).getProgramDAO().getProgram(id);
+
+                            request.setAttribute("programSelected", pro);
+                            request.setAttribute("episodes", ((GuidatvDataLayer) request.getAttribute("datalayer")).getEpisodeDAO().getProgramEpisodes(pro));
+
+                        }
+
+                        if (request.getParameter("delEp") != null) {
+                            delete_done(request, response);
+                        }
+
                         request.setAttribute("programs", ((GuidatvDataLayer) request.getAttribute("datalayer")).getProgramDAO().getPrograms());
-                        episode_insert(request, response);
-                    } catch (DataException ex) {
-                        Logger.getLogger(EpisodeController.class.getName()).log(Level.SEVERE, null, ex);
+                        episode_edit(request, response);
+
+                    } else {
+                        episode_key = SecurityLayer.checkNumeric(request.getParameter("ek"));
+                        request.setAttribute("key", episode_key);
+                        edit_done(request, response);
                     }
-                } else {
-                    insert_done(request, response);
                 }
-            }
-
-            if (request.getParameter("editdel") != null) {
-                int episode_key;
-                if (request.getParameter("sn") == null) {
-
-                    if (request.getParameter("pr") != null) { //verifico se ho scelto un elemento dal selettore 
-
-                        Integer id = Integer.parseInt(request.getParameter("pr"));
-                        Program pro = ((GuidatvDataLayer) request.getAttribute("datalayer")).getProgramDAO().getProgram(id);
-
-                        request.setAttribute("programSelected", pro);
-                        request.setAttribute("episodes", ((GuidatvDataLayer) request.getAttribute("datalayer")).getEpisodeDAO().getProgramEpisodes(pro));
-
-                    }
-
-                    if (request.getParameter("delEp") != null) {
-                        delete_done(request, response);
-                    }
-
-                    request.setAttribute("programs", ((GuidatvDataLayer) request.getAttribute("datalayer")).getProgramDAO().getPrograms());
-                    episode_edit(request, response);
-
-                } else {
-                    episode_key = SecurityLayer.checkNumeric(request.getParameter("ek"));
-                    request.setAttribute("key", episode_key);
-                    edit_done(request, response);
-                }
+            } else {
+                notAuth(request, response);
             }
 
         } catch (UnsupportedEncodingException ex) {
@@ -208,6 +202,17 @@ public class EpisodeController extends BaseController {
             Logger.getLogger(EpisodeController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DataException ex) {
             Logger.getLogger(EpisodeController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void notAuth(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            TemplateResult res = new TemplateResult(getServletContext());
+            res.activate("sonoin.ftl.html", request, response);
+            response.setContentType("text/html;charset=UTF-8");
+
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(ProfileController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
