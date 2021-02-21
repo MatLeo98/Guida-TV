@@ -8,9 +8,11 @@ package it.univaq.framework.data.proxy;
 import it.univaq.framework.data.DataException;
 import it.univaq.framework.data.DataItemProxy;
 import it.univaq.framework.data.DataLayer;
+import it.univaq.guidatv.data.dao.ChannelDAO;
 import it.univaq.guidatv.data.dao.UserDAO;
 import it.univaq.guidatv.data.impl.ProgramImpl.Genre;
 import it.univaq.guidatv.data.impl.SavedSearchesImpl;
+import it.univaq.guidatv.data.model.Channel;
 import it.univaq.guidatv.data.model.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,12 +30,14 @@ public class SavedSearchesProxy extends SavedSearchesImpl implements DataItemPro
     protected boolean modified;
     protected DataLayer dataLayer;
     protected String user_key = "";
+    protected int channel_key = 0;
     
     public SavedSearchesProxy(DataLayer d) {
         super();
         this.dataLayer = d;
         this.modified = false;
         this.user_key = "";
+        this.channel_key = 0;
     }
 
     @Override
@@ -73,9 +77,22 @@ public class SavedSearchesProxy extends SavedSearchesImpl implements DataItemPro
     }
 
     @Override
-    public void setChannel(String channel) {
-        super.setChannel(channel);
+    public void setChannel(Channel channel) {
+        super.setChannel(channel); 
         this.modified = true;
+    }
+
+    @Override
+    public Channel getChannel() {
+        if (super.getChannel() == null && channel_key > 0) {
+            try {
+                super.setChannel(((ChannelDAO) dataLayer.getDAO(Channel.class)).getChannel(channel_key));
+            } catch (DataException ex) {
+                Logger.getLogger(SavedSearchesProxy.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return super.getChannel();
     }
 
     @Override
@@ -114,5 +131,11 @@ public class SavedSearchesProxy extends SavedSearchesImpl implements DataItemPro
         this.user_key = user_key;
         super.setUser(null);
     }
+    
+    public void setChannelKey(int channel_key) {
+        this.channel_key = channel_key;
+        super.setChannel(null);
+    }
+    
     
 }

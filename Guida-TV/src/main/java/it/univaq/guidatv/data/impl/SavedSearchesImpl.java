@@ -7,6 +7,7 @@ package it.univaq.guidatv.data.impl;
 
 import it.univaq.framework.data.DataItemImpl;
 import it.univaq.guidatv.data.impl.ProgramImpl.Genre;
+import it.univaq.guidatv.data.model.Channel;
 import it.univaq.guidatv.data.model.SavedSearches;
 import it.univaq.guidatv.data.model.User;
 import java.time.LocalDate;
@@ -24,7 +25,7 @@ public class SavedSearchesImpl extends DataItemImpl<Integer> implements SavedSea
     private Genre genre;
     private LocalTime maxStartHour;
     private LocalTime minStartHour;
-    private String channel;
+    private Channel channel;
     private Date startDate;
     private Date endDate;
     private Boolean sendEmail;
@@ -86,12 +87,12 @@ public class SavedSearchesImpl extends DataItemImpl<Integer> implements SavedSea
     }
 
     @Override
-    public String getChannel() {
+    public Channel getChannel() {
         return channel;
     }
 
     @Override
-    public void setChannel(String channel) {
+    public void setChannel(Channel channel) {
         this.channel = channel;
     }
 

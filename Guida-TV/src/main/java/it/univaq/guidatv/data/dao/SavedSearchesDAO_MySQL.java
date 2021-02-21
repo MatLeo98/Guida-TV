@@ -98,7 +98,7 @@ public class SavedSearchesDAO_MySQL extends DAO implements SavedSearchesDAO{
             savedSearch.setGenre(Genre.valueOf(rs.getString("genre")));
             savedSearch.setMaxStartHour(rs.getTime("maxStartHour").toLocalTime());
             savedSearch.setMinStartHour(rs.getTime("minStartHour").toLocalTime());
-            savedSearch.setChannel(rs.getString("channel"));
+            savedSearch.setChannelKey(rs.getInt("channel"));
             savedSearch.setStartDate(rs.getDate("startDate"));
             savedSearch.setEndDate(rs.getDate("endDate"));
             savedSearch.setSendEmail(rs.getBoolean("sendEmail"));
