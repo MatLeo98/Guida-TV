@@ -34,20 +34,26 @@
 
     <h1>RISULTATI:</h1>
     <#list search as s>
-    <#assign before = s.program.key>
+    <#assign before = s.date>
     <#if after??>
         <#if before != after> 
-            <h2><a href = 'program?id=${s.program.key}'>${s.program.name}</a></h2>
-            <h2>In onda il ${s.date} Su <a href = 'channel?id=${s.channel.key}'>${s.channel.name}</a> Ore ${s.startTime}</h2>
-            
+            <h2>In onda il ${s.date}</h2>
+            <h2>
+                &nbsp <a href = 'program?id=${s.program.key}'>${s.program.name}
+                        <#if s.episode??>
+                            (S${s.episode.number} - E${s.episode.number})
+                        </#if> 
+                      </a> 
+                alle ore ${s.startTime} su <a href = 'channel?id=${s.channel.key}'>${s.channel.name}</a>
+            </h2>         
             <#else>
-            <h2>In onda il ${s.date} Su <a href = 'channel?id=${s.channel.key}'>${s.channel.name}</a> Ore ${s.startTime}</h2>
+            <h2> &nbsp <a href = 'program?id=${s.program.key}'>${s.program.name}</a> alle ore ${s.startTime} su <a href = 'channel?id=${s.channel.key}'>${s.channel.name}</a></h2>
         </#if>
     <#else>
-        <h2><a href = 'program?id=${s.program.key}'>${s.program.name}</a></h2>
-        <h2>In onda il ${s.date} Su <a href = 'channel?id=${s.channel.key}'>${s.channel.name}</a> Ore ${s.startTime}</h2>
+        <h2>In onda il ${s.date}</h2>
+        <h2> &nbsp <a href = 'program?id=${s.program.key}'>${s.program.name}</a> alle ore ${s.startTime} su <a href = 'channel?id=${s.channel.key}'>${s.channel.name}</a></h2>
     </#if>
-    <#assign after = s.program.key>
+    <#assign after = s.date>
     </#list>
     </div>
 
