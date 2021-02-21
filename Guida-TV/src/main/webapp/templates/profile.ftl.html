@@ -20,6 +20,12 @@
 
     <div id="container">
         <h1>BENVENUTO NEL TUO PROFILO</h1>
+        <#if confirmed??>
+         <a href="confirm?URI=${URI}"> CONFERMA EMAIL </a>
+        </#if>
+        <br>
+        <br>
+        <br>
         <form method="post" action="profile">
         <div id="form" class="flex-row between">
             <div>
