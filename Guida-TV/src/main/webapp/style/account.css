@@ -1,0 +1,73 @@
+#container{
+    width: 90vw;
+    height: 83vh;
+    margin-left: 3%;
+    padding-top: 5%;
+    padding-right: 7%;
+    overflow-y: scroll;
+    background-image: url(../src/canale_bg.png);
+}
+
+h1{
+    font-size: 210%;
+    margin-bottom: 1.5rem;
+}
+h2{
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    margin-right: -7%;
+    font-size: 220%;
+    font-weight: 200;
+}
+h3{
+    margin: 0;
+}
+
+#form{
+    margin-bottom: 2rem;
+}
+#form > div > select{
+    width: 24vw;
+    padding: 0.5rem;
+    background-color: #dedde083;
+}
+input[type="button"]{
+    width: 6vw;
+    padding: 0.5rem;
+    background-color: #dedde083;
+}
+#form > div > div > label{
+    width: 2rem;
+    padding: 0.5rem;
+    text-align: center;
+    border: none;
+    border-radius: 0.4rem;
+    color: #ffffff55;
+}
+input[type="radio"]:checked + label{
+    color: #ffffff !important;
+}
+
+.ricerca > *{
+    width: 14%;
+    margin: 0.1rem;
+}
+
+.programma > *{
+    width: 31.6666%;
+    margin: 0.1rem;
+}
+
+.canale > *{
+    width: 31.6666%;
+    margin: 0.1rem;
+}
+
+.ciao {
+    background-color: transparent;
+    text-decoration: none;
+    color: #ffffff;
+    text-align: center;
+    
+}

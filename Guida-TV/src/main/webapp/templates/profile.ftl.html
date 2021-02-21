@@ -1,211 +1,133 @@
-<!DOCTYPE html>
-<html>
+<html lang="it_IT">
 <head>
-<title>Profile</title>
-<#include "common1.ftl.html">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account</title>
+
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/account.css">
+
+    <!-- Monserrat import from google fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;900&display=swap" rel="stylesheet">
 </head>
 <body>
-<#if confirmed??>
-    <a href="confirm?URI=${URI}"> CONFERMA EMAIL </a>
-</#if>
-       
-<h1> PROFILO </h1>
-<br><br>
-<h3> Email Giornaliera: </h3>
-<form method="post" action="profile">
-    <label for='channel'> Scegli i tuoi canali preferiti </label>
-    <br>
-    <select name='channels[]' id='channel' multiple>
-    <#list channels as c>
-        <option value = '${c.key}'>${c.name}</option>
-    </#list>
-    </select>
-    <br><br>
-    <label for='timeslots'> Scegli le fasce orarie </label>
-    <br>
-    <select name='timeslots[]' id='timeslots' multiple>
-    <#list timeslots as timeslot>
-        <option value="${timeslot}">${timeslot}</option>
-    </#list>
-     </select>
-     <p> Vuoi ricevere l'email giornaliera?
-     <br>
-      <input type="radio" name="emailgiornaliera" id="abilita" value="1" />
-     <label for='abilita'> Si </label>
-     <br>
-     <input type="radio" name="emailgiornaliera" id="disabilita" value="0" checked="checked" />
-     <label for='disabilita'> No </label>
-     <br><br>
-     <input type="submit" name="salva" value="SALVA"/>
-</form>
-<br><br>
-<center><h2> Ecco le tue richerche salvate</h2></center>
-    <br>
-    <table style="width:100%">
-    <tr>
-      <th>Titolo</th>
 
-      <th>Genere</th>
+    <button id="hamburger"></button>
+    <div id="menu" class="flex-column">
+        <#include "menu.ftl.html"> 
+    </div>
 
-      <th>Ora inizio minima</th>
+    <div id="container">
+        <h1>BENVENUTO NEL TUO PROFILO</h1>
+        <form method="post" action="profile">
+        <div id="form" class="flex-row between">
+            <div>
+                <h3>Scegli Canali Preferiti</h3>
+                <select name='channels[]' id='channel' multiple>
+                    <#list channels as c>
+                    <option value = '${c.key}'>${c.name}</option>
+                    </#list>
+                </select>
+            </div>
+            <div>
+                <h3>Scegli Fasce Orarie</h3>
+                 <select name='timeslots[]' id='timeslots' multiple>
+                    <option value="Genere">Fascia oraria</option>
+                    <#list timeslots as timeslot>
+                    <option value="${timeslot}">${timeslot}</option>
+                     </#list>
+                </select>
+            </div>
+            <div>
+                <h3>email giornaliera?</h3>
+                <div class="flex-row center">
+                    <input type="radio" hidden checked id="si" name="emailgiornaliera" value="1">
+                    <label for="si" class="bold" style="background-color: #00ff5571; margin-right: 1rem;">si</label>
+                    <input type="radio" hidden id="no" name="emailgiornaliera" value="0">
+                    <label for="no" class="bold" style="background-color: #ae00ff71;">no</label>
+                </div>
+            </div>
+            <div>
+                <h3><br></h3>
+                <input type="submit" value="Invia">
+                </form>
+            </div>
+        </div>
 
-      <th>Ora inizio massima</th>
+        <h2>ricerche salvate</h2>
+        <div class="flex-column">
+            <div class="flex-row ricerca" style="margin-bottom: 1rem;">
+                <p class="bold">titolo</p>
+                <p class="bold">genere</p>
+                <p class="bold" style="width: 15%;">ora inizio min</p>
+                <p class="bold" style="width: 15%;">ora inizio max</p>
+                <p class="bold">canale</p>
+                <p class="bold">data min</p>
+                <p class="bold">data max</p>
 
-      <th>canale</th>
+                <p class="bold" style="width: 5%;text-align: center;">elimina</p>
+            </div>
+            
+<#list savedS as s>
+<div class="flex-row ricerca">
+    <p>${s.title}</p>
+    <p>${s.genre}</p>
+    <p style="width: 15%;">${s.minStartHour}</p>
+    <p style="width: 15%;">${s.maxStartHour}</p>
+    <p>${s.channel}</p>
+    <p>${s.startDate}</p>
+    <p>${s.endDate}</p>
+    <a href="#" class="bold" style="width: 5%;text-align: center;">canc</a>
+</div>
+</#list>
+        </div>
 
-      <th>Data minima</th>
+        <h2>programmi preferiti</h2>
+        <div class="flex-column">
+            <div class="flex-row programma" style="margin-bottom: 1rem;">
+                <p class="bold">nome</p>
+                <p class="bold">genere</p>
+                <p class="bold">link</p>
+                <p class="bold" style="width: 5%;text-align: center;">elimina</p>
+            </div>
+           <#list favPrograms as p>
+            <div class="flex-row programma">
+                <p>${p.program.name}</p>
+                <p>${p.program.genre}</p>
+                <p> <a href="${p.program.link}" target="_blank" rel="noopener noreferrer"> CLICCA QUI </a> </p>
+                <a href="" style="width: 5%;text-align: center;">canc</a>
+            </div>
+           </#list>
+        </div>
 
-      <th>Data massima</th>
+        <h2>canali preferiti</h2>
+        <div class="flex-column">
+            <div class="flex-row canale" style="margin-bottom: 1rem;">
+                <p class="bold">canale</p>
+                <p class="bold">nome</p>
+                <p class="bold">fascia oraria</p>
+                <p class="bold" style="width: 5%;text-align: center;">elimina</p>
+            </div>
+            <#list favChannels as c>
+            <div class="flex-row canale">
+                <p>${c.channel.key}</p>
+                <p>${c.channel.name}</p>
+                <p>${c.timeSlot}</p>
+                <a href="#" style="width: 5%;text-align: center;">canc</a>
+            </div>
+           </#list>
+        </div>
+    </div>
 
-      <th>Email giornaliera</th>
-
-      <th>Vedi Risultati</th>
-       <th>Elimina</th>
-    </tr>
-    <#list savedS as s>
-   
-
-        <tr>
-             <td style="text-align:center">${s.title}</td>
-
-             <td style="text-align:center">${s.genre}</td>
-
-             <td style="text-align:center">${s.minStartHour}</td>
-
-             <td style="text-align:center">${s.maxStartHour}</td>
-
-             <td style="text-align:center">${s.channel}</td>
-
-             <td style="text-align:center">${s.startDate}</td>
-
-             <td style="text-align:center">${s.endDate}</td>
-        <form method="post" action="profile?daymail=${s.key}">
-        <td style="text-align:center">
-         <button name='daymailss' type='submit' value='0'>NO</button>
-         <button  name='daymailss' type='submit' value='1'>SI</button>
-        </td>
-
-        </form>
-
-
-        <td style="text-align:center"><a href='searchresults?title=${s.title}&genre=${s.genre}&channel=${s.channel}&min=${s.minStartHour}&max=${s.maxStartHour}&date1=${s.startDate}&date2=${s.endDate}'><button> VEDI</button> </a></td>
-        <td style="text-align:center">
-        <form method="post" action="profile?delSS=${s.key}">
-
-
-        <input type="submit" name="elimina" value="ELIMINA"/>
-        </form>
-        </td>
-             </tr>
+    <script>
+        document.getElementById("hamburger").onclick = function (){
+            document.getElementById("menu").classList = "showing flex-column";
+        }
+        document.getElementById("chiudi").onclick = function (){
+            document.getElementById("menu").classList = "hiding flex-column";
+        }
+    </script>
     
-    </#list>
-        </table>
-
-        <br><br><br>
-
-
-        <center><h2> Ecco i tuoi programmi preferiti</h2></center>
-    <br>
-    <table style="width:100%">
-    <tr>
-      <th>Nome</th>
-
-      <th>Descrizione</th>
-
-      <th>Genere</th>
-
-      <th>Link</th>
-
-      <th>Elimina</th>
-
-
-    </tr>
-    <#list favPrograms as p>
-    
-
-        <tr>
-             <td style="text-align:center">${p.program.name}</td>
-
-             <td style="text-align:center">${p.program.description}</td>
-
-             <td style="text-align:center">${p.program.genre}</td>
-
-             <td style="text-align:center">${p.program.link}</td>
-
-         <td style="text-align:center">
-        <form method="post" action="profile?delprog=${p.key}">
-
-
-        <input type="submit" name="elimina" value="ELIMINA"/>
-        </form>
-        </td>
-
-
-    </#list>
-        </table>
-
-
-
-    <br><br><br>
-
-
-     <center><h2> Ecco i tuoi canali preferiti</h2></center>
-    <br>
-    <table style="width:100%">
-    <tr>
-      <th>Canale</th>
-
-      <th>Nome</th>
-
-      <th>Fascia Oraria</th>
-
-      <th>Elimina</th>
-
-
-    </tr>
-    <#list favChannels as c>
-   
-    <#assign before=c.channel.key>
-        <!--Integer var = c.getChannel().getKey();-->
-
-        <tr>
-        
-        <!--if(var != request.getAttribute("canale")){-->
-        <#if after??>
-            <#if before != after>
-
-                 <td  style="text-align:center">${c.channel.key}</td>
-
-                 <td style="text-align:center">${c.channel.name}</td>
-            <#else>
-                <td  style="text-align:center"></td>
-
-                 <td style="text-align:center"></td>
-            </#if>
-        <#else>
-           <td  style="text-align:center">${c.channel.key}</td>
-
-           <td style="text-align:center">${c.channel.name}</td> 
-        </#if>
-             <!--request.setAttribute("canale", c.getChannel().getKey());-->
-             <#assign after = c.channel.key>
-             <td style="text-align:center">${c.timeSlot}</td>
-
-         <td style="text-align:center">
-        <form method="post" action="profile?delch=${c.key}">
-
-
-        <input type="submit" name="elimina" value="ELIMINA"/>
-        </form>
-
-
-
-        </td>
-
-
-
-    </#list>
-        </table>
-
 </body>
 </html>

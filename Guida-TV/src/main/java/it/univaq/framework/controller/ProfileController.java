@@ -28,6 +28,9 @@ public class ProfileController extends BaseController {
 
             if (s != null) {
                 User user = (User) s.getAttribute("user");
+                String email = user.getKey();
+                request.setAttribute("email", email);
+            
 
                 if (user != null && !(user.getKey().isEmpty())) {
                     request.setAttribute("channels", ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannels());
