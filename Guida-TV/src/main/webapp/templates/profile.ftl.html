@@ -92,9 +92,9 @@
          <button style="background-color: #ae00ff71; margin-right: 1rem; color:white; border-radius: 5px" name='daymailss' type='submit' value='0'>NO</button>
         
         </form>
-    <p><a style="position:relative; left: 20px; " href='searchresults?title=${s.title}&genre=${s.genre}&channel=${s.channel}&min=${s.minStartHour}&max=${s.maxStartHour}&date1=${s.startDate}&date2=${s.endDate}'><button> VEDI</button> </a></p>
+    <p><a style=" left: 20px; " href='searchresults?title=${s.title}&genre=${s.genre}&channel=${s.channel}&min=${s.minStartHour}&max=${s.maxStartHour}&date1=${s.startDate}&date2=${s.endDate}'><button> VEDI</button> </a></p>
    <form style="width:2%;" method="post" action="profile?delSS=${s.key}">
-        <input style="width:auto; position:relative; left: 5px;" type="submit" name="elimina" value="ELIMINA"/>
+        <input style="width:auto;  left: 8px;" type="submit" name="elimina" value="ELIMINA"/>
         </form>
 </div>
 </#list>
@@ -116,7 +116,7 @@
                 <p>${p.program.genre}</p>
                 <p> <a href="${p.program.link}" target="_blank" rel="noopener noreferrer"> CLICCA QUI </a> </p>
                <form style="width:2%;" method="post" action="profile?delprog=${p.key}">
-        <input style="width:auto; position:relative; left: 5px;" type="submit" name="elimina" value="ELIMINA"/>
+        <input style="width:auto; left: 5px; " type="submit" name="elimina" value="ELIMINA"/>
         </form>
             </div>
            </#list>
@@ -137,7 +137,7 @@
                 <p>${c.channel.name}</p>
                 <p>${c.timeSlot}</p>
                <form style="width:2%;" method="post" action="profile?delch=${c.key}">
-        <input style="width:auto; position:relative; left: 5px;" type="submit" name="elimina" value="ELIMINA"/>
+        <input style="width:auto; left: 5px;" type="submit" name="elimina" value="ELIMINA"/>
         </form>
             </div>
            </#list>
