@@ -25,11 +25,20 @@ public class RegisterController extends BaseController {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 
-        if (request.getParameter("email") == null) {
-            action_default(request, response);
-        } else {
-            register_action(request, response);
+        HttpSession s = request.getSession(false);
+        User loggedUser = null;
+        if (s != null) {
+            loggedUser = (User) s.getAttribute("user");
         }
+        if (loggedUser != null && !(loggedUser.getKey()).isEmpty()) {
+                logged(request, response);
+        } else{
+                if (request.getParameter("email") == null) {
+                    action_default(request, response);
+                } else {
+                        register_action(request, response);
+                }
+          }
     }
 
     private void action_default(HttpServletRequest request, HttpServletResponse response) {
@@ -110,4 +119,24 @@ public class RegisterController extends BaseController {
             }
     }
     }
-}
+    
+     private void logged(HttpServletRequest request, HttpServletResponse response) {
+        try {
+
+            HttpSession s = request.getSession(false);
+            User user = (User) s.getAttribute("user");
+
+            if (user.getKey().equalsIgnoreCase("admin@email.it")) {
+                response.sendRedirect("http://localhost:8080/Guida-tivu/admin");
+            } else {
+                response.sendRedirect("http://localhost:8080/Guida-tivu/home");
+            }
+
+        } catch (IOException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+    
+    }
+
