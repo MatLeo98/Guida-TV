@@ -102,7 +102,7 @@ public class AdminController extends BaseController {
             List<User> users = null;
             users = (List<User>) ((GuidatvDataLayer) request.getAttribute("datalayer")).getUserDAO().getSubUsers();
             for (User u : users) {
-                FileWriter fw = new FileWriter("S:\\Programmi\\xampp\\htdocs\\univaq-Guida-TV\\Guida-TV\\Guida-TV\\src\\main\\java\\it\\univaq\\guida\\tv\\data\\files\\emailto" + u.getKey() + LocalDate.now() + ".txt");
+                FileWriter fw = new FileWriter("C:\\xampp\\htdocs\\Guida-TV\\Guida-TV\\src\\main\\java\\it\\univaq\\guidatv\\data\\files\\emailto" + u.getKey() + LocalDate.now() + ".txt");
                 fw.write("Ciao " + u.getKey() + "\r\n\r\n");
 
                 //schedules di oggi per canali preferiti
