@@ -18,6 +18,17 @@
 
     <div id="container" class="flex-column">
          <#include "searchbar.ftl.html">
+         
+         <#if email??>
+
+         <form method="post" action="searchresults?saved=1">	
+             <button type='submit'>Salva questi criteri di ricerca</button>
+         </form>
+            <#if message??>
+            <p> ${message} </p>
+            </#if>
+
+         </#if>
 
     <div id="index-programmi" >
 

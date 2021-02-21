@@ -147,6 +147,9 @@ public class SearchResultsController extends BaseController {
         try {
 
             ss = (SavedSearches) request.getAttribute("savedS");
+            System.out.println(email);
+            System.out.println(programs);
+            System.out.println(ss.getKey());
             ((GuidatvDataLayer) request.getAttribute("datalayer")).getFavouriteProgramDAO().storeFavPrograms(programs, email, ss.getKey());
         } catch (DataException ex) {
             Logger.getLogger(SearchResultsController.class.getName()).log(Level.SEVERE, null, ex);
