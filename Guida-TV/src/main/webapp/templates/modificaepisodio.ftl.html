@@ -4,7 +4,15 @@
 <title>Admin</title> 
 <#include "commonBackPages.ftl.html">
 </head>
-<body>
+<#if editSuccess??>
+    <body onload="messageFunction('${editSuccess}');">
+<#else>
+    <#if delSuccess??>
+    <body onload="messageFunction('${delSuccess}');">
+    <#else>
+    <body>
+    </#if>
+</#if>
 <h1> Modifica o elimina un episodio: </h1>
 <a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina di gestione </a>
 <br>
@@ -15,7 +23,7 @@
         <select name='pr' id='pr'>
             <option value = "${programSelected.key}">${programSelected.name}</option>   
                 <#list programs as p>
-             <!-- da mettere nel caso non funge se p e serie-->
+            
                     <#if (p == programSelected)>
 
                     <#else>
@@ -66,4 +74,5 @@
     </form>
 </#if>
 </body>
+<script type="text/javascript" src="../script/main.js"></script>
 </html>

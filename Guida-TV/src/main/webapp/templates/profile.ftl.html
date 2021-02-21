@@ -21,7 +21,7 @@
     <div id="container">
         <h1>BENVENUTO NEL TUO PROFILO</h1>
         <#if confirmed??>
-         <a href="confirm?URI=${URI}"> CONFERMA EMAIL </a>
+         <a style="color:lightgreen;" href="confirm?URI=${URI}"> CONFERMA EMAIL </a>
         </#if>
         <br>
         <br>
@@ -144,14 +144,7 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById("hamburger").onclick = function (){
-            document.getElementById("menu").classList = "showing flex-column";
-        }
-        document.getElementById("chiudi").onclick = function (){
-            document.getElementById("menu").classList = "hiding flex-column";
-        }
-    </script>
+     <script type="text/javascript" src="script/main.js"></script>
     
 </body>
 </html>

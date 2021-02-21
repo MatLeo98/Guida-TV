@@ -4,7 +4,11 @@
 <title>Admin</title>
 <#include "commonBackPages.ftl.html">
 </head>
-<body>
+ <#if editSuccess??>
+    <body onload="messageFunction('${editSuccess}');">
+<#else>
+    <body>
+</#if>
 <h1> Modifica o elimina un palinsesto: </h1>
 <a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina di gestione </a>
 <br>
@@ -83,4 +87,5 @@
     </form>
 </#if>
 </body>
+<script type="text/javascript" src="../script/main.js"></script>
 </html>

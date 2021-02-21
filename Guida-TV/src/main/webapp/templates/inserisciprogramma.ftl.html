@@ -4,7 +4,11 @@
 <title>Admin</title>
 <#include "commonBackPages.ftl.html">
 </head>
-<body>
+ <#if insertSuccess??>
+    <body onload="messageFunction('${insertSuccess}');">
+<#else>
+    <body>
+</#if>
     <a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina di gestione </a>
     <h1> Inserisci un nuovo programma: </h1>
     <form method='post' action='programs?insert=1' accept-charset="utf-8">           
@@ -40,5 +44,6 @@
         <button type='submit'>Crea</button>
     </form>
 </body>
+<script type="text/javascript" src="../script/main.js"></script>
 </html>
     

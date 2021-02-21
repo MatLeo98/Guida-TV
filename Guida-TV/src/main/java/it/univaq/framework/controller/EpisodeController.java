@@ -70,7 +70,7 @@ public class EpisodeController extends BaseController {
 
                         }
 
-                        if (request.getParameter("delEp") != null) {
+                        if (request.getParameter("delEp") != null ) {
                             delete_done(request, response);
                         }
 
@@ -133,14 +133,11 @@ public class EpisodeController extends BaseController {
                 ((GuidatvDataLayer) request.getAttribute("datalayer")).getEpisodeDAO().storeEpisode(episode);
             }
             s.setAttribute("programSelected", null);
-            request.setAttribute("var", 3);
+            request.setAttribute("insertSuccess", "Episodi inseriti");
+            request.setAttribute("programs", ((GuidatvDataLayer) request.getAttribute("datalayer")).getProgramDAO().getPrograms());
 
-            TemplateResult res = new TemplateResult(getServletContext());
-            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("inserimentoriuscito.ftl.html", request, response);
+            episode_insert(request,response);
 
-        } catch (TemplateManagerException ex) {
-            Logger.getLogger(EpisodeController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DataException ex) {
             Logger.getLogger(EpisodeController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -167,40 +164,31 @@ public class EpisodeController extends BaseController {
             episode.setSeasonNumber(Integer.parseInt(request.getParameter("sn")));
             episode.setNumber(Integer.parseInt(request.getParameter("en")));
             ((GuidatvDataLayer) request.getAttribute("datalayer")).getEpisodeDAO().storeEpisode(episode);
-            request.setAttribute("var", 3);
+            
+            request.setAttribute("editSuccess", "Episodio modificato");
+            request.setAttribute("programs", ((GuidatvDataLayer) request.getAttribute("datalayer")).getProgramDAO().getPrograms());
 
-            TemplateResult res = new TemplateResult(getServletContext());
-            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("modificariuscita.ftl.html", request, response);
+            episode_edit(request,response);
 
-        } catch (TemplateManagerException ex) {
-            Logger.getLogger(EpisodeController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DataException ex) {
             Logger.getLogger(EpisodeController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private void delete_done(HttpServletRequest request, HttpServletResponse response) {
-        try (PrintWriter out = response.getWriter()) {
+        try  {
 
             Integer id = Integer.parseInt(request.getParameter("delEp"));
             Episode episode = ((GuidatvDataLayer) request.getAttribute("datalayer")).getEpisodeDAO().getEpisode(id);
             ((GuidatvDataLayer) request.getAttribute("datalayer")).getEpisodeDAO().deleteEpisode(episode);
 
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Delete</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1> Eliminazione effettuata </h1>");
-            out.println("<a href='http://localhost:8080/Guida-tivu/admin/episodes?editdel=0'> Elimina di nuovo </a>");
-            out.println("<br>");
-            out.println("<br>");
-            out.println("<a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina admin </a>");
-        } catch (IOException ex) {
-            Logger.getLogger(EpisodeController.class.getName()).log(Level.SEVERE, null, ex);
+            request.setAttribute("delSuccess", "Episodio eliminato");
+            request.setAttribute("programs", ((GuidatvDataLayer) request.getAttribute("datalayer")).getProgramDAO().getPrograms());
+
+            response.sendRedirect("http://localhost:8080/Guida-tivu/admin/episodes?editdel=0");
         } catch (DataException ex) {
+            Logger.getLogger(EpisodeController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(EpisodeController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

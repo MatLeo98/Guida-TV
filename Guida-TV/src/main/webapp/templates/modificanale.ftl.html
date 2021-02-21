@@ -4,7 +4,11 @@
 <title>Admin</title>  
 <#include "commonBackPages.ftl.html">
 </head>
-<body>
+ <#if editSuccess??>
+    <body onload="messageFunction('${editSuccess}');">
+<#else>
+    <body>
+</#if>
 <h1> Modifica un canale: </h1>
 <#if channelSelected??>
 <form method='post' action='channels?edit=1' accept-charset="utf-8">
@@ -52,4 +56,6 @@ Canale da modificare:
     </form>
 </#if>
 </body>
+<script type="text/javascript" src="../script/main.js"></script>
+
 </html>

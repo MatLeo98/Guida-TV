@@ -117,11 +117,12 @@ public class ProgramController extends BaseController {
                 program.setSeasonsNumber(Integer.parseInt(request.getParameter("nSeasons")));
             }
             ((GuidatvDataLayer) request.getAttribute("datalayer")).getProgramDAO().storeProgram(program);
-            request.setAttribute("var", 2);
+
+            request.setAttribute("insertSuccess", "Programma inserito");
 
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("inserimentoriuscito.ftl.html", request, response);
+            res.activate("inserisciprogramma.ftl.html", request, response);
 
         } catch (TemplateManagerException ex) {
             Logger.getLogger(ProgramController.class.getName()).log(Level.SEVERE, null, ex);
@@ -164,13 +165,13 @@ public class ProgramController extends BaseController {
             if (program.IsSerie()) {
                 program.setSeasonsNumber(Integer.parseInt(request.getParameter("nSeasons")));
             }
-            System.out.println("Numero stagioni:" + program.getSeasonsNumber());
             ((GuidatvDataLayer) request.getAttribute("datalayer")).getProgramDAO().storeProgram(program);
-            request.setAttribute("var", 2);
 
+            request.setAttribute("editSuccess", "Programma modificato");
+            request.setAttribute("programs", ((GuidatvDataLayer) request.getAttribute("datalayer")).getProgramDAO().getPrograms());
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("modificariuscita.ftl.html", request, response);
+            res.activate("modificaprogramma.ftl.html", request, response);
 
         } catch (TemplateManagerException ex) {
             Logger.getLogger(ProgramController.class.getName()).log(Level.SEVERE, null, ex);
@@ -198,20 +199,17 @@ public class ProgramController extends BaseController {
             Program program = ((GuidatvDataLayer) request.getAttribute("datalayer")).getProgramDAO().getProgram(n);
             ((GuidatvDataLayer) request.getAttribute("datalayer")).getProgramDAO().deleteProgram(program);
 
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Delete</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1> Eliminazione effettuata </h1>");
-            out.println("<a href='http://localhost:8080/Guida-tivu/admin/programs?delete=0'> Elimina di nuovo </a>");
-            out.println("<br>");
-            out.println("<br>");
-            out.println("<a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina admin </a>");
+           request.setAttribute("delSuccess", "Programma eliminato");
+            request.setAttribute("programs", ((GuidatvDataLayer) request.getAttribute("datalayer")).getProgramDAO().getPrograms());
+
+            TemplateResult res = new TemplateResult(getServletContext());
+            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+            res.activate("cancellaprogramma.ftl.html", request, response);
         } catch (IOException ex) {
             Logger.getLogger(ProgramController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DataException ex) {
+            Logger.getLogger(ProgramController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TemplateManagerException ex) {
             Logger.getLogger(ProgramController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

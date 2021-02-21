@@ -107,11 +107,13 @@ public class ChannelController extends BaseController {
             channel.setImage(image);
             ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().storeChannel(channel);
             request.setAttribute("var", 1);
+            
+            request.setAttribute("insertSuccess", "Canale inserito");
 
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("inserimentoriuscito.ftl.html", request, response);
-
+            res.activate("inseriscicanale.ftl.html", request, response);
+           
         } catch (TemplateManagerException ex) {
             Logger.getLogger(ChannelController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DataException ex) {
@@ -145,12 +147,14 @@ public class ChannelController extends BaseController {
                 }
             }
             ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().storeChannel(channel);
-            request.setAttribute("var", 1);
+            
+             request.setAttribute("editSuccess", "Canale modificato");
+             request.setAttribute("channels", ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannels());
 
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+            res.activate("modificanale.ftl.html", request, response);
 
-            res.activate("modificariuscita.ftl.html", request, response);
 
         } catch (DataException ex) {
             Logger.getLogger(ChannelController.class.getName()).log(Level.SEVERE, null, ex);
@@ -180,20 +184,18 @@ public class ChannelController extends BaseController {
             Channel channel = ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannel(n);
             ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().deleteChannel(channel);
 
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Delete</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1> Eliminazione effettuata </h1>");
-            out.println("<a href='http://localhost:8080/Guida-tivu/admin/channels?delete=0'> Elimina di nuovo </a>");
-            out.println("<br>");
-            out.println("<br>");
-            out.println("<a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina admin </a>");
+          
+             request.setAttribute("channels", ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannels());
+
+            TemplateResult res = new TemplateResult(getServletContext());
+            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
+            res.activate("cancellacanale.ftl.html", request, response);
+            
         } catch (IOException ex) {
             Logger.getLogger(ChannelController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DataException ex) {
+            Logger.getLogger(ChannelController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TemplateManagerException ex) {
             Logger.getLogger(ChannelController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -37,8 +37,8 @@ public class ScheduleController extends BaseController {
 
         try {
             request.setCharacterEncoding("UTF-8");
-             User user = (User) s.getAttribute("user");
-            if(user.getKey().equals("admin@email.it")){
+            User user = (User) s.getAttribute("user");
+            if (user.getKey().equals("admin@email.it")) {
                 if (request.getParameter("insert") != null) {
                     if (s.getAttribute("channelSelected") == null) {
                         try {
@@ -91,9 +91,9 @@ public class ScheduleController extends BaseController {
                         request.setAttribute("key", schedule_key);
                         edit_done(request, response);
                     }
-                }           
-            }else{
-                notAuth(request,response);
+                }
+            } else {
+                notAuth(request, response);
             }
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(ScheduleController.class.getName()).log(Level.SEVERE, null, ex);
@@ -159,14 +159,10 @@ public class ScheduleController extends BaseController {
             }
 
             s.setAttribute("channelSelected", null);
-            request.setAttribute("var", 4);
+            request.setAttribute("insertSuccess", "Palinsesti inseriti");
+            request.setAttribute("channels", ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannels());
+            schedule_insert(request, response);
 
-            TemplateResult res = new TemplateResult(getServletContext());
-            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("inserimentoriuscito.ftl.html", request, response);
-
-        } catch (TemplateManagerException ex) {
-            Logger.getLogger(ScheduleController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DataException ex) {
             Logger.getLogger(ScheduleController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -187,25 +183,22 @@ public class ScheduleController extends BaseController {
     private void edit_done(HttpServletRequest request, HttpServletResponse response) {
         try {
 
-            int key = (int)request.getAttribute("key");
-            Schedule schedule = ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getSchedule(key);
-            if(schedule.getProgram().IsSerie()){
+            int key = (int) request.getAttribute("key");
+            Schedule schedule = ((GuidatvDataLayer) request.getAttribute("datalayer")).getScheduleDAO().getSchedule(key);
+            if (schedule.getProgram().IsSerie()) {
                 int ep = Integer.parseInt(request.getParameter("ep"));
-                Episode episode = ((GuidatvDataLayer)request.getAttribute("datalayer")).getEpisodeDAO().getEpisode(ep);
+                Episode episode = ((GuidatvDataLayer) request.getAttribute("datalayer")).getEpisodeDAO().getEpisode(ep);
                 schedule.setEpisode(episode);
             }
-            schedule.setDate(LocalDate.parse(request.getParameter("d")));            
+            schedule.setDate(LocalDate.parse(request.getParameter("d")));
             schedule.setStartTime(LocalTime.parse(request.getParameter("st")));
             schedule.setEndTime(LocalTime.parse(request.getParameter("et")));
-            ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().storeSchedule(schedule);
-            request.setAttribute("var", 4);
+            ((GuidatvDataLayer) request.getAttribute("datalayer")).getScheduleDAO().storeSchedule(schedule);
+            request.setAttribute("editSuccess", "Palinsesto modificato");
+            request.setAttribute("channels", ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannels());
 
-            TemplateResult res = new TemplateResult(getServletContext());
-            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("modificariuscita.ftl.html", request, response);
+            schedule_edit(request,response);
 
-        } catch (TemplateManagerException ex) {
-            Logger.getLogger(ScheduleController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DataException ex) {
             Logger.getLogger(ScheduleController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -215,27 +208,19 @@ public class ScheduleController extends BaseController {
         try (PrintWriter out = response.getWriter()) {
 
             Integer id = Integer.parseInt(request.getParameter("delSched"));
-            Schedule schedule = ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().getSchedule(id);
-            ((GuidatvDataLayer)request.getAttribute("datalayer")).getScheduleDAO().deleteSchedule(schedule);
+            Schedule schedule = ((GuidatvDataLayer) request.getAttribute("datalayer")).getScheduleDAO().getSchedule(id);
+            ((GuidatvDataLayer) request.getAttribute("datalayer")).getScheduleDAO().deleteSchedule(schedule);
 
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Delete</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1> Eliminazione effettuata </h1>");
-            out.println("<a href='http://localhost:8080/Guida-tivu/admin/schedules?editdel=0'> Elimina di nuovo </a>");
-            out.println("<br>");
-            out.println("<br>");
-            out.println("<a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina admin </a>");
+            request.setAttribute("channels", ((GuidatvDataLayer) request.getAttribute("datalayer")).getChannelDAO().getChannels());
+
+            response.sendRedirect("http://localhost:8080/Guida-tivu/admin/schedules?editdel=0");
         } catch (IOException ex) {
             Logger.getLogger(ScheduleController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DataException ex) {
             Logger.getLogger(ScheduleController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void notAuth(HttpServletRequest request, HttpServletResponse response) {
         try {
             TemplateResult res = new TemplateResult(getServletContext());

@@ -4,7 +4,12 @@
 <title>Admin</title>
 <#include "commonBackPages.ftl.html">
 </head>
-<body>
+ <#if insertSuccess??>
+    <body onload="messageFunction('${insertSuccess}');">
+<#else>
+    <body>
+</#if>
+     
     <a href='http://localhost:8080/Guida-tivu/admin'> Torna alla pagina di gestione </a>
     <h1> Inserisci un nuovo canale: </h1>
     <form method='post' action='channels?insert=1' accept-charset="utf-8">
@@ -19,7 +24,9 @@
         <br>
         <input type='submit' name='crea' value='CREA'/>
         <br>
-        <br>        
+        <br>
+       
     </form>
 </body>
+<script type="text/javascript" src="../script/main.js"></script>
 </html>
