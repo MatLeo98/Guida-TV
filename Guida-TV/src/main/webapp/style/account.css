@@ -50,7 +50,7 @@ input[type="radio"]:checked + label{
 }
 
 .ricerca > *{
-    width: 14%;
+    width: 9.111111%;
     margin: 0.1rem;
 }
 
