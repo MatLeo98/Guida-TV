@@ -63,7 +63,7 @@ public class ChannelDetailController extends BaseController {
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("date", date);
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("channeldetails.ftl.html", request, response);
+            res.activate("channeldetail.ftl.html", request, response);
             //try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             //  out.println("<!DOCTYPE html>");

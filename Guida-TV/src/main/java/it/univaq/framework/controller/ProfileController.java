@@ -368,7 +368,7 @@ public class ProfileController extends BaseController {
     private void notLogged(HttpServletRequest request, HttpServletResponse response) {
         try {
             TemplateResult res = new TemplateResult(getServletContext());
-            res.activate("devilogin.ftl.html", request, response);
+            res.activate("loginrequired.ftl.html", request, response);
             response.setContentType("text/html;charset=UTF-8");
 
         } catch (TemplateManagerException ex) {

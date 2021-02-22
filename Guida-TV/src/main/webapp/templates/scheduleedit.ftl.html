@@ -63,13 +63,13 @@
                         <td style='text-align:center'> ${s.program.name} non ha episodi <!--<input type='text' name='empty' disabled />--> </td>
                     </#if>
                     <td style='text-align:center'> <input type='date' name='d' value='${s.date}'/> </td>
-                    <td style='text-align:center'> <input type='time' name='st' value='${s.startTime}'/> </td>
-                    <td style='text-align:center'> <input type='time' name='et' value='${s.endTime}'/> </td>
-                    <td style='text-align:center'> <input type='submit' name='edit' value='MODIFICA'/> </td>                
+                    <td style='text-align:center'> <input type='time' name='st' value='${s.startTime}' style='width:80px;'/> </td>
+                    <td style='text-align:center'> <input type='time' name='et' value='${s.endTime}' style='width:80px;'/> </td>
+                    <td style='text-align:center; width:10px;'> <input type='submit' name='edit' value='MODIFICA' style='width:73px;'/> </td>                
                 </form>               
-                <td style='text-align:center'>
+                <td style='text-align:center; width:10px;'>
                     <form method='post' action='schedules?editdel=0&delSched=${s.key}'>
-                        <input type='submit' name='delete' value='ELIMINA'/>
+                        <input type='submit' name='delete' value='ELIMINA' style='width:68px;'/>
                     </form>
                 </td>
             </tr>

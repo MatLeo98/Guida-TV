@@ -92,7 +92,7 @@ public class ProgramController extends BaseController {
         try {
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("inserisciprogramma.ftl.html", request, response);
+            res.activate("programinsert.ftl.html", request, response);
 
         } catch (TemplateManagerException ex) {
             Logger.getLogger(ProgramController.class.getName()).log(Level.SEVERE, null, ex);
@@ -122,7 +122,7 @@ public class ProgramController extends BaseController {
 
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("inserisciprogramma.ftl.html", request, response);
+            res.activate("programinsert.ftl.html", request, response);
 
         } catch (TemplateManagerException ex) {
             Logger.getLogger(ProgramController.class.getName()).log(Level.SEVERE, null, ex);
@@ -139,7 +139,7 @@ public class ProgramController extends BaseController {
         try {
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("modificaprogramma.ftl.html", request, response);
+            res.activate("programedit.ftl.html", request, response);
         } catch (TemplateManagerException ex) {
             Logger.getLogger(ProgramController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -171,7 +171,7 @@ public class ProgramController extends BaseController {
             request.setAttribute("programs", ((GuidatvDataLayer) request.getAttribute("datalayer")).getProgramDAO().getPrograms());
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("modificaprogramma.ftl.html", request, response);
+            res.activate("programedit.ftl.html", request, response);
 
         } catch (TemplateManagerException ex) {
             Logger.getLogger(ProgramController.class.getName()).log(Level.SEVERE, null, ex);
@@ -186,7 +186,7 @@ public class ProgramController extends BaseController {
         try {
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("cancellaprogramma.ftl.html", request, response);
+            res.activate("programdelete.ftl.html", request, response);
         } catch (TemplateManagerException ex) {
             Logger.getLogger(ProgramController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -204,7 +204,7 @@ public class ProgramController extends BaseController {
 
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("cancellaprogramma.ftl.html", request, response);
+            res.activate("programdelete.ftl.html", request, response);
         } catch (IOException ex) {
             Logger.getLogger(ProgramController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DataException ex) {
@@ -217,7 +217,7 @@ public class ProgramController extends BaseController {
     private void notAuth(HttpServletRequest request, HttpServletResponse response) {
         try {
             TemplateResult res = new TemplateResult(getServletContext());
-            res.activate("sonoin.ftl.html", request, response);
+            res.activate("notauthorized.ftl.html", request, response);
             response.setContentType("text/html;charset=UTF-8");
 
         } catch (TemplateManagerException ex) {

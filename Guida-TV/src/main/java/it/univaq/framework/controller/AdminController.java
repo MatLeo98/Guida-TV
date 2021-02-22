@@ -43,7 +43,7 @@ public class AdminController extends BaseController {
                         action_admin(request, response);
                     } else {
                         request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-                        res.activate("sonoin.ftl.html", request, response);
+                        res.activate("notauthorized.ftl.html", request, response);
                     }
                 } else {
                     notLogged(request, response);
@@ -155,7 +155,7 @@ public class AdminController extends BaseController {
     private void notLogged(HttpServletRequest request, HttpServletResponse response) {
         try {
             TemplateResult res = new TemplateResult(getServletContext());
-            res.activate("devilogin.ftl.html", request, response);
+            res.activate("loginrequired.ftl.html", request, response);
             response.setContentType("text/html;charset=UTF-8");
 
         } catch (TemplateManagerException ex) {

@@ -32,7 +32,7 @@ public class ConfirmController extends BaseController {
             
         }else{
 
-                res.activate("devilogin.ftl.html", request, response);
+                res.activate("loginrequired.ftl.html", request, response);
                 /*
                 try (PrintWriter out = response.getWriter()) {
                 response.setContentType("text/html;charset=UTF-8");

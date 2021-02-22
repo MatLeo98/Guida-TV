@@ -86,7 +86,7 @@ public class ChannelController extends BaseController {
         try {
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("inseriscicanale.ftl.html", request, response);
+            res.activate("channelinsert.ftl.html", request, response);
 
         } catch (TemplateManagerException ex) {
             Logger.getLogger(ChannelController.class.getName()).log(Level.SEVERE, null, ex);
@@ -112,7 +112,7 @@ public class ChannelController extends BaseController {
 
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("inseriscicanale.ftl.html", request, response);
+            res.activate("channelinsert.ftl.html", request, response);
            
         } catch (TemplateManagerException ex) {
             Logger.getLogger(ChannelController.class.getName()).log(Level.SEVERE, null, ex);
@@ -126,7 +126,7 @@ public class ChannelController extends BaseController {
         try {
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("modificanale.ftl.html", request, response);
+            res.activate("channeledit.ftl.html", request, response);
 
         } catch (TemplateManagerException ex) {
             Logger.getLogger(ChannelController.class.getName()).log(Level.SEVERE, null, ex);
@@ -153,7 +153,7 @@ public class ChannelController extends BaseController {
 
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("modificanale.ftl.html", request, response);
+            res.activate("channeledit.ftl.html", request, response);
 
 
         } catch (DataException ex) {
@@ -169,7 +169,7 @@ public class ChannelController extends BaseController {
 
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("cancellacanale.ftl.html", request, response);
+            res.activate("channeldelete.ftl.html", request, response);
 
         } catch (TemplateManagerException ex) {
             Logger.getLogger(ChannelController.class.getName()).log(Level.SEVERE, null, ex);
@@ -189,7 +189,7 @@ public class ChannelController extends BaseController {
 
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("cancellacanale.ftl.html", request, response);
+            res.activate("channeldelete.ftl.html", request, response);
             
         } catch (IOException ex) {
             Logger.getLogger(ChannelController.class.getName()).log(Level.SEVERE, null, ex);
@@ -203,7 +203,7 @@ public class ChannelController extends BaseController {
     private void notAuth(HttpServletRequest request, HttpServletResponse response) {
         try {
             TemplateResult res = new TemplateResult(getServletContext());
-            res.activate("sonoin.ftl.html", request, response);
+            res.activate("notauthorized.ftl.html", request, response);
             response.setContentType("text/html;charset=UTF-8");
 
         } catch (TemplateManagerException ex) {

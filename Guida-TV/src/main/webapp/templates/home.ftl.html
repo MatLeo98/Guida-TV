@@ -20,7 +20,11 @@
            <#list onAirPrograms as s>
            <div class="flex-row">
                 <h3> <a class="programmi" href = 'channel?id=${s.channel.key}'> ${s.channel.name} </a></h3>
-                <h3> Presenta <a class="programmi" href = 'program?id=${s.program.key}'>   ${s.program.name}  </a></h3>  
+                <h3> Presenta <a class="programmi" href = 'program?id=${s.program.key}'>   ${s.program.name}  
+                    <#if s.episode??>
+                                (S${s.episode.seasonNumber} - E${s.episode.number})
+                    </#if>
+                </a></h3>   
            </div>
             </#list>
         </div>

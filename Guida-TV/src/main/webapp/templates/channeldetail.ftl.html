@@ -24,16 +24,12 @@
              </#if>
             </img>
             <div id="info" class="flex-column between">
-                
-               <#-- <div class="flex-row between"> -->
+                             
                     <h1 class="bold">Nome Canale</h1>
                     <h1>${channel.name}</h1>
-                <#-- </div> -->
-                
-               <#-- <div class="flex-row between"> -->
+                                             
                 <h1 class="bold">Palinsesto del </h1>
                 <h1>${date}</h1>
-               <#-- </div> -->
                 
                <div class="index-episodi">
                      <h1 class="bold">Oggi in Onda:</h1>
@@ -42,7 +38,11 @@
                         <#list schedule as s>
                         <tr>
                          <div class="flex-row between">
-                             <td><h2> <a href='program?id=${s.program.key}'>  ${s.program.name} </a></h2> </td>
+                             <td><h2> <a href='program?id=${s.program.key}'>  ${s.program.name} 
+                                         <#if s.episode??>
+                                            (S${s.episode.number} - E${s.episode.number})
+                                         </#if>
+                                     </a></h2> </td>
                              <td><h2>  Dalle: <b> ${s.startTime} </b> </h2></td>
                              <td><h2>  Alle: <b> ${s.endTime} </b> </h2></td>
                         </div>

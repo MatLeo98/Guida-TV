@@ -41,7 +41,7 @@
             <h2>
                 &nbsp <a href = 'program?id=${s.program.key}'>${s.program.name}
                         <#if s.episode??>
-                            (S${s.episode.number} - E${s.episode.number})
+                            (S${s.episode.seasonNumber} - E${s.episode.number})
                         </#if> 
                       </a> 
                 alle ore ${s.startTime} su <a href = 'channel?id=${s.channel.key}'>${s.channel.name}</a>

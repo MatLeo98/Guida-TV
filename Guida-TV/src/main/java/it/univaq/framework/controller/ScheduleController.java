@@ -118,7 +118,7 @@ public class ScheduleController extends BaseController {
                 }
                 request.setAttribute("rows", rows);
             }
-            res.activate("inseriscipalinsesto.ftl.html", request, response);
+            res.activate("scheduleinsert.ftl.html", request, response);
 
         } catch (TemplateManagerException ex) {
             Logger.getLogger(ScheduleController.class.getName()).log(Level.SEVERE, null, ex);
@@ -173,7 +173,7 @@ public class ScheduleController extends BaseController {
         try {
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("modificaschedule.ftl.html", request, response);
+            res.activate("scheduleedit.ftl.html", request, response);
         } catch (TemplateManagerException ex) {
             Logger.getLogger(ScheduleController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -224,7 +224,7 @@ public class ScheduleController extends BaseController {
     private void notAuth(HttpServletRequest request, HttpServletResponse response) {
         try {
             TemplateResult res = new TemplateResult(getServletContext());
-            res.activate("sonoin.ftl.html", request, response);
+            res.activate("notauthorized.ftl.html", request, response);
             response.setContentType("text/html;charset=UTF-8");
 
         } catch (TemplateManagerException ex) {

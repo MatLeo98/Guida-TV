@@ -45,7 +45,7 @@ public class RegisterController extends BaseController {
         response.setContentType("text/html;charset=UTF-8");
         try {
             TemplateResult res = new TemplateResult(getServletContext());
-            res.activate("registrati.ftl.html", request, response);
+            res.activate("register.ftl.html", request, response);
             /* TODO output your page here. You may use following sample code. */
 
  /*

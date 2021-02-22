@@ -60,7 +60,7 @@ public class ProgramDetailController extends BaseController {
             }
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("programdetail1.ftl.html", request, response);
+            res.activate("programdetail.ftl.html", request, response);
 
             //try (PrintWriter out = response.getWriter()) {
             /*
@@ -105,7 +105,7 @@ public class ProgramDetailController extends BaseController {
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
             request.setAttribute("after", null);
-            res.activate("programdetail1.ftl.html", request, response);
+            res.activate("programdetail.ftl.html", request, response);
             /*
             try (PrintWriter out = response.getWriter()) {
             

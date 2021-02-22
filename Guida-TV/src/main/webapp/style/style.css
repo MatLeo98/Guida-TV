@@ -35,7 +35,10 @@ input, select{
     font-weight: bolder;
     border: none;
     border-radius: 0.4rem;
-    background-color: #b5b3c1;
+    background-color: #85838f;
+}
+::placeholder{
+    color: #ffffff;
 }
 input[type="date"]{
     background-color: #a59e16;

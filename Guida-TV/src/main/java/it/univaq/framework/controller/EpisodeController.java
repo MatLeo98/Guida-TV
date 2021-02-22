@@ -110,7 +110,7 @@ public class EpisodeController extends BaseController {
                 }
                 request.setAttribute("rows", rows);
             }
-            res.activate("inserisciepisodio.ftl.html", request, response);
+            res.activate("episodeinsert.ftl.html", request, response);
 
         } catch (TemplateManagerException ex) {
             Logger.getLogger(EpisodeController.class.getName()).log(Level.SEVERE, null, ex);
@@ -148,7 +148,7 @@ public class EpisodeController extends BaseController {
         try {
             TemplateResult res = new TemplateResult(getServletContext());
             request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
-            res.activate("modificaepisodio.ftl.html", request, response);
+            res.activate("episodeedit.ftl.html", request, response);
         } catch (TemplateManagerException ex) {
             Logger.getLogger(EpisodeController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -196,7 +196,7 @@ public class EpisodeController extends BaseController {
     private void notAuth(HttpServletRequest request, HttpServletResponse response) {
         try {
             TemplateResult res = new TemplateResult(getServletContext());
-            res.activate("sonoin.ftl.html", request, response);
+            res.activate("notauthorized.ftl.html", request, response);
             response.setContentType("text/html;charset=UTF-8");
 
         } catch (TemplateManagerException ex) {

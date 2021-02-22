@@ -64,7 +64,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
 
             //precompiliamo tutte le query utilizzate nella classe
             //precompile all the queries uses in this class
-            sOnAirPrograms = connection.prepareStatement("SELECT * FROM schedule WHERE startTime <= CURTIME() && endTime >= CURTIME() && date = CURDATE()");
+            sOnAirPrograms = connection.prepareStatement("SELECT * FROM schedule WHERE startTime <= CURTIME() && endTime >= CURTIME() && date = CURDATE() ORDER BY channelId");
             //s = connection.prepareStatement("SELECT * FROM episode");SELECT * FROM schedule WHERE '10:30:00' < startTime && '11:40:00' > endTime
             //s = connection.prepareStatement("SELECT * FROM episode");
             scheduleByTimeSlotDate = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? AND timeSlot = ? ORDER BY channelId, startTime");
@@ -73,7 +73,7 @@ public class ScheduleDAO_MySQL extends DAO implements ScheduleDAO{
             todayScheduleByChannel = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? AND channelId = ? ORDER BY startTime");
             todayScheduleByFavCh = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? AND channelId = ? AND timeSlot = ? ORDER BY startTime");
             todayScheduleByProgram = connection.prepareStatement("SELECT * FROM schedule WHERE date = ? AND programId = ? ORDER BY startTime");
-            search = connection.prepareStatement("SELECT * FROM schedule,program,channel WHERE programId = idProgram AND channelId = idChannel AND program.name LIKE ? AND genre LIKE ? AND channel.name LIKE ? AND startTime >= ? AND startTime <= ? AND date >= ? AND date <= ? ORDER BY date, startTime, channel.name");
+            search = connection.prepareStatement("SELECT * FROM schedule,program,channel,episode WHERE schedule.programId = idProgram AND channelId = idChannel AND episodeId = idEpisode AND program.name LIKE ? AND genre LIKE ? AND channel.name LIKE ? AND startTime >= ? AND startTime <= ? AND date >= ? AND date <= ? ORDER BY date, startTime, channel.name");
             insertSchedule = connection.prepareStatement("INSERT INTO schedule (startTime, endTime, date, timeSlot, channelId, programId, episodeId) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             scheduleByChannel = connection.prepareStatement("SELECT * FROM schedule WHERE date >= ? AND channelId = ? ORDER BY date");
             updateSchedule = connection.prepareStatement("UPDATE schedule SET startTime = ?, endTime = ?, date = ?, timeSlot = ?, episodeId = ?, version = ? WHERE idSchedule = ? AND version = ?");
